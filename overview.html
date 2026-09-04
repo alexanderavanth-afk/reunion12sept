@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Køkkenoversigt</title>
+<meta name="description" content="Samler RSVP-svarene til én oversigt, køkkenet kan læse.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;1,6..72,300&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<script>
+/* The courses, in the order the kitchen reads them. Keep this list in step
+   with CONFIG.courses in index.html. */
+const COURSES = [
+  { id: "forret",    name: "Forretter" },
+  { id: "mellemret", name: "Mellemretter" },
+  { id: "hovedret",  name: "Hovedretter" },
+  { id: "dessert",   name: "Desserter & ost" }
+];
+const EVENT = { venue: "Restaurant Norrlyst", date: "Lørdag den 12. september", time: "17:00" };
+</script>
+
+<style>
+:root {
+  color-scheme: light;
+  --bone:   #EDE9DD;
+  --card:   #F5F2E9;
+  --bone-2: #E4DFD0;
+  --ink:    #1E1B15;
+  --ink-2:  #4A443A;
+  --ink-3:  #756D5E;
+  --rule:   #C9C2AE;
+  --rule-2: #B3AB94;
+  --stamp:  #8A3B1E;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bone);
+  color: var(--ink);
+  font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.wrap { max-width: 900px; margin: 0 auto; padding: 34px 22px 90px; }
+
+.mono {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+h1 {
+  margin: 0 0 6px;
+  font-size: clamp(30px, 5vw, 46px);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.sub { margin: 0 0 30px; color: var(--ink-2); font-family: "Newsreader", Georgia, serif; font-weight: 300; font-size: 18px; }
+
+h2 {
+  margin: 40px 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--stamp);
+  border-bottom: 1.5px solid var(--ink);
+  padding-bottom: 8px;
+}
+
+/* Paste panel */
+.intake { border: 1.5px solid var(--ink); background: var(--card); padding: 18px; display: grid; gap: 12px; }
+.intake p { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; max-width: 68ch; }
+textarea {
+  width: 100%;
+  min-height: 130px;
+  background: var(--bone);
+  border: 1.5px solid var(--rule-2);
+  color: var(--ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  padding: 11px 12px;
+  border-radius: 0;
+  resize: vertical;
+}
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+button {
+  appearance: none;
+  border: 1.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--bone);
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 12px 22px;
+  cursor: pointer;
+}
+button.ghost { background: transparent; color: var(--ink); }
+button:hover { background: var(--stamp); border-color: var(--stamp); color: var(--bone); }
+button:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
+.status { color: var(--ink-3); font-size: 13.5px; }
+.status.bad { color: var(--stamp); font-weight: 600; }
+
+/* Totals */
+.totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: var(--rule); border: 1.5px solid var(--ink); }
+.totals div { background: var(--bone); padding: 14px 16px 16px; }
+.totals dt { color: var(--ink-3); margin: 0 0 6px; }
+.totals dd { margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 28px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+caption {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 16px 0 6px;
+}
+th, td { text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+td.n, th.n { text-align: right; font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 0; }
+tr.zero td { color: var(--ink-3); }
+td.dish { font-weight: 600; }
+.scroll { overflow-x: auto; }
+
+.note { font-family: "Newsreader", Georgia, serif; font-weight: 300; font-style: italic; color: var(--ink-2); }
+.empty { color: var(--ink-3); font-family: "Newsreader", Georgia, serif; font-weight: 300; font-style: italic; }
+
+[hidden] { display: none !important; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
+  .wrap { max-width: none; padding: 0; }
+  h2 { break-after: avoid; }
+  tr, .totals { break-inside: avoid; }
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <p class="mono" id="stamp"></p>
+  <h1>Køkkenoversigt</h1>
+  <p class="sub">Alle svar samlet til én seddel, restauranten kan læse.</p>
+
+  <section class="intake no-print">
+    <p>
+      Hent svarene fra Formspree — <strong>Export → JSON</strong> giver det pæneste
+      resultat, men CSV virker også — og sæt dem ind herunder. Alt bliver regnet
+      ud i browseren; intet sendes nogen steder hen.
+    </p>
+    <textarea id="paste" spellcheck="false"
+      placeholder='[{"name":"Maja Jensen","attending":"yes","party":2,"guests":[…]}, …]'></textarea>
+    <div class="bar">
+      <button type="button" id="run">Læs svarene</button>
+      <button type="button" class="ghost" id="demo">Vis et eksempel</button>
+      <button type="button" class="ghost" id="print" hidden>Print</button>
+      <button type="button" class="ghost" id="copy" hidden>Kopiér som regneark</button>
+      <span class="status" id="status"></span>
+    </div>
+  </section>
+
+  <div id="out" hidden>
+    <h2>Optælling</h2>
+    <dl class="totals" id="totals"></dl>
+
+    <h2>Til køkkenet</h2>
+    <div id="tally"></div>
+
+    <h2>Bordet</h2>
+    <div class="scroll" id="table"></div>
+
+    <h2>Allergier og hensyn</h2>
+    <div id="diets"></div>
+
+    <h2>Afbud</h2>
+    <div id="regrets"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const $ = (s) => document.querySelector(s);
+  const esc = (v) => String(v == null ? "" : v)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  $("#stamp").textContent = (EVENT.venue + " · " + EVENT.date + " · " + EVENT.time).toUpperCase();
+
+  /* ── Reading the export ────────────────────────────────────────────
+     Formspree hands back either a JSON array of submissions or a CSV
+     whose cells hold the same fields. Both land in the same shape:
+     { name, attending, party, guests: [{name, order:{courseId: dish}}],
+       diet, note }.                                                   */
+
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], cell = "", quoted = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (quoted) {
+        if (ch === '"') {
+          if (text[i + 1] === '"') { cell += '"'; i++; } else { quoted = false; }
+        } else { cell += ch; }
+      } else if (ch === '"') { quoted = true; }
+      else if (ch === ",") { row.push(cell); cell = ""; }
+      else if (ch === "\n") { row.push(cell); rows.push(row); row = []; cell = ""; }
+      else if (ch !== "\r") { cell += ch; }
+    }
+    if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+    return rows.filter(function (r) { return r.some(function (c) { return c.trim() !== ""; }); });
+  }
+
+  function maybeJSON(v) {
+    if (typeof v !== "string") return v;
+    const s = v.trim();
+    if (!s || (s[0] !== "[" && s[0] !== "{")) return v;
+    try { return JSON.parse(s); } catch (e) { return v; }
+  }
+
+  /* `rows` is the flat one-line-per-guest field the RSVP page also sends,
+     which survives a CSV round-trip when the nested guests array doesn't. */
+  function guestsFromRows(rowsText) {
+    return String(rowsText).split(/\n+/).map(function (line) {
+      const parts = line.split("|").map(function (x) { return x.trim(); });
+      if (!parts.length || !parts[0]) return null;
+      const order = {};
+      COURSES.forEach(function (c, i) {
+        const v = parts[i + 1];
+        if (v && v !== "-") order[c.id] = v;
+      });
+      return { name: parts[0], order: order };
+    }).filter(Boolean);
+  }
+
+  function normalise(sub) {
+    const guestsRaw = maybeJSON(sub.guests);
+    let guests = [];
+
+    if (Array.isArray(guestsRaw)) {
+      guests = guestsRaw.map(function (g) {
+        return { name: g.name || "", order: maybeJSON(g.order) || {} };
+      });
+    } else if (sub.rows) {
+      guests = guestsFromRows(sub.rows);
+    }
+
+    return {
+      name: sub.name || "",
+      attending: String(sub.attending || "yes").toLowerCase() !== "no",
+      party: Number(sub.party) || guests.length || 0,
+      guests: guests,
+      diet: sub.diet || "",
+      note: sub.note || "",
+      at: sub.submittedAt || sub._date || ""
+    };
+  }
+
+  function read(text) {
+    const trimmed = text.trim();
+    if (!trimmed) throw new Error("Der er ikke sat noget ind endnu.");
+
+    let list;
+    if (trimmed[0] === "[" || trimmed[0] === "{") {
+      const parsed = JSON.parse(trimmed);
+      list = Array.isArray(parsed) ? parsed : (parsed.submissions || [parsed]);
+    } else {
+      const rows = parseCSV(trimmed);
+      if (rows.length < 2) throw new Error("Kunne ikke finde nogen rækker i det indsatte.");
+      const head = rows[0].map(function (h) { return h.trim(); });
+      list = rows.slice(1).map(function (r) {
+        const o = {};
+        head.forEach(function (h, i) { o[h] = r[i]; });
+        return o;
+      });
+    }
+
+    /* One person may answer twice — the later submission wins. */
+    const byName = new Map();
+    list.map(normalise)
+        .filter(function (s) { return s.name; })
+        .forEach(function (s) {
+          const key = s.name.trim().toLowerCase();
+          const prev = byName.get(key);
+          if (!prev || String(s.at) >= String(prev.at)) byName.set(key, s);
+        });
+
+    return Array.from(byName.values());
+  }
+
+  /* ── Rendering ─────────────────────────────────────────────────── */
+
+  let lastTSV = "";
+
+  function render(subs) {
+    const coming = subs.filter(function (s) { return s.attending; });
+    const regrets = subs.filter(function (s) { return !s.attending; });
+    const heads = coming.reduce(function (n, s) { return n + (s.party || s.guests.length); }, 0);
+    const seats = coming.reduce(function (a, s) { return a.concat(s.guests); }, []);
+
+    $("#totals").innerHTML = [
+      ["Kuverter", heads],
+      ["Selskaber", coming.length],
+      ["Afbud", regrets.length],
+      ["Retter valgt", seats.reduce(function (n, g) { return n + Object.keys(g.order || {}).length; }, 0)]
+    ].map(function (r) {
+      return '<div><dt class="mono">' + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+    }).join("");
+
+    /* Dish tally, grouped by course */
+    $("#tally").innerHTML = COURSES.map(function (c) {
+      const counts = new Map();
+      seats.forEach(function (g) {
+        const dish = (g.order || {})[c.id];
+        if (!dish || /^(ingen tak|none)$/i.test(dish)) return;
+        counts.set(dish, (counts.get(dish) || 0) + 1);
+      });
+      const sorted = Array.from(counts.entries()).sort(function (a, b) { return b[1] - a[1]; });
+      const body = sorted.length
+        ? sorted.map(function (e) {
+            return "<tr><td class=\"dish\">" + esc(e[0]) + '</td><td class="n">' + e[1] + "</td></tr>";
+          }).join("")
+        : '<tr class="zero"><td>Ingen valgt endnu</td><td class="n">0</td></tr>';
+      return "<table><caption>" + esc(c.name) + "</caption><tbody>" + body + "</tbody></table>";
+    }).join("");
+
+    /* Per-person table */
+    const header = "<tr><th>Gæst</th><th>Selskab</th>" +
+      COURSES.map(function (c) { return "<th>" + esc(c.name) + "</th>"; }).join("") + "</tr>";
+    const body = coming.length
+      ? coming.map(function (s) {
+          const gs = s.guests.length ? s.guests : [{ name: s.name, order: {} }];
+          return gs.map(function (g) {
+            return "<tr><td>" + esc(g.name || "—") + "</td><td>" + esc(s.name) + "</td>" +
+              COURSES.map(function (c) {
+                return "<td>" + esc((g.order || {})[c.id] || "—") + "</td>";
+              }).join("") + "</tr>";
+          }).join("");
+        }).join("")
+      : '<tr><td colspan="6" class="empty">Ingen svar endnu.</td></tr>';
+    $("#table").innerHTML = "<table><thead>" + header + "</thead><tbody>" + body + "</tbody></table>";
+
+    /* Allergies */
+    const diets = coming.filter(function (s) { return s.diet; });
+    $("#diets").innerHTML = diets.length
+      ? "<table><tbody>" + diets.map(function (s) {
+          return "<tr><td class=\"dish\">" + esc(s.name) + "</td><td>" + esc(s.diet) + "</td></tr>";
+        }).join("") + "</tbody></table>"
+      : '<p class="empty">Ingen har meldt noget ind.</p>';
+
+    /* Regrets */
+    $("#regrets").innerHTML = regrets.length
+      ? "<table><tbody>" + regrets.map(function (s) {
+          return "<tr><td class=\"dish\">" + esc(s.name) + "</td><td class=\"note\">" +
+                 esc(s.note || "") + "</td></tr>";
+        }).join("") + "</tbody></table>"
+      : '<p class="empty">Ingen afbud.</p>';
+
+    /* Tab-separated, for pasting straight into a sheet */
+    lastTSV = ["Gæst\tSelskab\t" + COURSES.map(function (c) { return c.name; }).join("\t")]
+      .concat(coming.reduce(function (acc, s) {
+        const gs = s.guests.length ? s.guests : [{ name: s.name, order: {} }];
+        return acc.concat(gs.map(function (g) {
+          return [g.name || "", s.name].concat(COURSES.map(function (c) {
+            return (g.order || {})[c.id] || "";
+          })).join("\t");
+        }));
+      }, [])).join("\n");
+
+    $("#out").hidden = false;
+    $("#print").hidden = false;
+    $("#copy").hidden = false;
+  }
+
+  function say(msg, bad) {
+    const el = $("#status");
+    el.textContent = msg;
+    el.className = "status" + (bad ? " bad" : "");
+  }
+
+  $("#run").addEventListener("click", function () {
+    try {
+      const subs = read($("#paste").value);
+      render(subs);
+      say(subs.length + (subs.length === 1 ? " svar læst." : " svar læst."), false);
+    } catch (e) {
+      $("#out").hidden = true;
+      say(e.message || "Kunne ikke læse det indsatte.", true);
+    }
+  });
+
+  $("#demo").addEventListener("click", function () {
+    $("#paste").value = JSON.stringify([
+      { name: "Maja Jensen", attending: "yes", party: 2, diet: "Anders: nødder",
+        submittedAt: "2026-09-02T18:04:00Z",
+        guests: [
+          { name: "Maja Jensen", order: { forret: "Løgtærte", mellemret: "Stegte hvide asparges",
+                                          hovedret: "Stegt kål", dessert: "Rabarber “Baked Alaska”" } },
+          { name: "Anders Holm", order: { forret: "Hummersalat", mellemret: "Ingen tak",
+                                          hovedret: "Striploin af krondyr", dessert: "3 / 5 oste" } }
+        ] },
+      { name: "Tim", attending: "no", note: "Er i Port Moresby den uge.",
+        submittedAt: "2026-09-01T09:12:00Z", guests: [] },
+      { name: "Frank", attending: "yes", party: 1, submittedAt: "2026-09-03T07:40:00Z",
+        rows: "Frank | Norrlyst signatur tatar | Aromatisk bisque af strandkrabber | Dagens tilgang af fisk | Verdens bedste vaniljeis" }
+    ], null, 2);
+    $("#run").click();
+  });
+
+  $("#print").addEventListener("click", function () { window.print(); });
+
+  $("#copy").addEventListener("click", function () {
+    navigator.clipboard.writeText(lastTSV).then(
+      function () { say("Kopieret — sæt det ind i et regneark.", false); },
+      function () { say("Kunne ikke kopiere. Markér tabellen og kopiér manuelt.", true); }
+    );
+  });
+})();
+</script>
+</body>
+</html>

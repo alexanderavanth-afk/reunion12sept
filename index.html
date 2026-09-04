@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Living Life on a Coin Toss</title>
+<title>Planning Life on a Coin Toss</title>
 <meta name="description" content="Genforeningsmiddag på Restaurant Norrlyst, lørdag den 12. september. Seks lande, ét bord.">
 <meta name="theme-color" content="#EDE9DD">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@600&family=Noto+Sans+Thai:wght@600&display=swap&text=%D9%A0%D9%A1%E0%B9%90%E0%B9%91">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@600&display=swap&text=%E0%B9%90%E0%B9%91">
 
 <!-- ══════════════════════════════════════════════════════════════════════
      EVERYTHING EDITABLE LIVES IN THE CONFIG BLOCK BELOW.
@@ -27,45 +28,99 @@ const CONFIG = {
 
   /* The evening. */
   date:     { da: "Lørdag den 12. september", en: "Saturday 12 September" },
-  time:     "18:30",
+  time:     { da: "17:00 – sent", en: "17:00 – late" },
+
+  /* How the evening runs. `aside` prints in the accent — the line that
+     isn't really part of the schedule. */
+  agenda: [
+    { time: "17 – 18", label: { da: "Ankomst, drinks og snacks",
+                                en: "Arrival, drinks and snacks" } },
+    { time: "18 – 22", label: { da: "Middag og drinks",
+                                en: "Dinner and drinks" } },
+    { time: "22 – ?",  label: { da: "Flere drinks?", en: "More drinks?" },
+      aside:           { da: "Hvor er Tim og Frank?", en: "Where are Tim and Frank?" } }
+  ],
   venue:    "Restaurant Norrlyst",
   venueUrl: "https://norrlyst.dk/restaurantnorrlyst/aften/",
   city:     { da: "København", en: "Copenhagen" },
   deadline: { da: "9. september", en: "9 September" },
   maxGuests: 8,
 
-  /* The six passports at the table, as coins. `hole` and `ring` are real
-     structural facts about each currency's coin, not decoration. */
+  /* The resting state of the hero coin, before anything is tossed. */
+  host: {
+    palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
+               rule: "#C9C2AE", rule2: "#B3AB94", stamp: "#8A3B1E", aura: "#D3C5A6" },
+    quote: { orig: { da: "Ét bord. Seks lande. Én aften.",
+                     en: "One table. Six countries. One evening." },
+             by: "12.09.2026" }
+  },
+
+  /* The six countries at the table, as coins. `hole` and `ring` are real
+     structural facts about each currency's coin, not decoration. `palette`
+     washes the whole page when that coin lands; `quote` is its line on life. */
   countries: [
     { code: "JO", name: { da: "Jordan",          en: "Jordan" },
       unit: "DINAR", denom: "١٠", script: "ar", metal: "brass", ring: null,
       fact: { da: "Én dinar deler sig i ti dirham, hundrede qirsh, tusind fils.",
-              en: "One dinar divides into ten dirham, a hundred qirsh, a thousand fils." } },
+              en: "One dinar divides into ten dirham, a hundred qirsh, a thousand fils." },
+      palette: { ground: "#F0E6D4", bone2: "#E7DAC3", card: "#F9F2E4",
+                 rule: "#D3C3A4", rule2: "#BFAC89", stamp: "#8E3B24", aura: "#DBB582" },
+      quote: { orig: "خير الناس أنفعهم للناس", dir: "rtl", by: "Muhammad",
+               da: "De bedste mennesker er dem, der er til mest gavn for andre.",
+               en: "The best of people are those of most use to others." } },
 
     { code: "PH", name: { da: "Filippinerne",    en: "Philippines" },
       unit: "PISO", denom: "1", script: "lat", metal: "nickel", ring: null,
       fact: { da: "Piso — arvet fra den spanske peso, stavet om til tagalog.",
-              en: "Piso — inherited from the Spanish peso, respelled into Tagalog." } },
+              en: "Piso — inherited from the Spanish peso, respelled into Tagalog." },
+      palette: { ground: "#EFEBD8", bone2: "#E5E0C8", card: "#F8F5E5",
+                 rule: "#CFC7A4", rule2: "#B8AF88", stamp: "#1D4E89", aura: "#E7CE83" },
+      quote: { orig: "Ang hindi lumingon sa pinanggalingan ay hindi makararating sa paroroonan.",
+               by: { da: "Tagalsk ordsprog", en: "Tagalog proverb" },
+               da: "Den, der ikke ser tilbage på hvor han kom fra, når aldrig frem.",
+               en: "Whoever won't look back at where they came from will never arrive." } },
 
     { code: "PG", name: { da: "Papua Ny Guinea", en: "Papua New Guinea" },
       unit: "KINA", denom: "", script: "lat", metal: "aged", ring: null, hole: true,
       fact: { da: "Én-kina-mønten er slået med hul tværs igennem midten.",
-              en: "The one-kina coin is struck with a hole straight through the middle." } },
+              en: "The one-kina coin is struck with a hole straight through the middle." },
+      palette: { ground: "#EEE4D2", bone2: "#E3D7C1", card: "#F7F0E1",
+                 rule: "#D0BEA0", rule2: "#B7A484", stamp: "#93351F", aura: "#C68C52" },
+      quote: { orig: "Wanpela diwai i no inap kamapim bikbus.",
+               by: { da: "Tok pisin-ordsprog", en: "Tok Pisin saying" },
+               da: "Ét træ bliver aldrig til en skov.",
+               en: "One tree never makes a forest." } },
 
     { code: "TH", name: { da: "Thailand",        en: "Thailand" },
       unit: "BAHT", denom: "๑๐", script: "th", metal: "brass", ring: "nickel",
       fact: { da: "Ti baht: et messinghjerte i en hvid ring.",
-              en: "Ten baht: a brass heart inside a white ring." } },
+              en: "Ten baht: a brass heart inside a white ring." },
+      palette: { ground: "#F0EBD6", bone2: "#E6E0C6", card: "#F9F5E4",
+                 rule: "#D1C7A2", rule2: "#BAAF86", stamp: "#6E2F3E", aura: "#DFC06D" },
+      quote: { orig: "Manopubbaṅgamā dhammā, manoseṭṭhā manomayā.",
+               by: "Buddha · Dhammapada 1",
+               da: "Alt hvad vi er, udspringer af det vi tænker.",
+               en: "All that we are arises with our thoughts." } },
 
     { code: "DE", name: { da: "Tyskland",        en: "Germany" },
       unit: "EURO", denom: "2", script: "lat", metal: "nickel", ring: "brass",
       fact: { da: "Samme mønt i tyve lande — og en anden bagside i hvert.",
-              en: "The same coin in twenty countries — and a different back in each." } },
+              en: "The same coin in twenty countries — and a different back in each." },
+      palette: { ground: "#E9E7DE", bone2: "#DFDCD1", card: "#F4F2EB",
+                 rule: "#C6C2B2", rule2: "#ADA895", stamp: "#8A1C1C", aura: "#C9B67F" },
+      quote: { orig: "Es ist nicht genug zu wissen, man muss auch anwenden.",
+               by: "Johann Wolfgang von Goethe",
+               da: "Det er ikke nok at vide — man må også bruge det.",
+               en: "Knowing is not enough; we must apply." } },
 
     { code: "DK", name: { da: "Danmark",         en: "Denmark" },
       unit: "KRONE", denom: "", script: "lat", metal: "nickel", ring: null, hole: true,
       fact: { da: "Hul i midten, og monarkens kronede monogram rundt om det.",
-              en: "A hole through the middle, and the monarch's crowned monogram around it." } }
+              en: "A hole through the middle, and the monarch's crowned monogram around it." },
+      palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
+                 rule: "#C9C2AE", rule2: "#B3AB94", stamp: "#A32B2B", aura: "#D9B2AC" },
+      quote: { orig: "At rejse er at leve.", by: "H.C. Andersen",
+               da: "At rejse er at leve.", en: "To travel is to live." } }
   ],
 
   /* The menu, à la carte. Each guest picks one dish per course — or skips
@@ -153,6 +208,7 @@ const CONFIG = {
   --rule:   #C9C2AE;
   --rule-2: #B3AB94;
   --stamp:  #8A3B1E;
+  --aura:   #D3C5A6;
 
   --step-1: 15px;
   --step-2: 17px;
@@ -170,7 +226,23 @@ body {
   font-size: var(--step-2);
   line-height: 1.5;
   overflow-x: hidden;
+  transition: background-color .9s ease;
 }
+
+/* The wash of whichever country the coin last landed on */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--aura);
+  opacity: .62;
+  transition: background-color .9s ease;
+  -webkit-mask-image: radial-gradient(88% 64% at 74% -10%, #000 0%, rgba(0,0,0,.5) 44%, transparent 74%);
+  mask-image: radial-gradient(88% 64% at 74% -10%, #000 0%, rgba(0,0,0,.5) 44%, transparent 74%);
+}
+.wrap { position: relative; z-index: 1; }
 
 /* Paper grain, fixed over everything */
 body::after {
@@ -318,6 +390,70 @@ a:hover { color: var(--stamp); }
 .coin-btn svg { width: 100%; height: 100%; display: block; }
 .toss-caption { color: var(--ink-3); text-align: center; margin: 0; }
 .toss-caption b { color: var(--ink); font-weight: 700; letter-spacing: .12em; }
+
+/* ── Quote, struck on landing ───────────────────────────────────────── */
+.quote {
+  margin: 0;
+  max-width: 46ch;
+  min-height: 136px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  align-content: start;
+}
+.quote blockquote {
+  margin: 0;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(19px, 2.7vw, 27px);
+  line-height: 1.28;
+  letter-spacing: -.012em;
+  text-wrap: balance;
+}
+.quote blockquote[dir="rtl"] {
+  font-family: "Noto Sans Arabic", "Geeza Pro", serif;
+  font-style: normal;
+  font-size: clamp(20px, 2.8vw, 28px);
+  line-height: 1.75;
+}
+.q-trans { margin: 0; color: var(--ink-2); font-size: 15.5px; max-width: 44ch; line-height: 1.45; }
+.q-by { color: var(--ink-3); }
+.quote.struck { animation: strike .55s cubic-bezier(.16,.84,.28,1) both; }
+@keyframes strike {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Agenda ─────────────────────────────────────────────────────────── */
+.agenda { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
+.agenda li {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3px;
+  padding: 18px 0 19px;
+  border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 620px) {
+  .agenda li { grid-template-columns: 132px 1fr; gap: 22px; align-items: baseline; }
+}
+.agenda .t {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  letter-spacing: .06em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.agenda .l { font-size: var(--step-3); font-weight: 600; letter-spacing: -.022em; }
+.agenda .a {
+  display: block;
+  margin-top: 2px;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 17.5px;
+  color: var(--stamp);
+}
 
 /* ── Facts ledger ──────────────────────────────────────────────────── */
 .ledger {
@@ -562,6 +698,24 @@ select {
   padding: 12px 0;
 }
 
+/* Numbered steps */
+.step {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  border-bottom: 1.5px solid var(--ink);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+.step .n { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em; }
+.step h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+
 /* Guest cards */
 .guests { display: grid; gap: 16px; }
 .guest { background: var(--card); border: 1.5px solid var(--ink); }
@@ -591,19 +745,72 @@ select {
 }
 .guest-head input[type="text"]:hover { border: 0; }
 .guest-body { padding: 4px 15px 14px; }
-.pick {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 6px;
-  padding: 11px 0;
+/* Tick lists — one dish per course */
+.ticks {
+  border: 0;
+  margin: 0;
+  padding: 13px 0 14px;
   border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: 3px;
 }
-.pick:last-child { border-bottom: 0; }
-@media (min-width: 560px) {
-  .pick { grid-template-columns: 124px 1fr; align-items: center; gap: 14px; }
+.ticks:last-child { border-bottom: 0; }
+.ticks legend { padding: 0; margin-bottom: 5px; color: var(--ink-3); }
+.tick {
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  gap: 11px;
+  align-items: baseline;
+  padding: 7px 9px 7px 7px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color .12s ease;
 }
-.pick > span { color: var(--ink-3); }
-.pick select { background: var(--bone); font-size: 15px; padding: 9px 34px 9px 11px; }
+.tick:hover { background: var(--bone-2); }
+.tick input { position: absolute; opacity: 0; pointer-events: none; }
+.tick .box {
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid var(--rule-2);
+  display: grid;
+  place-items: center;
+  position: relative;
+  top: 2px;
+}
+.tick .box::after { content: ""; width: 7px; height: 7px; background: transparent; }
+.tick input:checked ~ .box { border-color: var(--stamp); }
+.tick input:checked ~ .box::after { background: var(--stamp); }
+.tick input:focus-visible ~ .box { outline: 2px solid var(--stamp); outline-offset: 2px; }
+.tick:has(input:checked) { background: var(--bone-2); border-color: var(--rule-2); }
+.tick:has(input:checked) .tname { font-weight: 600; }
+.tname { font-size: 15px; line-height: 1.3; }
+.tick .supp { margin-left: 6px; }
+.tprice {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Confirm panel */
+.confirm { border: 1.5px solid var(--ink); background: var(--card); padding: 18px 18px 20px; }
+.confirm h4 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--stamp);
+}
+.confirm .receipt { border-top: 1px solid var(--rule); }
+.confirm .empty {
+  margin: 0;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ink-3);
+}
 
 /* Submit */
 .submit {
@@ -724,14 +931,18 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
                 aria-label="Slå plat eller krone / Toss the coin"></button>
       </div>
       <p class="mono toss-caption" id="caption"></p>
+      <figure class="quote" id="quote">
+        <blockquote id="q-orig"></blockquote>
+        <p class="q-trans" id="q-trans"></p>
+        <figcaption class="mono q-by" id="q-by"></figcaption>
+      </figure>
     </div>
 
-    <h1 data-da="Livet på en <span class='thin'>plat eller krone</span>"
-        data-en="Living life on a <span class='thin'>coin toss</span>"></h1>
+    <h1>Planning life on a <span class="thin">coin toss</span></h1>
 
     <p class="sub"
-       data-da="Seks pas, seks valutaer, ét bord. Den 12. september lander vi alle samme sted — på Norrlyst i København."
-       data-en="Six passports, six currencies, one table. On 12 September we all land in the same place — Norrlyst in Copenhagen."></p>
+       data-da="Seks lande har haft os på skift. Den 12. september lander vi det samme sted — på Norrlyst i København."
+       data-en="Six countries have had us in turn. On 12 September we land in the same place — Norrlyst in Copenhagen."></p>
 
     <dl class="ledger">
       <div><dt class="mono" data-da="Dato" data-en="Date"></dt><dd id="f-date"></dd></div>
@@ -742,10 +953,18 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     </dl>
   </header>
 
+  <section id="agenda">
+    <div class="sec-head">
+      <h2 data-da="Aftenens gang" data-en="How the evening runs"></h2>
+      <span class="mono num">I / IV</span>
+    </div>
+    <ol class="agenda" id="agenda-list"></ol>
+  </section>
+
   <section id="countries">
     <div class="sec-head">
       <h2 data-da="Bordets valutaer" data-en="Currencies at the table"></h2>
-      <span class="mono num">I / III</span>
+      <span class="mono num">II / IV</span>
     </div>
     <p class="lede"
        data-da="Seks steder, vi har kaldt hjem på skift. Hver mønt er slået som den rigtige — hullet, ringen og skriften er ikke pynt."
@@ -756,7 +975,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   <section id="menu-section">
     <div class="sec-head">
       <h2 data-da="Kortet" data-en="The card"></h2>
-      <span class="mono num">II / III</span>
+      <span class="mono num">III / IV</span>
     </div>
     <p class="lede"
        data-da="Norrlyst serverer à la carte om aftenen. Vælg én ret pr. servering — eller spring en over."
@@ -768,10 +987,15 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   <section id="rsvp-section">
     <div class="sec-head">
       <h2 data-da="Tilmelding" data-en="RSVP"></h2>
-      <span class="mono num">III / III</span>
+      <span class="mono num">IV / IV</span>
     </div>
 
     <form id="rsvp" novalidate>
+      <div class="step">
+        <span class="n">01</span>
+        <h3 data-da="Hvem kommer?" data-en="Who's coming?"></h3>
+      </div>
+
       <div class="field">
         <span class="lbl" data-da="Kommer I?" data-en="Are you coming?"></span>
         <div class="choice">
@@ -804,12 +1028,22 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         </div>
       </div>
 
+      <div class="step" id="step-2">
+        <span class="n">02</span>
+        <h3 data-da="Retterne" data-en="The dishes"></h3>
+      </div>
+
       <div class="field" id="guests-field">
-        <span class="lbl" data-da="Hvad skal I spise?" data-en="What will you eat?"></span>
+        <span class="lbl" data-da="Sæt kryds ved det I gerne vil have" data-en="Tick what you'd like"></span>
         <span class="hint"
               data-da="Én ret pr. servering, pr. person. Intet er bindende — køkkenet vil bare gerne vide det på forhånd."
               data-en="One dish per course, per person. Nothing is binding — the kitchen just likes to know in advance."></span>
         <div class="guests" id="guests"></div>
+      </div>
+
+      <div class="step">
+        <span class="n">03</span>
+        <h3 data-da="Bekræft" data-en="Confirm"></h3>
       </div>
 
       <div class="field">
@@ -826,6 +1060,13 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       <div class="field">
         <label class="lbl" for="note" data-da="Hilsen til værterne" data-en="A note to the hosts"></label>
         <textarea id="note" name="note" data-ph-da="Valgfrit" data-ph-en="Optional"></textarea>
+      </div>
+
+      <div class="field">
+        <div class="confirm">
+          <h4 data-da="Sådan sender vi den" data-en="This is what we'll send"></h4>
+          <dl class="receipt" id="preview"></dl>
+        </div>
       </div>
 
       <div class="field">
@@ -1006,6 +1247,35 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   function paintCoin(spec) { $("#coin").innerHTML = coinSVG(spec); }
 
+  function applyPalette(pal) {
+    const r = document.documentElement.style;
+    r.setProperty("--bone", pal.ground);
+    r.setProperty("--bone-2", pal.bone2);
+    r.setProperty("--card", pal.card);
+    r.setProperty("--rule", pal.rule);
+    r.setProperty("--rule-2", pal.rule2);
+    r.setProperty("--stamp", pal.stamp);
+    r.setProperty("--aura", pal.aura);
+  }
+
+  function showQuote(q, animate) {
+    const fig = $("#quote");
+    const orig = $("#q-orig");
+    orig.textContent = t(q.orig);
+    if (q.dir === "rtl") { orig.setAttribute("dir", "rtl"); } else { orig.removeAttribute("dir"); }
+    $("#q-trans").textContent = q[lang] && q[lang] !== t(q.orig) ? q[lang] : "";
+    $("#q-by").textContent = t(q.by);
+    if (animate) {
+      fig.classList.remove("struck");
+      void fig.offsetWidth;
+      fig.classList.add("struck");
+    }
+  }
+
+  function landed() {
+    return tossIndex < 0 ? CONFIG.host : CONFIG.countries[tossIndex];
+  }
+
   function setCaption() {
     const where = tossIndex < 0
       ? T("VÆRTSLAND", "HOST COUNTRY") + " · <b>" + T("DANMARK", "DENMARK") + "</b>"
@@ -1017,18 +1287,29 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     return tossIndex < 0 ? hostSpec() : countrySpec(CONFIG.countries[tossIndex]);
   }
 
+  function land(animate) {
+    const it = landed();
+    paintCoin(currentSpec());
+    applyPalette(it.palette);
+    showQuote(it.quote, animate);
+    setCaption();
+  }
+
   function toss(advance) {
     if (tossing) return;
-    if (advance) {
-      tossIndex = tossIndex + 1 >= CONFIG.countries.length ? -1 : tossIndex + 1;
+    /* The host coin is only the resting state — once tossed, the cycle
+       runs through the six countries and wraps. */
+    if (advance) tossIndex = (tossIndex + 1) % CONFIG.countries.length;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      land(false);
+      return;
     }
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) { paintCoin(currentSpec()); setCaption(); return; }
 
     tossing = true;
     turns += 3;
     $("#coin").style.transform = "rotateY(" + (turns * 360) + "deg) rotateX(12deg)";
-    window.setTimeout(function () { paintCoin(currentSpec()); setCaption(); }, 620);
+    window.setTimeout(function () { land(true); }, 620);
     window.setTimeout(function () { tossing = false; }, 1400);
   }
 
@@ -1039,6 +1320,15 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
                "<h3>" + t(c.name) + "</h3>" +
                "<p>" + t(c.fact) + "</p>" +
              "</article>";
+    }).join("");
+  }
+
+  function renderAgenda() {
+    $("#agenda-list").innerHTML = CONFIG.agenda.map(function (row) {
+      return "<li><span class=\"t\">" + row.time + "</span>" +
+             '<span class="l">' + t(row.label) +
+               (row.aside ? '<span class="a">' + t(row.aside) + "</span>" : "") +
+             "</span></li>";
     }).join("");
   }
 
@@ -1066,19 +1356,27 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   /* ═══ Guests ═══════════════════════════════════════════════════════ */
   let party = 1;
 
+  function tick(i, course, value, label, price, supp) {
+    return '<label class="tick">' +
+             '<input type="radio" name="g' + i + "-" + course + '" value="' + value +
+               '" data-guest="' + i + '" data-course="' + course + '">' +
+             '<span class="box"></span>' +
+             '<span class="tname">' + label +
+               (supp ? '<span class="supp">+' + supp + "</span>" : "") + "</span>" +
+             '<span class="tprice">' + (price || "") + "</span>" +
+           "</label>";
+  }
+
   function guestRow(i) {
     const picks = CONFIG.courses.map(function (course) {
-      const opts = ['<option value="">' + T("— vælg —", "— choose —") + "</option>"]
-        .concat(course.dishes.map(function (d) {
-          return '<option value="' + d.id + '">' + d.name +
-                 (d.supp ? " (+" + d.supp + ")" : "") + " · " + priceOf(d) + "</option>";
-        }))
-        .concat(['<option value="skip">' + T("Ingen tak", "None, thanks") + "</option>"])
-        .join("");
-      return '<label class="pick">' +
-               '<span class="mono">' + t(course.name) + "</span>" +
-               '<select data-guest="' + i + '" data-course="' + course.id + '">' + opts + "</select>" +
-             "</label>";
+      const rows = course.dishes.map(function (d) {
+        return tick(i, course.id, d.id, d.name, priceOf(d), d.supp);
+      }).join("") + tick(i, course.id, "skip", T("Ingen tak", "None, thanks"), "", 0);
+
+      return '<fieldset class="ticks">' +
+               '<legend class="mono">' + t(course.name) + "</legend>" +
+               rows +
+             "</fieldset>";
     }).join("");
 
     const ph = i === 0 ? T("Dit navn", "Your name") : T("Gæst " + (i + 1), "Guest " + (i + 1));
@@ -1095,7 +1393,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   function readGuests() {
     return $$(".guest", $("#guests")).map(function (row, i) {
       const choices = {};
-      $$("select", row).forEach(function (s) { choices[s.dataset.course] = s.value; });
+      $$('input[type="radio"]:checked', row).forEach(function (r) {
+        choices[r.dataset.course] = r.value;
+      });
       const nameEl = $('[data-guest-name="' + i + '"]', row);
       return {
         name: nameEl ? nameEl.value : "",
@@ -1116,15 +1416,16 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         nameEl.value = g.name;
         if (g.touched) nameEl.dataset.touched = "1";
       }
-      $$('select[data-guest="' + i + '"]', wrap).forEach(function (s) {
-        const v = g.choices[s.dataset.course];
-        if (v) s.value = v;
+      Object.keys(g.choices).forEach(function (courseId) {
+        const r = $('input[name="g' + i + "-" + courseId + '"][value="' + g.choices[courseId] + '"]', wrap);
+        if (r) r.checked = true;
       });
     });
 
     const first = $('[data-guest-name="0"]', wrap);
     if (first && !first.dataset.touched) first.value = $("#name").value.trim();
 
+    renderPreview();
     $("#minus").disabled = party <= 1;
     $("#plus").disabled = party >= CONFIG.maxGuests;
     $("#party").textContent = String(party);
@@ -1147,7 +1448,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#rail-r").textContent = (CONFIG.venue + " · " + t(CONFIG.city)).toUpperCase();
 
     $("#f-date").textContent = t(CONFIG.date);
-    $("#f-time").textContent = CONFIG.time;
+    $("#f-time").textContent = t(CONFIG.time);
     $("#f-deadline").textContent = t(CONFIG.deadline);
     const venue = $("#f-venue");
     venue.textContent = CONFIG.venue;
@@ -1164,11 +1465,11 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         CONFIG.hostName + " at "
     ) + '<a href="mailto:' + CONFIG.hostEmail + '">' + CONFIG.hostEmail + "</a>.";
 
+    renderAgenda();
     renderCountries();
     renderMenu();
     renderGuests();
-    setCaption();
-    paintCoin(currentSpec());
+    land(false);
   }
 
   /* ═══ Attendance ═══════════════════════════════════════════════════ */
@@ -1180,7 +1481,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     const yes = attending();
     $("#party-field").hidden = !yes;
     $("#guests-field").hidden = !yes;
+    $("#step-2").hidden = !yes;
     $("#send").textContent = yes ? T("Send tilmelding", "Send RSVP") : T("Send afbud", "Send regrets");
+    renderPreview();
   }
 
   /* ═══ Submit ═══════════════════════════════════════════════════════ */
@@ -1217,6 +1520,11 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       party: yes ? party : 0,
       guests: guests,
       kitchen: kitchen,
+      rows: guests.map(function (g) {
+        return [g.name || "?"].concat(CONFIG.courses.map(function (c) {
+          return g.order[c.id] || "-";
+        })).join(" | ");
+      }).join("\n"),
       diet: $("#diet").value.trim(),
       note: $("#note").value.trim(),
       event: CONFIG.venue + " — " + CONFIG.date.da,
@@ -1247,6 +1555,43 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     if (d.diet) lines.push("Allergier / Dietary: " + d.diet);
     if (d.note) lines.push("Hilsen / Note: " + d.note);
     return lines.join("\n");
+  }
+
+  /* Step 03 — a live reading of exactly what the send button will post. */
+  function renderPreview() {
+    const box = $("#preview");
+    const d = payload();
+    const none = T("Ingen tak", "None");
+    const rows = [];
+
+    if (!d.name) {
+      box.innerHTML = '<p class="empty">' +
+        T("Udfyld navnet ovenfor, så samler vi det hele her.",
+          "Fill in the name above and it all gathers here.") + "</p>";
+      return;
+    }
+
+    rows.push([T("Navn", "Name"), d.name]);
+    if (d.attending === "yes") {
+      rows.push([T("Antal", "Party"), String(d.party)]);
+      d.guests.forEach(function (g) {
+        const order = CONFIG.courses
+          .map(function (c) { return g.order[c.id]; })
+          .filter(function (x) { return x && x !== none; });
+        rows.push([
+          g.name || T("Gæst ", "Guest ") + g.seat,
+          order.length ? order.join(" · ") : T("Intet valgt endnu", "Nothing ticked yet")
+        ]);
+      });
+      if (d.diet) rows.push([T("Hensyn", "Needs"), d.diet]);
+    } else {
+      rows.push([T("Svar", "Answer"), T("Afbud", "Regrets")]);
+    }
+    if (d.note) rows.push([T("Hilsen", "Note"), d.note]);
+
+    box.innerHTML = rows.map(function (r) {
+      return "<div><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+    }).join("");
   }
 
   function showDone(d, viaEmail) {
@@ -1354,7 +1699,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   });
   document.addEventListener("input", function (e) {
     if (e.target.matches("[data-guest-name]")) e.target.dataset.touched = "1";
+    if (e.target.closest("#rsvp")) renderPreview();
   });
+  $("#rsvp").addEventListener("change", renderPreview);
   $("#again").addEventListener("click", function () {
     $("#done").hidden = true;
     $("#rsvp").hidden = false;

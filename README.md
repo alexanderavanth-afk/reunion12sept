@@ -1,9 +1,14 @@
-# Living Life on a Coin Toss
+# Planning Life on a Coin Toss
 
 RSVP page for the reunion dinner at Restaurant Norrlyst on 12 September.
 Six countries, six coins, one table.
 
-`index.html` is the whole site — no build step, no framework, no dependencies.
+Two pages, no build step, no framework, no dependencies:
+
+- `index.html` — the invitation and RSVP form guests fill in.
+- `overview.html` — a host-only tool that turns the collected replies into one
+  sheet the restaurant can read. Nothing links to it from the invitation.
+
 Deployed on Vercel from `main`; pushing redeploys.
 
 **Live:** _(paste the Vercel URL here)_
@@ -34,8 +39,25 @@ Thai numerals load as `text=`-subsetted Noto faces (a few hundred bytes) with
 system fallbacks behind them.
 
 The hero coin flips once on load and lands on a new country each time it's
-tapped, cycling back to the dinner's own coin. `prefers-reduced-motion` skips
-the animation and just paints the result.
+tapped. Landing does three things at once: the coin is restruck, the whole page
+washes to that country's palette, and its line on life appears beneath —
+H.C. Andersen for Denmark, a Dhammapada verse for Thailand, a Tagalog proverb
+for the Philippines, a hadith in Arabic for Jordan, Goethe for Germany, and a
+Tok Pisin saying for Papua New Guinea. `prefers-reduced-motion` skips the
+animation and paints the result directly.
+
+Each country's `palette` (seven colours) and `quote` live beside it in
+`CONFIG.countries`, so both are edited in one place.
+
+## The RSVP flow
+
+Three numbered steps on one page — no wizard, nothing to lose on a refresh:
+
+1. **Hvem kommer?** — attending or not, name, and a party-size stepper.
+2. **Retterne** — one tickable card per person, with each course as a short
+   list. One dish per course, plus "Ingen tak" for anyone skipping it.
+3. **Bekræft** — a live reading of exactly what the send button will post,
+   updating as the form is filled in.
 
 ## Where the replies go
 
@@ -74,6 +96,29 @@ can read directly:
 ```
 
 `summary` is the readable one — it's what lands in the notification email.
+`rows` is one flat line per guest (`Name | forret | mellemret | hovedret |
+dessert`), which is what survives a CSV round-trip when the nested `guests`
+array doesn't.
+
+## The restaurant overview
+
+Open `overview.html`, export the replies from Formspree (**Export → JSON** reads
+cleanest, CSV also works), and paste them in. It produces:
+
+- **Optælling** — covers, parties, regrets, dishes chosen.
+- **Til køkkenet** — every dish with a count, grouped by course. This is the
+  number the kitchen actually needs.
+- **Bordet** — one row per person with all four courses.
+- **Allergier** and **Afbud**.
+
+Everything is computed in the browser; nothing is uploaded. **Print** gives a
+clean sheet to hand over, and **Kopiér som regneark** puts a tab-separated
+table on the clipboard for Excel or Sheets. Duplicate answers from the same
+name are collapsed, keeping the later one. "Vis et eksempel" loads sample data
+if you want to see the shape before the real replies arrive.
+
+Its `COURSES` list must stay in step with `CONFIG.courses` in `index.html` —
+that's the one place the two files have to agree.
 
 ## Editing the evening
 
@@ -84,9 +129,11 @@ Everything editable lives in `CONFIG` at the top of `index.html`.
 | `endpoint` | Where RSVPs are sent |
 | `hostEmail`, `hostName` | Footer contact; used by the email fallback |
 | `date`, `time`, `venue`, `venueUrl`, `city` | The facts ledger under the headline |
+| `agenda[]` | The running order — time, label, and an optional `aside` printed in the accent |
+| `host` | The resting coin's palette and line, before anything is tossed |
 | `deadline` | The reply-by date |
 | `maxGuests` | Upper limit on the party-size stepper |
-| `countries[]` | The six coins — name, unit, denomination, metal, `ring`, `hole`, and the one-line fact |
+| `countries[]` | The six coins — name, unit, denomination, metal, `ring`, `hole`, the one-line fact, the `palette` and the `quote` |
 | `courses[]` | The menu: course groups, each with its dishes |
 
 ### A dish
