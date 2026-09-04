@@ -3,63 +3,133 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Genforeningsmiddag · Norrlyst</title>
-<meta name="description" content="Tilmelding til genforeningsmiddagen på Restaurant Norrlyst, lørdag den 12. september.">
+<title>Living Life on a Coin Toss</title>
+<meta name="description" content="Genforeningsmiddag på Restaurant Norrlyst, lørdag den 12. september. Seks lande, ét bord.">
+<meta name="theme-color" content="#EDE9DD">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@600&family=Noto+Sans+Thai:wght@600&display=swap&text=%D9%A0%D9%A1%E0%B9%90%E0%B9%91">
 
-<!-- ══════════════════════════════════════════════════════════════════
-     EVERYTHING YOU NEED TO EDIT LIVES IN THE CONFIG BLOCK BELOW.
-     ════════════════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     EVERYTHING EDITABLE LIVES IN THE CONFIG BLOCK BELOW.
+     ═══════════════════════════════════════════════════════════════════ -->
 <script>
 const CONFIG = {
-  // Where RSVPs are sent. Paste your Formspree endpoint here, e.g.
-  // "https://formspree.io/f/xyzabcde"  — see README.md for the 2-minute setup.
-  // Leave empty and the form falls back to a pre-filled email to hostEmail.
+
+  /* Where RSVPs are sent. Formspree — replies arrive by email and collect
+     in the dashboard for CSV export. Empty falls back to a pre-filled
+     email to hostEmail. */
   endpoint: "https://formspree.io/f/mljeljaa",
 
-  // Fallback + "questions?" address.
   hostEmail: "alexander.avanth@gmail.com",
-  hostName: "Alexander",
+  hostName:  "Alexander",
 
-  // The evening.
-  date:      { da: "Lørdag den 12. september", en: "Saturday 12 September" },
-  time:      "18:30",
-  venue:     "Restaurant Norrlyst",
-  venueUrl:  "https://norrlyst.dk/restaurantnorrlyst/aften/",
-  deadline:  { da: "9. september", en: "9 September" },
+  /* The evening. */
+  date:     { da: "Lørdag den 12. september", en: "Saturday 12 September" },
+  time:     "18:30",
+  venue:    "Restaurant Norrlyst",
+  venueUrl: "https://norrlyst.dk/restaurantnorrlyst/aften/",
+  city:     { da: "København", en: "Copenhagen" },
+  deadline: { da: "9. september", en: "9 September" },
   maxGuests: 8,
 
-  // The menu. Norrlyst serves a set four-course menu in the evening, in two
-  // versions. Replace the `courses` lines with the current dishes from
-  // norrlyst.dk when you have them — the layout takes any number of courses.
-  price: "495 kr.",
-  menus: [
+  /* The six passports at the table, as coins. `hole` and `ring` are real
+     structural facts about each currency's coin, not decoration. */
+  countries: [
+    { code: "JO", name: { da: "Jordan",          en: "Jordan" },
+      unit: "DINAR", denom: "١٠", script: "ar", metal: "brass", ring: null,
+      fact: { da: "Én dinar deler sig i ti dirham, hundrede qirsh, tusind fils.",
+              en: "One dinar divides into ten dirham, a hundred qirsh, a thousand fils." } },
+
+    { code: "PH", name: { da: "Filippinerne",    en: "Philippines" },
+      unit: "PISO", denom: "1", script: "lat", metal: "nickel", ring: null,
+      fact: { da: "Piso — arvet fra den spanske peso, stavet om til tagalog.",
+              en: "Piso — inherited from the Spanish peso, respelled into Tagalog." } },
+
+    { code: "PG", name: { da: "Papua Ny Guinea", en: "Papua New Guinea" },
+      unit: "KINA", denom: "", script: "lat", metal: "aged", ring: null, hole: true,
+      fact: { da: "Én-kina-mønten er slået med hul tværs igennem midten.",
+              en: "The one-kina coin is struck with a hole straight through the middle." } },
+
+    { code: "TH", name: { da: "Thailand",        en: "Thailand" },
+      unit: "BAHT", denom: "๑๐", script: "th", metal: "brass", ring: "nickel",
+      fact: { da: "Ti baht: et messinghjerte i en hvid ring.",
+              en: "Ten baht: a brass heart inside a white ring." } },
+
+    { code: "DE", name: { da: "Tyskland",        en: "Germany" },
+      unit: "EURO", denom: "2", script: "lat", metal: "nickel", ring: "brass",
+      fact: { da: "Samme mønt i tyve lande — og en anden bagside i hvert.",
+              en: "The same coin in twenty countries — and a different back in each." } },
+
+    { code: "DK", name: { da: "Danmark",         en: "Denmark" },
+      unit: "KRONE", denom: "", script: "lat", metal: "nickel", ring: null, hole: true,
+      fact: { da: "Hul i midten, og monarkens kronede monogram rundt om det.",
+              en: "A hole through the middle, and the monarch's crowned monogram around it." } }
+  ],
+
+  /* The menu, à la carte. Each guest picks one dish per course — or skips
+     the course. `supp` is the supplement printed on the card; `price` is the
+     à la carte price; `label` overrides it where it isn't a single number. */
+  courses: [
     {
-      id: "klassisk",
-      name:  { da: "Norrlyst-menuen", en: "The Norrlyst menu" },
-      kind:  { da: "Kød, fisk & skaldyr", en: "Meat, fish & shellfish" },
-      blurb: { da: "Køkkenets firerettersmenu, sat efter sæsonen.",
-               en: "The kitchen's four-course menu, set by the season." },
-      courses: [
-        { da: "Forret",      en: "First course" },
-        { da: "Mellemret",   en: "Middle course" },
-        { da: "Hovedret",    en: "Main course" },
-        { da: "Dessert",     en: "Dessert" }
+      id: "forret",
+      name: { da: "Forretter", en: "Starters" },
+      dishes: [
+        { id: "tatar", name: "Norrlyst signatur tatar",
+          desc: "Af okse, fløde-kefir, peberrod, aromatiske urter og røgede mandler",
+          price: 110 },
+        { id: "hummer", name: "Hummersalat",
+          desc: "Sprød brioche og bitre urter",
+          price: 185, supp: 75 },
+        { id: "logtaerte", name: "Løgtærte",
+          desc: "Syltede grøntsager og skummende sauce på lagret ost",
+          price: 110 }
       ]
     },
     {
-      id: "gron",
-      name:  { da: "Den grønne Norrlyst-menu", en: "The green Norrlyst menu" },
-      kind:  { da: "Vegetarisk", en: "Vegetarian" },
-      blurb: { da: "Samme fire retter med grøntsagerne i hovedrollen.",
-               en: "The same four courses with vegetables in the lead." },
-      courses: [
-        { da: "Forret",      en: "First course" },
-        { da: "Mellemret",   en: "Middle course" },
-        { da: "Hovedret",    en: "Main course" },
-        { da: "Dessert",     en: "Dessert" }
+      id: "mellemret",
+      name: { da: "Mellemretter", en: "Middle courses" },
+      dishes: [
+        { id: "bisque", name: "Aromatisk bisque af strandkrabber",
+          desc: "Syltet knoldselleri og syrlige æbler",
+          price: 135 },
+        { id: "asparges", name: "Stegte hvide asparges",
+          desc: "Blomkålscreme, sprøde løg og aromatisk sauce med citron og timian",
+          price: 135 },
+        { id: "havtaske", name: "Stegt havtaskekæbe",
+          desc: "Karamelliseret løgpuré og grønne jordbær anno 2025",
+          price: 185, supp: 50 }
+      ]
+    },
+    {
+      id: "hovedret",
+      name: { da: "Hovedretter", en: "Main courses" },
+      dishes: [
+        { id: "fisk", name: "Dagens tilgang af fisk",
+          desc: "Smørpocheret, grillede forårsløg og sauce på blåmuslinger og ørredrogn",
+          price: 185 },
+        { id: "kaal", name: "Stegt kål",
+          desc: "Grillet løg og intens sauce på hengemte grøntsager",
+          price: 185 },
+        { id: "krondyr", name: "Striploin af krondyr",
+          desc: "Creme på kartoffel og ramsløg, fermenteret løg og sauce på røget marv",
+          price: 310, supp: 125 }
+      ]
+    },
+    {
+      id: "dessert",
+      name: { da: "Desserter & ost", en: "Desserts & cheese" },
+      dishes: [
+        { id: "ost", name: "3 / 5 oste",
+          desc: "Dansk honning og malt-knækbrød",
+          price: 110, label: "110 / 150" },
+        { id: "rabarber", name: "Rabarber “Baked Alaska”",
+          desc: "Mørk chokolade, saltet karamel og sprød crumble",
+          price: 115 },
+        { id: "vanilje", name: "Verdens bedste vaniljeis",
+          desc: "Kaviar, koldpresset mandelolie og ristede græskarkerner",
+          price: 190, supp: 75 }
       ]
     }
   ]
@@ -67,431 +137,580 @@ const CONFIG = {
 </script>
 
 <style>
-/* ── Tokens ─────────────────────────────────────────────────────────
-   North light: cool spruce neutrals, a deep pine accent, one warm
-   ember reserved for the date and the confirmation.                  */
+/* ═══════════════════════════════════════════════════════════════════════
+   A committed single visual world: bone paper, ink, and struck metal.
+   Every colour is painted explicitly so the page holds on any host ground.
+   ═══════════════════════════════════════════════════════════════════ */
 :root {
-  --ground:  #E9EDE8;
-  --surface: #FBFCFA;
-  --sunk:    #E1E7E0;
-  --ink:     #121A17;
-  --muted:   #5B6B63;
-  --faint:   #6D7B73;
-  --line:    #D2DAD1;
-  --line-2:  #BCC7BB;
-  --accent:  #17594C;
-  --accent-soft: #E0EBE5;
-  --ember:   #A9571A;
-  --focus:   #17594C;
-  --shadow:  0 1px 2px rgba(18,26,23,.05), 0 8px 24px -16px rgba(18,26,23,.35);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ground:  #0C1211;
-    --surface: #141C1A;
-    --sunk:    #101817;
-    --ink:     #E6EDE8;
-    --muted:   #93A29A;
-    --faint:   #86958D;
-    --line:    #25302D;
-    --line-2:  #35423E;
-    --accent:  #63BFA6;
-    --accent-soft: #17302A;
-    --ember:   #DE9350;
-    --focus:   #63BFA6;
-    --shadow:  0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.9);
-  }
-}
-:root[data-theme="dark"] {
-  --ground:  #0C1211;
-  --surface: #141C1A;
-  --sunk:    #101817;
-  --ink:     #E6EDE8;
-  --muted:   #93A29A;
-  --faint:   #86958D;
-  --line:    #25302D;
-  --line-2:  #35423E;
-  --accent:  #63BFA6;
-  --accent-soft: #17302A;
-  --ember:   #DE9350;
-  --focus:   #63BFA6;
-  --shadow:  0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.9);
+  color-scheme: light;
+
+  --bone:   #EDE9DD;
+  --bone-2: #E4DFD0;
+  --card:   #F5F2E9;
+  --ink:    #1E1B15;
+  --ink-2:  #4A443A;
+  --ink-3:  #756D5E;
+  --rule:   #C9C2AE;
+  --rule-2: #B3AB94;
+  --stamp:  #8A3B1E;
+
+  --step-1: 15px;
+  --step-2: 17px;
+  --step-3: 21px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background: var(--ground);
+  background: var(--bone);
   color: var(--ink);
-  font-family: "Newsreader", Georgia, "Times New Roman", serif;
-  font-size: 17px;
-  line-height: 1.6;
-  font-weight: 300;
+  font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--step-2);
+  line-height: 1.5;
+  overflow-x: hidden;
 }
 
-/* Utility type roles */
+/* Paper grain, fixed over everything */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: .34;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.5'/></svg>");
+}
+
+a { color: var(--ink); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--stamp); }
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 3px;
+}
+
 .mono {
   font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11.5px;
-  letter-spacing: .12em;
+  font-size: 11px;
+  letter-spacing: .1em;
   text-transform: uppercase;
   font-weight: 500;
 }
-h1, h2, h3, .display, button, label, input, select, textarea {
-  font-family: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+
+/* ── Marginalia rails ──────────────────────────────────────────────── */
+.rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  pointer-events: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
+.rail span { white-space: nowrap; writing-mode: vertical-rl; }
+.rail-l { left: 0; }
+.rail-r { right: 0; }
+.rail-l span { transform: rotate(180deg); }
+@media (min-width: 1080px) { .rail { display: flex; } }
 
-a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+/* ── Shell ─────────────────────────────────────────────────────────── */
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 22px 110px; }
+@media (min-width: 1080px) { .wrap { padding-inline: 72px; } }
 
-:where(a, button, input, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-  border-radius: 3px;
-}
-
-.page {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 0 24px 96px;
-}
-
-/* ── Masthead ─────────────────────────────────────────────────────── */
 .topbar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 20px 0 0;
+  gap: 20px;
+  padding: 18px 0 0;
 }
-.mark { color: var(--faint); }
+.kicker {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  line-height: 1.25;
+  max-width: 30ch;
+}
 .lang {
   display: inline-flex;
-  border: 1px solid var(--line-2);
+  border: 1.5px solid var(--ink);
   border-radius: 999px;
   overflow: hidden;
-  background: var(--surface);
+  flex: 0 0 auto;
 }
 .lang button {
   appearance: none;
   border: 0;
   background: transparent;
-  color: var(--muted);
-  padding: 5px 11px 4px;
-  cursor: pointer;
-  font-size: 11.5px;
+  color: var(--ink);
+  font-family: "Archivo", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: .1em;
-  font-weight: 500;
+  padding: 6px 12px;
+  cursor: pointer;
 }
-.lang button[aria-pressed="true"] { background: var(--ink); color: var(--ground); }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--bone); }
 
-header.hero { padding: 56px 0 40px; }
-.eyebrow { color: var(--ember); margin: 0 0 22px; }
-h1 {
-  font-size: clamp(38px, 8.5vw, 60px);
-  line-height: 1.02;
-  letter-spacing: -.028em;
-  font-weight: 600;
-  margin: 0 0 22px;
-  text-wrap: balance;
+/* ── Hero ──────────────────────────────────────────────────────────── */
+.hero {
+  display: grid;
+  gap: 26px;
+  padding: 26px 0 8px;
+  justify-items: center;
+  text-align: center;
 }
-h1 em {
+.hero h1 {
+  margin: 0;
+  font-size: clamp(36px, 8.6vw, 100px);
+  line-height: .93;
+  font-weight: 700;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  max-width: 15ch;
+}
+.hero h1 .thin {
   font-family: "Newsreader", Georgia, serif;
   font-weight: 300;
   font-style: italic;
+  text-transform: none;
   letter-spacing: -.01em;
 }
-.standfirst { margin: 0; max-width: 46ch; color: var(--muted); font-size: 18px; }
-
-/* Facts strip */
-.facts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--line);
-  border-block: 1px solid var(--line);
-  margin: 40px 0 0;
-}
-.fact { background: var(--ground); padding: 16px 0 18px; }
-.fact dt { color: var(--faint); margin: 0 0 7px; }
-.fact dd {
+.hero .sub {
   margin: 0;
-  font-family: "Familjen Grotesk", sans-serif;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: -.01em;
-}
-.fact:nth-child(2) { padding-left: 16px; }
-.fact:nth-child(3) { padding-left: 16px; }
-
-/* ── Sections ─────────────────────────────────────────────────────── */
-section { padding-top: 56px; }
-h2 {
-  font-size: 13px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: var(--muted);
-  margin: 0 0 20px;
+  max-width: 42ch;
+  color: var(--ink-2);
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(17px, 2.2vw, 21px);
+  line-height: 1.45;
 }
 
-/* Menu panels */
-.menus { display: grid; gap: 14px; }
-@media (min-width: 560px) { .menus { grid-template-columns: 1fr 1fr; } }
-.menu {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  padding: 22px 22px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.menu h3 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -.018em;
-  line-height: 1.2;
-}
-.menu .kind { color: var(--accent); }
-.menu p { margin: 0; color: var(--muted); font-size: 15.5px; line-height: 1.5; }
-.menu ol {
-  margin: 4px 0 0;
+/* Coin toss */
+.toss { display: grid; justify-items: center; gap: 18px; }
+.coin-stage { width: min(62vw, 330px); aspect-ratio: 1; perspective: 1400px; }
+.coin-btn {
+  appearance: none;
+  border: 0;
   padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--line);
-  display: grid;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  display: block;
+  transform-style: preserve-3d;
+  transition: transform 1.35s cubic-bezier(.16,.84,.28,1);
+  filter: drop-shadow(0 22px 26px rgba(40,33,20,.3));
 }
-.menu ol li {
-  padding: 9px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 15.5px;
+.coin-btn svg { width: 100%; height: 100%; display: block; }
+.toss-caption { color: var(--ink-3); text-align: center; margin: 0; }
+.toss-caption b { color: var(--ink); font-weight: 700; letter-spacing: .12em; }
+
+/* ── Facts ledger ──────────────────────────────────────────────────── */
+.ledger {
+  margin: 44px 0 0;
+  width: 100%;
+  border-top: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  display: grid;
+  text-align: left;
+}
+@media (min-width: 720px) { .ledger { grid-template-columns: repeat(4, 1fr); } }
+.ledger div { padding: 16px 0 17px; border-bottom: 1px solid var(--rule); }
+.ledger div:last-child { border-bottom: 0; }
+@media (min-width: 720px) {
+  .ledger div { border-bottom: 0; border-left: 1px solid var(--rule); padding-left: 18px; }
+  .ledger div:first-child { border-left: 0; padding-left: 0; }
+}
+.ledger dt { color: var(--ink-3); margin: 0 0 6px; }
+.ledger dd {
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -.005em;
+  line-height: 1.3;
+}
+
+/* ── Sections ──────────────────────────────────────────────────────── */
+section { padding-top: 84px; }
+.sec-head {
   display: flex;
-  gap: 12px;
+  align-items: baseline;
+  gap: 16px;
+  border-bottom: 1.5px solid var(--ink);
+  padding-bottom: 10px;
+  margin-bottom: 28px;
+}
+.sec-head h2 {
+  margin: 0;
+  font-size: clamp(22px, 3.4vw, 34px);
+  font-weight: 700;
+  letter-spacing: -.028em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.sec-head .num { margin-left: auto; color: var(--ink-3); flex: 0 0 auto; }
+
+.lede {
+  max-width: 54ch;
+  margin: 0 0 34px;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-size: var(--step-3);
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+/* ── Country coins ─────────────────────────────────────────────────── */
+.coins {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 30px 20px;
+}
+.country { display: grid; gap: 12px; justify-items: center; text-align: center; align-content: start; }
+.country .disc {
+  width: 128px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  filter: drop-shadow(0 10px 12px rgba(40,33,20,.26));
+  transition: transform .5s cubic-bezier(.16,.84,.28,1);
+}
+.country:hover .disc { transform: rotate(-8deg) scale(1.05); }
+.country .disc svg { width: 100%; height: 100%; display: block; }
+.country h3 {
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+.country p {
+  margin: 0;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 25ch;
+}
+
+/* ── Menu ──────────────────────────────────────────────────────────── */
+.course { margin-bottom: 40px; }
+.course > h3 {
+  margin: 0 0 5px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--stamp);
+}
+.course > .rule { border: 0; border-top: 1px solid var(--rule-2); margin: 0; }
+.dish {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 22px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--rule);
   align-items: baseline;
 }
-.menu ol li span {
+.dish:last-child { border-bottom: 0; }
+.dish h4 {
+  margin: 0;
+  font-size: var(--step-2);
+  font-weight: 600;
+  letter-spacing: -.012em;
+  line-height: 1.25;
+}
+.dish .desc {
+  grid-column: 1;
+  margin: 0;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-size: 15.5px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 58ch;
+}
+.dish .price {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: start;
+  margin: 0;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  color: var(--faint);
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding-top: 2px;
 }
-.menu ol li:last-child { border-bottom: 0; }
-.menu-note {
-  margin: 16px 0 0;
-  color: var(--muted);
+.supp {
+  display: inline-block;
+  margin-left: 8px;
+  border: 1px solid var(--rule-2);
+  border-radius: 999px;
+  padding: 1px 7px 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  font-weight: 400;
+  color: var(--ink-2);
+  vertical-align: 2px;
+}
+.menu-note { margin: 0; color: var(--ink-2); font-size: 14.5px; max-width: 62ch; line-height: 1.55; }
+
+/* ── Form ──────────────────────────────────────────────────────────── */
+form { display: grid; gap: 30px; max-width: 780px; }
+.field { display: grid; gap: 9px; }
+.lbl { font-size: 13px; font-weight: 700; letter-spacing: .01em; text-transform: uppercase; }
+.hint {
+  color: var(--ink-3);
   font-size: 14.5px;
-  line-height: 1.5;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  line-height: 1.4;
 }
 
-/* ── Form ─────────────────────────────────────────────────────────── */
-form { display: grid; gap: 26px; }
-.field { display: grid; gap: 8px; }
-label.lbl { font-size: 13.5px; font-weight: 500; letter-spacing: -.005em; }
-.hint { color: var(--faint); font-size: 13.5px; font-family: "Familjen Grotesk", sans-serif; }
-
-input[type="text"], textarea {
+input[type="text"], textarea, select {
   width: 100%;
-  background: var(--surface);
-  border: 1px solid var(--line-2);
+  background: var(--card);
+  border: 1.5px solid var(--rule-2);
   color: var(--ink);
-  padding: 11px 13px;
+  font-family: "Archivo", sans-serif;
   font-size: 16px;
-  border-radius: 2px;
+  padding: 11px 13px;
+  border-radius: 0;
   transition: border-color .15s ease;
 }
-input[type="text"]::placeholder, textarea::placeholder { color: var(--faint); }
-input[type="text"]:hover, textarea:hover { border-color: var(--muted); }
-textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+input[type="text"]::placeholder, textarea::placeholder { color: var(--ink-3); }
+input[type="text"]:hover, textarea:hover, select:hover { border-color: var(--ink-2); }
+textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
 
-/* Attendance choice */
+select {
+  appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%234A443A' stroke-width='1.6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+/* Attendance */
 .choice { display: grid; gap: 10px; }
-@media (min-width: 460px) { .choice { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 520px) { .choice { grid-template-columns: 1fr 1fr; } }
 .choice label {
   display: flex;
   align-items: center;
-  gap: 11px;
-  background: var(--surface);
-  border: 1px solid var(--line-2);
+  gap: 12px;
+  background: var(--card);
+  border: 1.5px solid var(--rule-2);
   padding: 15px 16px;
   cursor: pointer;
-  font-size: 15.5px;
-  font-weight: 500;
-  border-radius: 2px;
+  font-size: 15px;
+  font-weight: 600;
   transition: border-color .15s ease, background .15s ease;
 }
-.choice label:hover { border-color: var(--muted); }
+.choice label:hover { border-color: var(--ink-2); }
 .choice input { position: absolute; opacity: 0; pointer-events: none; }
 .dot {
-  width: 15px; height: 15px;
-  border: 1px solid var(--line-2);
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--rule-2);
   border-radius: 50%;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
 }
-.dot::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: transparent; }
-.choice input:checked + .dot { border-color: var(--accent); }
-.choice input:checked + .dot::after { background: var(--accent); }
-.choice label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-.choice input:focus-visible + .dot { outline: 2px solid var(--focus); outline-offset: 2px; }
+.dot::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: transparent; }
+.choice input:checked + .dot { border-color: var(--stamp); }
+.choice input:checked + .dot::after { background: var(--stamp); }
+.choice label:has(input:checked) { border-color: var(--ink); background: var(--bone-2); }
 
 /* Party stepper */
-.stepper {
-  display: inline-flex;
-  align-items: stretch;
-  border: 1px solid var(--line-2);
-  background: var(--surface);
-  border-radius: 2px;
-  width: fit-content;
-}
+.stepper { display: inline-flex; border: 1.5px solid var(--ink); background: var(--card); width: fit-content; }
 .stepper button {
   appearance: none;
   border: 0;
   background: transparent;
   color: var(--ink);
-  width: 44px;
-  font-size: 20px;
+  font-family: "Archivo", sans-serif;
+  width: 46px;
+  font-size: 21px;
   line-height: 1;
   cursor: pointer;
 }
-.stepper button:disabled { color: var(--faint); cursor: not-allowed; }
+.stepper button:disabled { color: var(--ink-3); cursor: not-allowed; }
 .stepper output {
-  min-width: 56px;
+  min-width: 58px;
   display: grid;
   place-items: center;
-  border-inline: 1px solid var(--line-2);
+  border-inline: 1.5px solid var(--ink);
   font-family: "IBM Plex Mono", monospace;
   font-size: 17px;
   font-variant-numeric: tabular-nums;
-  padding: 11px 0;
+  padding: 12px 0;
 }
 
-/* Guest rows */
-.guests { display: grid; gap: 10px; }
-.guest {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  padding: 14px 15px 15px;
-  display: grid;
-  gap: 11px;
-  border-radius: 2px;
+/* Guest cards */
+.guests { display: grid; gap: 16px; }
+.guest { background: var(--card); border: 1.5px solid var(--ink); }
+.guest-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  border-bottom: 1.5px solid var(--ink);
+  background: var(--bone-2);
 }
-.guest-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.guest-head .n { color: var(--faint); }
-.guest input[type="text"] { padding: 9px 11px; font-size: 15.5px; }
-
-.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.seg label {
-  display: block;
-  text-align: center;
-  border: 1px solid var(--line-2);
-  padding: 9px 6px;
-  cursor: pointer;
-  font-size: 13.5px;
+.guest-head .seat {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
   font-weight: 500;
-  border-radius: 2px;
-  transition: border-color .15s ease, background .15s ease, color .15s ease;
+  letter-spacing: .06em;
+  flex: 0 0 auto;
 }
-.seg label:hover { border-color: var(--muted); }
-.seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg label:has(input:checked) {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--ground);
+.guest-head input[type="text"] {
+  border: 0;
+  background: transparent;
+  padding: 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  flex: 1 1 auto;
+  min-width: 0;
 }
-.seg label:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+.guest-head input[type="text"]:hover { border: 0; }
+.guest-body { padding: 4px 15px 14px; }
+.pick {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.pick:last-child { border-bottom: 0; }
+@media (min-width: 560px) {
+  .pick { grid-template-columns: 124px 1fr; align-items: center; gap: 14px; }
+}
+.pick > span { color: var(--ink-3); }
+.pick select { background: var(--bone); font-size: 15px; padding: 9px 34px 9px 11px; }
 
 /* Submit */
 .submit {
   appearance: none;
-  border: 0;
+  border: 1.5px solid var(--ink);
   background: var(--ink);
-  color: var(--ground);
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -.005em;
-  padding: 15px 26px;
-  border-radius: 2px;
+  color: var(--bone);
+  font-family: "Archivo", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 16px 32px;
   cursor: pointer;
   justify-self: start;
-  transition: opacity .15s ease;
+  transition: background .15s ease, border-color .15s ease;
 }
-.submit:hover { opacity: .88; }
-.submit:disabled { opacity: .5; cursor: progress; }
-.formfoot { display: grid; gap: 12px; }
-.err {
-  color: var(--ember);
-  font-size: 14.5px;
-  font-family: "Familjen Grotesk", sans-serif;
-  margin: 0;
-}
+.submit:hover { background: var(--stamp); border-color: var(--stamp); }
+.submit:disabled { opacity: .55; cursor: progress; }
+.err { color: var(--stamp); font-size: 14.5px; font-weight: 600; margin: 0; }
 
 /* Confirmation */
-.done {
-  border: 1px solid var(--accent);
-  background: var(--accent-soft);
-  padding: 28px 26px 30px;
-  border-radius: 2px;
+.done { border: 1.5px solid var(--ink); background: var(--card); max-width: 780px; }
+.done-head {
+  background: var(--ink);
+  color: var(--bone);
+  padding: 12px 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
 }
-.done h2 { color: var(--ember); margin-bottom: 14px; }
-.done p.big {
-  margin: 0 0 18px;
-  font-size: 25px;
-  line-height: 1.25;
-  letter-spacing: -.02em;
-  font-family: "Familjen Grotesk", sans-serif;
-  font-weight: 500;
+.done-body { padding: 26px 22px 28px; }
+.done-body p.big {
+  margin: 0 0 20px;
+  font-size: clamp(22px, 3.6vw, 32px);
+  line-height: 1.1;
+  letter-spacing: -.03em;
+  font-weight: 700;
+  text-transform: uppercase;
   text-wrap: balance;
 }
-.receipt { margin: 0; display: grid; gap: 0; border-top: 1px solid var(--line-2); }
+.receipt { margin: 0; border-top: 1px solid var(--rule); }
 .receipt div {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  gap: 18px;
   padding: 9px 0;
-  border-bottom: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--rule);
   font-size: 15px;
 }
-.receipt dt { color: var(--muted); font-family: "Familjen Grotesk", sans-serif; font-size: 13.5px; }
-.receipt dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.receipt dt {
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding-top: 3px;
+  flex: 0 0 auto;
+  max-width: 40%;
+}
+.receipt dd { margin: 0; text-align: right; }
 .again {
   appearance: none;
   background: transparent;
   border: 0;
-  color: var(--accent);
+  color: var(--stamp);
   padding: 0;
-  margin-top: 20px;
-  font-size: 14.5px;
+  margin-top: 22px;
+  font-family: "Archivo", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
   cursor: pointer;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 4px;
 }
 
-footer {
-  padding-top: 64px;
-  color: var(--muted);
-  font-size: 14.5px;
-  line-height: 1.6;
+footer { padding-top: 88px; display: grid; gap: 14px; }
+footer .strip {
+  border-top: 1.5px solid var(--ink);
+  padding-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+  justify-content: space-between;
 }
-footer a { color: var(--muted); }
+footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; line-height: 1.55; }
 
 [hidden] { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 </style>
 </head>
 
 <body>
-<div class="page">
+
+<div class="rail rail-l"><span id="rail-l"></span></div>
+<div class="rail rail-r"><span id="rail-r"></span></div>
+
+<div class="wrap">
 
   <div class="topbar">
-    <span class="mono mark" id="mark">Norrlyst · 2026</span>
+    <p class="kicker" id="kicker"></p>
     <div class="lang" role="group" aria-label="Sprog / Language">
       <button type="button" data-lang="da" aria-pressed="true">DA</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -499,36 +718,58 @@ footer a { color: var(--muted); }
   </div>
 
   <header class="hero">
-    <p class="mono eyebrow" id="eyebrow"></p>
-    <h1 data-da="Genforenings&shy;middag" data-en="The reunion dinner"></h1>
-    <p class="standfirst"
-       data-da="Vi samles om en firerettersmenu på Norrlyst. Sig til hvor mange I er, og hvad I gerne vil spise — så giver vi køkkenet besked."
-       data-en="We're gathering around a four-course menu at Norrlyst. Tell us how many you are and what you'd like to eat, and we'll pass it to the kitchen."></p>
+    <div class="toss">
+      <div class="coin-stage">
+        <button type="button" class="coin-btn" id="coin"
+                aria-label="Slå plat eller krone / Toss the coin"></button>
+      </div>
+      <p class="mono toss-caption" id="caption"></p>
+    </div>
 
-    <dl class="facts">
-      <div class="fact">
-        <dt class="mono" data-da="Dato" data-en="Date"></dt>
-        <dd id="f-date"></dd>
-      </div>
-      <div class="fact">
-        <dt class="mono" data-da="Tid" data-en="Time"></dt>
-        <dd id="f-time"></dd>
-      </div>
-      <div class="fact">
-        <dt class="mono" data-da="Sted" data-en="Where"></dt>
-        <dd><a id="f-venue" href="#" target="_blank" rel="noopener noreferrer"></a></dd>
-      </div>
+    <h1 data-da="Livet på en <span class='thin'>plat eller krone</span>"
+        data-en="Living life on a <span class='thin'>coin toss</span>"></h1>
+
+    <p class="sub"
+       data-da="Seks pas, seks valutaer, ét bord. Den 12. september lander vi alle samme sted — på Norrlyst i København."
+       data-en="Six passports, six currencies, one table. On 12 September we all land in the same place — Norrlyst in Copenhagen."></p>
+
+    <dl class="ledger">
+      <div><dt class="mono" data-da="Dato" data-en="Date"></dt><dd id="f-date"></dd></div>
+      <div><dt class="mono" data-da="Tid" data-en="Time"></dt><dd id="f-time"></dd></div>
+      <div><dt class="mono" data-da="Sted" data-en="Where"></dt>
+           <dd><a id="f-venue" href="#" target="_blank" rel="noopener noreferrer"></a></dd></div>
+      <div><dt class="mono" data-da="Svar inden" data-en="Reply by"></dt><dd id="f-deadline"></dd></div>
     </dl>
   </header>
 
+  <section id="countries">
+    <div class="sec-head">
+      <h2 data-da="Bordets valutaer" data-en="Currencies at the table"></h2>
+      <span class="mono num">I / III</span>
+    </div>
+    <p class="lede"
+       data-da="Seks steder, vi har kaldt hjem på skift. Hver mønt er slået som den rigtige — hullet, ringen og skriften er ikke pynt."
+       data-en="Six places we've each called home in turn. Every coin is struck like the real one — the hole, the ring and the script aren't decoration."></p>
+    <div class="coins" id="coin-row"></div>
+  </section>
+
   <section id="menu-section">
-    <h2 data-da="Aftenens menu" data-en="The evening menu"></h2>
-    <div class="menus" id="menus"></div>
+    <div class="sec-head">
+      <h2 data-da="Kortet" data-en="The card"></h2>
+      <span class="mono num">II / III</span>
+    </div>
+    <p class="lede"
+       data-da="Norrlyst serverer à la carte om aftenen. Vælg én ret pr. servering — eller spring en over."
+       data-en="Norrlyst serves à la carte in the evening. Pick one dish per course — or skip a course."></p>
+    <div id="menu"></div>
     <p class="menu-note" id="menu-note"></p>
   </section>
 
   <section id="rsvp-section">
-    <h2 data-da="Tilmelding" data-en="RSVP"></h2>
+    <div class="sec-head">
+      <h2 data-da="Tilmelding" data-en="RSVP"></h2>
+      <span class="mono num">III / III</span>
+    </div>
 
     <form id="rsvp" novalidate>
       <div class="field">
@@ -549,12 +790,12 @@ footer a { color: var(--muted); }
 
       <div class="field">
         <label class="lbl" for="name" data-da="Dit navn" data-en="Your name"></label>
-        <input type="text" id="name" name="name" autocomplete="name" required
+        <input type="text" id="name" name="name" autocomplete="name"
                data-ph-da="Fornavn og efternavn" data-ph-en="First and last name">
       </div>
 
       <div class="field" id="party-field">
-        <span class="lbl" data-da="Hvor mange kommer I?" data-en="How many of you are coming?"></span>
+        <span class="lbl" data-da="Hvor mange kommer I?" data-en="How many of you?"></span>
         <span class="hint" data-da="Dig selv talt med." data-en="Including yourself."></span>
         <div class="stepper">
           <button type="button" id="minus" aria-label="Én færre / One fewer">−</button>
@@ -564,10 +805,10 @@ footer a { color: var(--muted); }
       </div>
 
       <div class="field" id="guests-field">
-        <span class="lbl" data-da="Hvad skal I spise?" data-en="What would you like to eat?"></span>
+        <span class="lbl" data-da="Hvad skal I spise?" data-en="What will you eat?"></span>
         <span class="hint"
-              data-da="Vælg en menu pr. person. Navne hjælper med bordkortene."
-              data-en="One menu per person. Names help us with the place cards."></span>
+              data-da="Én ret pr. servering, pr. person. Intet er bindende — køkkenet vil bare gerne vide det på forhånd."
+              data-en="One dish per course, per person. Nothing is binding — the kitchen just likes to know in advance."></span>
         <div class="guests" id="guests"></div>
       </div>
 
@@ -583,30 +824,36 @@ footer a { color: var(--muted); }
       </div>
 
       <div class="field">
-        <label class="lbl" for="note"
-               data-da="Hilsen til værterne" data-en="A note to the hosts"></label>
-        <textarea id="note" name="note"
-                  data-ph-da="Valgfrit" data-ph-en="Optional"></textarea>
+        <label class="lbl" for="note" data-da="Hilsen til værterne" data-en="A note to the hosts"></label>
+        <textarea id="note" name="note" data-ph-da="Valgfrit" data-ph-en="Optional"></textarea>
       </div>
 
-      <div class="formfoot">
-        <button type="submit" class="submit" id="send"
-                data-da="Send tilmelding" data-en="Send RSVP"></button>
+      <div class="field">
+        <button type="submit" class="submit" id="send"></button>
         <p class="err" id="err" hidden></p>
       </div>
     </form>
 
     <div class="done" id="done" hidden>
-      <h2 data-da="Modtaget" data-en="Received"></h2>
-      <p class="big" id="done-line"></p>
-      <dl class="receipt" id="receipt"></dl>
-      <button type="button" class="again" id="again"
-              data-da="Ret min tilmelding" data-en="Change my answer"></button>
+      <div class="done-head">
+        <span class="mono" data-da="Modtaget" data-en="Received"></span>
+        <span class="mono" id="done-stamp"></span>
+      </div>
+      <div class="done-body">
+        <p class="big" id="done-line"></p>
+        <dl class="receipt" id="receipt"></dl>
+        <button type="button" class="again" id="again"
+                data-da="Ret min tilmelding" data-en="Change my answer"></button>
+      </div>
     </div>
   </section>
 
   <footer>
-    <p id="foot-1"></p>
+    <div class="strip">
+      <span class="mono" id="foot-mark"></span>
+      <span class="mono" id="foot-place"></span>
+    </div>
+    <p id="foot-note"></p>
   </footer>
 </div>
 
@@ -621,143 +868,355 @@ footer a { color: var(--muted); }
   try { lang = localStorage.getItem("rsvp-lang") || "da"; } catch (e) {}
   if (lang !== "en") lang = "da";
 
-  const t = (obj) => (obj && typeof obj === "object" ? obj[lang] : obj) || "";
+  const t = (v) => (v && typeof v === "object" && !Array.isArray(v) ? v[lang] : v) || "";
+  const T = (da, en) => (lang === "da" ? da : en);
 
-  /* ── Menus ──────────────────────────────────────────────────────── */
-  function renderMenus() {
-    $("#menus").innerHTML = CONFIG.menus.map(function (m) {
-      const courses = m.courses.map(function (c, i) {
-        return '<li><span>' + String(i + 1).padStart(2, "0") + '</span>' + t(c) + '</li>';
-      }).join("");
-      return '<article class="menu">' +
-               '<p class="mono kind">' + t(m.kind) + '</p>' +
-               '<h3>' + t(m.name) + '</h3>' +
-               '<p>' + t(m.blurb) + '</p>' +
-               '<ol>' + courses + '</ol>' +
-             '</article>';
+  /* ═══ Coins ════════════════════════════════════════════════════════
+     Drawn, not photographed: a struck disc, a reeded rim, a legend on an
+     arc, and either a hole or a denomination in the country's own script.
+     Rim ticks are generated rather than hand-authored path data.       */
+
+  const METAL = {
+    brass:  { hi: "#F2DCA8", mid: "#C29A54", lo: "#7E5F2A", edge: "#5B441E", text: "#463316" },
+    nickel: { hi: "#F6F5EE", mid: "#C7C7BC", lo: "#8B8B80", edge: "#6A6A60", text: "#43433C" },
+    aged:   { hi: "#DEDCCF", mid: "#A9A79A", lo: "#706F63", edge: "#54534A", text: "#3A3932" }
+  };
+
+  const GROUND = "#EDE9DD";
+  let uid = 0;
+
+  function coinSVG(spec) {
+    const id = "k" + (uid++);
+    const M = METAL[spec.metal] || METAL.nickel;
+    const R = spec.ring ? METAL[spec.ring] : null;
+    const core = R ? 58 : 88;
+    const legendR = R ? 76 : 72;
+
+    let ticks = "";
+    const N = 84;
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2;
+      ticks += '<line x1="' + (Math.cos(a) * 92).toFixed(2) + '" y1="' + (Math.sin(a) * 92).toFixed(2) +
+               '" x2="' + (Math.cos(a) * 98).toFixed(2) + '" y2="' + (Math.sin(a) * 98).toFixed(2) + '"/>';
+    }
+
+    const legendInk = (R ? R : M).text;
+    const arcTop = "M-" + legendR + " 0 A" + legendR + " " + legendR + " 0 0 1 " + legendR + " 0";
+    const arcBot = "M-" + legendR + " 0 A" + legendR + " " + legendR + " 0 0 0 " + legendR + " 0";
+
+    const scriptFont = spec.script === "ar"
+      ? "'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', 'Tahoma', sans-serif"
+      : spec.script === "th"
+        ? "'Noto Sans Thai', 'Thonburi', 'Leelawadee UI', 'Tahoma', sans-serif"
+        : "Archivo, sans-serif";
+
+    let centre;
+    if (spec.hole) {
+      centre =
+        (spec.crown
+          ? '<path d="M-26 -50 l7 14 9 -18 9 18 7 -14 4 22 h-40z" fill="none" stroke="' + M.text +
+            '" stroke-width="3" stroke-linejoin="round" opacity=".72"/>'
+          : '') +
+        '<circle r="20" fill="' + GROUND + '"/>' +
+        '<circle r="20" fill="none" stroke="' + M.edge + '" stroke-width="2.5" opacity=".8"/>' +
+        '<circle r="25" fill="none" stroke="' + M.hi + '" stroke-width="1.2" opacity=".5"/>';
+    } else {
+      centre =
+        '<text x="0" y="0" text-anchor="middle" dominant-baseline="central" ' +
+        'font-family="' + scriptFont + '" font-size="' + (R ? 44 : 60) + '" font-weight="600" ' +
+        'fill="' + M.text + '" opacity=".9">' + spec.denom + '</text>';
+    }
+
+    return '' +
+    '<svg viewBox="-104 -104 208 208" role="img" aria-label="' + (spec.alt || "") + '">' +
+      '<defs>' +
+        '<radialGradient id="' + id + 'f" cx="34%" cy="28%" r="82%">' +
+          '<stop offset="0%" stop-color="' + M.hi + '"/>' +
+          '<stop offset="52%" stop-color="' + M.mid + '"/>' +
+          '<stop offset="100%" stop-color="' + M.lo + '"/>' +
+        '</radialGradient>' +
+        (R ? '<radialGradient id="' + id + 'r" cx="34%" cy="28%" r="82%">' +
+               '<stop offset="0%" stop-color="' + R.hi + '"/>' +
+               '<stop offset="52%" stop-color="' + R.mid + '"/>' +
+               '<stop offset="100%" stop-color="' + R.lo + '"/>' +
+             '</radialGradient>' : '') +
+        '<linearGradient id="' + id + 's" x1="8%" y1="0%" x2="92%" y2="100%">' +
+          '<stop offset="0%" stop-color="#FFFFFF" stop-opacity=".40"/>' +
+          '<stop offset="38%" stop-color="#FFFFFF" stop-opacity="0"/>' +
+          '<stop offset="70%" stop-color="#000000" stop-opacity="0"/>' +
+          '<stop offset="100%" stop-color="#000000" stop-opacity=".22"/>' +
+        '</linearGradient>' +
+        '<path id="' + id + 'at" d="' + arcTop + '"/>' +
+        '<path id="' + id + 'ab" d="' + arcBot + '"/>' +
+      '</defs>' +
+
+      '<circle r="99" fill="' + (R ? R.edge : M.edge) + '"/>' +
+      '<g stroke="' + (R ? R.lo : M.lo) + '" stroke-width="2.4" opacity=".9">' + ticks + '</g>' +
+      '<circle r="92" fill="url(#' + id + (R ? 'r' : 'f') + ')"/>' +
+      (R
+        ? '<circle r="' + (core + 3) + '" fill="' + M.edge + '" opacity=".5"/>' +
+          '<circle r="' + core + '" fill="url(#' + id + 'f)"/>'
+        : '<circle r="80" fill="none" stroke="' + M.edge + '" stroke-width="1.4" opacity=".4"/>') +
+
+      '<g font-family="Archivo, sans-serif" font-weight="700" letter-spacing="2.6" ' +
+         'fill="' + legendInk + '" opacity=".92">' +
+        '<text font-size="15"><textPath href="#' + id + 'at" startOffset="50%" text-anchor="middle">' +
+          spec.legendTop + '</textPath></text>' +
+        '<text font-size="12"><textPath href="#' + id + 'ab" startOffset="50%" text-anchor="middle">' +
+          spec.legendBottom + '</textPath></text>' +
+      '</g>' +
+
+      centre +
+      '<circle r="99" fill="url(#' + id + 's)"/>' +
+    '</svg>';
+  }
+
+  function countrySpec(c) {
+    return {
+      metal: c.metal,
+      ring: c.ring,
+      hole: !!c.hole,
+      crown: c.code === "DK",
+      denom: c.denom,
+      script: c.script,
+      legendTop: t(c.name).toUpperCase(),
+      legendBottom: c.unit,
+      alt: t(c.name) + " — " + c.unit
+    };
+  }
+
+  function hostSpec() {
+    return {
+      metal: "brass",
+      ring: null,
+      hole: false,
+      denom: "XII",
+      script: "lat",
+      legendTop: "NORRLYST",
+      legendBottom: "MMXXVI · " + T("KØBENHAVN", "COPENHAGEN"),
+      alt: T("Middagens mønt", "The dinner's own coin")
+    };
+  }
+
+  /* The toss: the coin rests visible, flips once on load, and lands on a
+     new country with every tap before cycling back to the dinner's coin. */
+  let turns = 0;
+  let tossIndex = -1;
+  let tossing = false;
+
+  function paintCoin(spec) { $("#coin").innerHTML = coinSVG(spec); }
+
+  function setCaption() {
+    const where = tossIndex < 0
+      ? T("VÆRTSLAND", "HOST COUNTRY") + " · <b>" + T("DANMARK", "DENMARK") + "</b>"
+      : T("LANDEDE PÅ", "LANDED ON") + " · <b>" + t(CONFIG.countries[tossIndex].name).toUpperCase() + "</b>";
+    $("#caption").innerHTML = where + " · " + T("TRYK FOR AT SLÅ", "TAP TO TOSS");
+  }
+
+  function currentSpec() {
+    return tossIndex < 0 ? hostSpec() : countrySpec(CONFIG.countries[tossIndex]);
+  }
+
+  function toss(advance) {
+    if (tossing) return;
+    if (advance) {
+      tossIndex = tossIndex + 1 >= CONFIG.countries.length ? -1 : tossIndex + 1;
+    }
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { paintCoin(currentSpec()); setCaption(); return; }
+
+    tossing = true;
+    turns += 3;
+    $("#coin").style.transform = "rotateY(" + (turns * 360) + "deg) rotateX(12deg)";
+    window.setTimeout(function () { paintCoin(currentSpec()); setCaption(); }, 620);
+    window.setTimeout(function () { tossing = false; }, 1400);
+  }
+
+  function renderCountries() {
+    $("#coin-row").innerHTML = CONFIG.countries.map(function (c) {
+      return '<article class="country">' +
+               '<div class="disc">' + coinSVG(countrySpec(c)) + "</div>" +
+               "<h3>" + t(c.name) + "</h3>" +
+               "<p>" + t(c.fact) + "</p>" +
+             "</article>";
     }).join("");
   }
 
-  /* ── Guest rows ─────────────────────────────────────────────────── */
+  /* ═══ Menu ═════════════════════════════════════════════════════════ */
+  const priceOf = (d) => d.label || String(d.price);
+
+  function renderMenu() {
+    $("#menu").innerHTML = CONFIG.courses.map(function (course) {
+      const dishes = course.dishes.map(function (d) {
+        return '<div class="dish">' +
+                 "<h4>" + d.name + (d.supp ? '<span class="supp">+' + d.supp + "</span>" : "") + "</h4>" +
+                 '<p class="price">' + priceOf(d) + "</p>" +
+                 '<p class="desc">' + d.desc + "</p>" +
+               "</div>";
+      }).join("");
+      return '<div class="course"><h3>' + t(course.name) + '</h3><hr class="rule">' + dishes + "</div>";
+    }).join("");
+
+    $("#menu-note").textContent = T(
+      "Priser i kroner, som de står på kortet. Tallet i ringen er tillægget, hvis retten tages som del af en menu. Det endelige format bekræftes med restauranten.",
+      "Prices in kroner, as printed on the card. The number in the ring is the supplement if the dish is taken as part of a menu. The final format is being confirmed with the restaurant."
+    );
+  }
+
+  /* ═══ Guests ═══════════════════════════════════════════════════════ */
   let party = 1;
 
   function guestRow(i) {
-    const seat = String(i + 1).padStart(2, "0");
-    const options = CONFIG.menus.map(function (m) {
-      return '<label><input type="radio" name="menu-' + i + '" value="' + m.id + '"' +
-             (m.id === CONFIG.menus[0].id ? " checked" : "") + '>' + t(m.name) + '</label>';
+    const picks = CONFIG.courses.map(function (course) {
+      const opts = ['<option value="">' + T("— vælg —", "— choose —") + "</option>"]
+        .concat(course.dishes.map(function (d) {
+          return '<option value="' + d.id + '">' + d.name +
+                 (d.supp ? " (+" + d.supp + ")" : "") + " · " + priceOf(d) + "</option>";
+        }))
+        .concat(['<option value="skip">' + T("Ingen tak", "None, thanks") + "</option>"])
+        .join("");
+      return '<label class="pick">' +
+               '<span class="mono">' + t(course.name) + "</span>" +
+               '<select data-guest="' + i + '" data-course="' + course.id + '">' + opts + "</select>" +
+             "</label>";
     }).join("");
-    const you = lang === "da" ? "Dig" : "You";
-    const other = lang === "da" ? "Gæst " + (i + 1) : "Guest " + (i + 1);
-    const ph = lang === "da" ? "Navn" : "Name";
+
+    const ph = i === 0 ? T("Dit navn", "Your name") : T("Gæst " + (i + 1), "Guest " + (i + 1));
+
     return '<div class="guest">' +
              '<div class="guest-head">' +
-               '<span class="mono n">' + seat + '</span>' +
-               '<span class="mono n">' + (i === 0 ? you : other) + '</span>' +
-             '</div>' +
-             '<input type="text" data-guest-name="' + i + '" placeholder="' + ph + '" autocomplete="off">' +
-             '<div class="seg">' + options + '</div>' +
-           '</div>';
+               '<span class="seat">' + String(i + 1).padStart(2, "0") + "</span>" +
+               '<input type="text" data-guest-name="' + i + '" autocomplete="off" placeholder="' + ph + '">' +
+             "</div>" +
+             '<div class="guest-body">' + picks + "</div>" +
+           "</div>";
+  }
+
+  function readGuests() {
+    return $$(".guest", $("#guests")).map(function (row, i) {
+      const choices = {};
+      $$("select", row).forEach(function (s) { choices[s.dataset.course] = s.value; });
+      const nameEl = $('[data-guest-name="' + i + '"]', row);
+      return {
+        name: nameEl ? nameEl.value : "",
+        touched: !!(nameEl && nameEl.dataset.touched),
+        choices: choices
+      };
+    });
   }
 
   function renderGuests() {
     const wrap = $("#guests");
     const keep = readGuests();
-    wrap.innerHTML = Array.from({ length: party }, (_, i) => guestRow(i)).join("");
+    wrap.innerHTML = Array.from({ length: party }, function (_, i) { return guestRow(i); }).join("");
+
     keep.slice(0, party).forEach(function (g, i) {
       const nameEl = $('[data-guest-name="' + i + '"]', wrap);
-      if (nameEl && g.name) nameEl.value = g.name;
-      const pick = $('input[name="menu-' + i + '"][value="' + g.menu + '"]', wrap);
-      if (pick) pick.checked = true;
+      if (nameEl && g.name) {
+        nameEl.value = g.name;
+        if (g.touched) nameEl.dataset.touched = "1";
+      }
+      $$('select[data-guest="' + i + '"]', wrap).forEach(function (s) {
+        const v = g.choices[s.dataset.course];
+        if (v) s.value = v;
+      });
     });
-    if (party === 1) {
-      const first = $('[data-guest-name="0"]', wrap);
-      if (first && !first.value) first.value = $("#name").value.trim();
-    }
+
+    const first = $('[data-guest-name="0"]', wrap);
+    if (first && !first.dataset.touched) first.value = $("#name").value.trim();
+
     $("#minus").disabled = party <= 1;
     $("#plus").disabled = party >= CONFIG.maxGuests;
     $("#party").textContent = String(party);
   }
 
-  function readGuests() {
-    return $$(".guest", $("#guests")).map(function (row, i) {
-      const picked = $('input[name="menu-' + i + '"]:checked', row);
-      return {
-        name: ($('[data-guest-name="' + i + '"]', row) || {}).value || "",
-        menu: picked ? picked.value : CONFIG.menus[0].id
-      };
-    });
-  }
-
-  /* ── Language ───────────────────────────────────────────────────── */
+  /* ═══ Language ═════════════════════════════════════════════════════ */
   function applyLang() {
     document.documentElement.lang = lang;
-    $$("[data-da]").forEach(function (el) {
-      el.innerHTML = el.getAttribute("data-" + lang);
-    });
-    $$("[data-ph-da]").forEach(function (el) {
-      el.placeholder = el.getAttribute("data-ph-" + lang);
-    });
+    $$("[data-da]").forEach(function (el) { el.innerHTML = el.getAttribute("data-" + lang); });
+    $$("[data-ph-da]").forEach(function (el) { el.placeholder = el.getAttribute("data-ph-" + lang); });
     $$(".lang button").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     });
 
-    $("#eyebrow").textContent = t(CONFIG.date).toUpperCase() + " · " + CONFIG.venue;
-    $("#f-date").textContent  = t(CONFIG.date);
-    $("#f-time").textContent  = CONFIG.time;
+    $("#kicker").textContent = T(
+      "Genforeningsmiddag · seks lande, ét bord",
+      "Reunion dinner · six countries, one table"
+    );
+    $("#rail-l").textContent = T("Plat eller krone · 12.09.2026", "Heads or tails · 12.09.2026");
+    $("#rail-r").textContent = (CONFIG.venue + " · " + t(CONFIG.city)).toUpperCase();
+
+    $("#f-date").textContent = t(CONFIG.date);
+    $("#f-time").textContent = CONFIG.time;
+    $("#f-deadline").textContent = t(CONFIG.deadline);
     const venue = $("#f-venue");
     venue.textContent = CONFIG.venue;
     venue.href = CONFIG.venueUrl;
 
-    $("#menu-note").textContent = lang === "da"
-      ? "Firerettersmenu, " + CONFIG.price + " pr. person. Retterne følger sæsonen og sættes af køkkenet — du vælger blot hvilken af de to menuer du vil have."
-      : "Four courses, " + CONFIG.price + " per person. The dishes follow the season and are set by the kitchen — you simply choose which of the two menus you'd like.";
+    $("#foot-mark").textContent = T("Genforeningsmiddag", "Reunion dinner") + " · MMXXVI";
+    $("#foot-place").textContent = (CONFIG.venue + " · " + t(CONFIG.city)).toUpperCase();
+    $("#foot-note").innerHTML = T(
+      "Svar gerne inden <strong>" + t(CONFIG.deadline) +
+        "</strong>, så vi kan give Norrlyst det endelige antal og køkkenet en fornemmelse af kortet. Spørgsmål? Skriv til " +
+        CONFIG.hostName + " på ",
+      "Please reply by <strong>" + t(CONFIG.deadline) +
+        "</strong> so we can give Norrlyst the final count and the kitchen a feel for the card. Questions? Write to " +
+        CONFIG.hostName + " at "
+    ) + '<a href="mailto:' + CONFIG.hostEmail + '">' + CONFIG.hostEmail + "</a>.";
 
-    $("#foot-1").innerHTML = (lang === "da"
-      ? "Svar gerne inden <strong>" + t(CONFIG.deadline) + "</strong>, så vi kan give Norrlyst det endelige antal. Spørgsmål? Skriv til " + CONFIG.hostName + " på "
-      : "Please reply by <strong>" + t(CONFIG.deadline) + "</strong> so we can give Norrlyst the final count. Questions? Write to " + CONFIG.hostName + " at ")
-      + '<a href="mailto:' + CONFIG.hostEmail + '">' + CONFIG.hostEmail + "</a>.";
-
-    renderMenus();
+    renderCountries();
+    renderMenu();
     renderGuests();
+    setCaption();
+    paintCoin(currentSpec());
   }
 
-  /* ── Attendance toggle ──────────────────────────────────────────── */
+  /* ═══ Attendance ═══════════════════════════════════════════════════ */
   function attending() {
     const el = $('input[name="attending"]:checked');
     return !el || el.value === "yes";
   }
   function syncAttending() {
     const yes = attending();
-    $("#party-field").hidden  = !yes;
+    $("#party-field").hidden = !yes;
     $("#guests-field").hidden = !yes;
-    $("#menu-section").hidden = !yes;
-    $("#send").textContent = yes
-      ? (lang === "da" ? "Send tilmelding" : "Send RSVP")
-      : (lang === "da" ? "Send afbud" : "Send regrets");
+    $("#send").textContent = yes ? T("Send tilmelding", "Send RSVP") : T("Send afbud", "Send regrets");
   }
 
-  /* ── Submit ─────────────────────────────────────────────────────── */
+  /* ═══ Submit ═══════════════════════════════════════════════════════ */
+  function dishById(courseId, dishId) {
+    const c = CONFIG.courses.find(function (x) { return x.id === courseId; });
+    return c ? c.dishes.find(function (d) { return d.id === dishId; }) : null;
+  }
+
   function payload() {
     const yes = attending();
-    const guests = yes ? readGuests() : [];
-    const tally = {};
-    CONFIG.menus.forEach(function (m) { tally[m.id] = 0; });
-    guests.forEach(function (g) { if (g.menu in tally) tally[g.menu] += 1; });
+    const raw = yes ? readGuests() : [];
+    const kitchen = {};
+
+    const guests = raw.map(function (g, i) {
+      const order = {};
+      CONFIG.courses.forEach(function (course) {
+        const v = g.choices[course.id];
+        if (!v) { order[course.id] = ""; return; }
+        if (v === "skip") { order[course.id] = T("Ingen tak", "None"); return; }
+        const d = dishById(course.id, v);
+        order[course.id] = d ? d.name : v;
+        if (d) kitchen[d.name] = (kitchen[d.name] || 0) + 1;
+      });
+      return {
+        seat: i + 1,
+        name: g.name.trim() || (i === 0 ? $("#name").value.trim() : ""),
+        order: order
+      };
+    });
 
     return {
       attending: yes ? "yes" : "no",
       name: $("#name").value.trim(),
       party: yes ? party : 0,
-      guests: guests.map(function (g, i) {
-        return {
-          seat: i + 1,
-          name: g.name.trim() || (i === 0 ? $("#name").value.trim() : ""),
-          menu: g.menu,
-          menuLabel: t((CONFIG.menus.find(function (m) { return m.id === g.menu; }) || {}).name)
-        };
-      }),
-      tally: tally,
+      guests: guests,
+      kitchen: kitchen,
       diet: $("#diet").value.trim(),
       note: $("#note").value.trim(),
       event: CONFIG.venue + " — " + CONFIG.date.da,
@@ -767,13 +1226,24 @@ footer a { color: var(--muted); }
 
   function asText(d) {
     const lines = [
-      (d.attending === "yes" ? "KOMMER / ATTENDING" : "AFBUD / CANNOT ATTEND"),
+      d.attending === "yes" ? "KOMMER / ATTENDING" : "AFBUD / CANNOT ATTEND",
       "Navn / Name: " + d.name,
-      "Antal / Party: " + d.party
+      "Antal / Party: " + d.party,
+      ""
     ];
     d.guests.forEach(function (g) {
-      lines.push("  " + g.seat + ". " + (g.name || "—") + " — " + g.menuLabel);
+      lines.push(g.seat + ". " + (g.name || "—"));
+      CONFIG.courses.forEach(function (c) {
+        lines.push("   " + c.name.da + ": " + (g.order[c.id] || "—"));
+      });
+      lines.push("");
     });
+    const keys = Object.keys(d.kitchen);
+    if (keys.length) {
+      lines.push("TIL KØKKENET / KITCHEN TALLY");
+      keys.forEach(function (k) { lines.push("   " + k + " × " + d.kitchen[k]); });
+      lines.push("");
+    }
     if (d.diet) lines.push("Allergier / Dietary: " + d.diet);
     if (d.note) lines.push("Hilsen / Note: " + d.note);
     return lines.join("\n");
@@ -785,35 +1255,35 @@ footer a { color: var(--muted); }
     $("#menu-section").hidden = true;
     $("#done").hidden = false;
 
+    const first = d.name.split(" ")[0] || "";
     $("#done-line").textContent = yes
-      ? (lang === "da"
-          ? "Vi glæder os til at se dig, " + (d.name.split(" ")[0] || "") + "."
-          : "We can't wait to see you, " + (d.name.split(" ")[0] || "") + ".")
-      : (lang === "da"
-          ? "Ærgerligt — vi savner dig den aften."
-          : "A shame — you'll be missed that evening.");
+      ? T("Vi ses den 12.", "See you on the 12th.")
+      : T("Ærgerligt — vi savner dig den aften.", "A shame — you'll be missed that evening.");
+    $("#done-stamp").textContent = (first || CONFIG.venue).toUpperCase();
 
-    const rows = [];
-    const L = lang === "da"
-      ? { who: "Navn", n: "Antal", when: "Dato", diet: "Hensyn", sent: "Status" }
-      : { who: "Name", n: "Party", when: "Date", diet: "Needs", sent: "Status" };
-    rows.push([L.who, d.name]);
+    const none = T("Ingen tak", "None");
+    const rows = [[T("Navn", "Name"), d.name]];
     if (yes) {
-      rows.push([L.n, String(d.party)]);
-      CONFIG.menus.forEach(function (m) {
-        if (d.tally[m.id]) rows.push([t(m.name), String(d.tally[m.id])]);
+      rows.push([T("Antal", "Party"), String(d.party)]);
+      d.guests.forEach(function (g) {
+        const order = CONFIG.courses
+          .map(function (c) { return g.order[c.id]; })
+          .filter(function (x) { return x && x !== none; });
+        rows.push([
+          g.name || T("Gæst ", "Guest ") + g.seat,
+          order.length ? order.join(" · ") : T("Ikke valgt endnu", "Not chosen yet")
+        ]);
       });
-      if (d.diet) rows.push([L.diet, d.diet]);
+      if (d.diet) rows.push([T("Hensyn", "Needs"), d.diet]);
     }
-    rows.push([L.when, t(CONFIG.date)]);
-    if (viaEmail) {
-      rows.push([L.sent, lang === "da" ? "Sendt som e-mail" : "Sent by email"]);
-    }
+    rows.push([T("Dato", "Date"), t(CONFIG.date)]);
+    if (viaEmail) rows.push([T("Status", "Status"), T("Sendt som e-mail", "Sent by email")]);
+
     $("#receipt").innerHTML = rows.map(function (r) {
       return "<div><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
     }).join("");
 
-    $("#done").scrollIntoView({ behavior: "smooth", block: "start" });
+    $("#done").scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   function mailFallback(d) {
@@ -832,21 +1302,19 @@ footer a { color: var(--muted); }
 
     const nameEl = $("#name");
     if (!nameEl.value.trim()) {
-      err.textContent = lang === "da"
-        ? "Skriv lige dit navn, så vi ved hvem der kommer."
-        : "Add your name so we know who's coming.";
+      err.textContent = T("Skriv lige dit navn, så vi ved hvem der kommer.",
+                          "Add your name so we know who's coming.");
       err.hidden = false;
       nameEl.focus();
       return;
     }
 
     const d = payload();
-
     if (!CONFIG.endpoint) { mailFallback(d); return; }
 
     const btn = $("#send");
     btn.disabled = true;
-    btn.textContent = lang === "da" ? "Sender…" : "Sending…";
+    btn.textContent = T("Sender…", "Sending…");
 
     fetch(CONFIG.endpoint, {
       method: "POST",
@@ -860,25 +1328,20 @@ footer a { color: var(--muted); }
       .catch(function () {
         btn.disabled = false;
         syncAttending();
-        err.innerHTML = (lang === "da"
-          ? "Tilmeldingen kunne ikke sendes. Prøv igen, eller "
-          : "That didn't go through. Try again, or ")
-          + '<a href="#" id="mailnow">'
-          + (lang === "da" ? "send den som e-mail" : "send it by email")
-          + "</a>.";
+        err.innerHTML = T("Tilmeldingen kunne ikke sendes. Prøv igen, eller ",
+                          "That didn't go through. Try again, or ") +
+          '<a href="#" id="mailnow">' + T("send den som e-mail", "send it by email") + "</a>.";
         err.hidden = false;
         const link = $("#mailnow");
-        if (link) link.addEventListener("click", function (ev) {
-          ev.preventDefault();
-          mailFallback(d);
-        });
+        if (link) {
+          link.addEventListener("click", function (ev) { ev.preventDefault(); mailFallback(d); });
+        }
       });
   });
 
-  /* ── Wiring ─────────────────────────────────────────────────────── */
-  $("#minus").addEventListener("click", function () {
-    if (party > 1) { party -= 1; renderGuests(); }
-  });
+  /* ═══ Wiring ═══════════════════════════════════════════════════════ */
+  $("#coin").addEventListener("click", function () { toss(true); });
+  $("#minus").addEventListener("click", function () { if (party > 1) { party -= 1; renderGuests(); } });
   $("#plus").addEventListener("click", function () {
     if (party < CONFIG.maxGuests) { party += 1; renderGuests(); }
   });
@@ -895,6 +1358,7 @@ footer a { color: var(--muted); }
   $("#again").addEventListener("click", function () {
     $("#done").hidden = true;
     $("#rsvp").hidden = false;
+    $("#menu-section").hidden = false;
     syncAttending();
     $("#rsvp").scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -909,6 +1373,7 @@ footer a { color: var(--muted); }
 
   applyLang();
   syncAttending();
+  window.setTimeout(function () { toss(false); }, 420);
 })();
 </script>
 </body>
