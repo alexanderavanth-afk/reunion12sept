@@ -19,7 +19,7 @@ Deployed on Vercel from `main`; pushing redeploys.
 
 A single committed visual world: bone paper, ink, and struck metal. Archivo for
 the display and interface, Newsreader for the menu prose, IBM Plex Mono for
-prices and labels. Danish by default, English on the toggle.
+labels. English throughout — everyone at this table reads it.
 
 **The coins are drawn, not photographed** — SVG built in `coinSVG()`: a struck
 disc, a generated reeded rim, the legend set on an arc, and either a hole or a
@@ -53,11 +53,16 @@ Each country's `palette` (seven colours) and `quote` live beside it in
 
 Three numbered steps on one page — no wizard, nothing to lose on a refresh:
 
-1. **Hvem kommer?** — attending or not, name, and a party-size stepper.
-2. **Retterne** — one tickable card per person, with each course as a short
-   list. One dish per course, plus "Ingen tak" for anyone skipping it.
-3. **Bekræft** — a live reading of exactly what the send button will post,
+1. **Who's coming?** — attending or not, name, and a party-size stepper.
+2. **The dishes** — one tickable card per person, with each course as a short
+   list. One dish per course, plus "None, thanks" for anyone skipping it.
+3. **Confirm** — a live reading of exactly what the send button will post,
    updating as the form is filled in.
+
+The room seats fifteen, and the page says so twice: once under the headline
+where nobody can miss it, and again beside the party stepper where it actually
+bears on what someone is about to type. `CONFIG.seats` sets the number in both
+places, and the overview page counts down from it.
 
 ## Where the replies go
 
@@ -127,30 +132,37 @@ Everything editable lives in `CONFIG` at the top of `index.html`.
 | Key | What it does |
 | --- | --- |
 | `endpoint` | Where RSVPs are sent |
+| `maxGuests` | Upper limit on the party-size stepper |
 | `hostEmail`, `hostName` | Footer contact; used by the email fallback |
 | `date`, `time`, `venue`, `venueUrl`, `city` | The facts ledger under the headline |
 | `agenda[]` | The running order — time, label, and an optional `aside` printed in the accent |
+| `seats` | The size of the room: shown in the notice and the stepper hint, counted down in the overview |
 | `host` | The resting coin's palette and line, before anything is tossed |
 | `deadline` | The reply-by date |
-| `maxGuests` | Upper limit on the party-size stepper |
 | `countries[]` | The six coins — name, unit, denomination, metal, `ring`, `hole`, the one-line fact, the `palette` and the `quote` |
 | `courses[]` | The menu: course groups, each with its dishes |
 
 ### A dish
 
 ```js
-{ id: "tatar", name: "Norrlyst signatur tatar",
-  desc: "Af okse, fløde-kefir, peberrod, aromatiske urter og røgede mandler",
-  price: 110, supp: 75, label: "110 / 150" }
+{ id: "tatar",
+  name: "Norrlyst signatur tatar",
+  en:   "Norrlyst signature tartare",
+  desc: "Beef, cream kefir, horseradish, aromatic herbs and smoked almonds" }
 ```
 
-`price` is the à la carte price. `supp` is optional and prints as the `+75` chip
-beside the name. `label` overrides the printed price where it isn't a single
-number (the cheese course). Adding, removing or reordering dishes needs no other
-change — the menu and every guest's dropdown are both generated from this list.
+Adding, removing or reordering dishes needs no other change — the printed card
+and every guest's tick list are both generated from this list.
 
-Dish names and descriptions stay in Danish in both languages: a chef's menu
-reads as written. Only the interface around it translates.
+**No prices anywhere.** The hosts are paying, and a price list only makes
+people order politely.
+
+Each dish carries three strings: `name` is the dish as Norrlyst writes it,
+`en` is the English name guests read, and `desc` is the English description.
+The page shows the English with the Danish original set small beneath it — so
+a guest can point at the right line in the restaurant — and **the payload sends
+the Danish `name`**, because that's the wording the kitchen works from. The
+overview page therefore tallies in Danish, which is correct.
 
 ## Deploy
 
@@ -168,4 +180,3 @@ onto Netlify, Cloudflare Pages or GitHub Pages unchanged.
   number, add a field and a line to `payload()`.
 - Guests can revise with "Ret min tilmelding", which sends a second submission —
   the later timestamp wins.
-- The language choice is remembered per viewer in `localStorage`.

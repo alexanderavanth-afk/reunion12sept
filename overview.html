@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="da">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Køkkenoversigt</title>
-<meta name="description" content="Samler RSVP-svarene til én oversigt, køkkenet kan læse.">
+<title>Kitchen Overview</title>
+<meta name="description" content="Gathers the RSVP replies into one sheet the kitchen can read.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,12 +14,12 @@
 /* The courses, in the order the kitchen reads them. Keep this list in step
    with CONFIG.courses in index.html. */
 const COURSES = [
-  { id: "forret",    name: "Forretter" },
-  { id: "mellemret", name: "Mellemretter" },
-  { id: "hovedret",  name: "Hovedretter" },
-  { id: "dessert",   name: "Desserter & ost" }
+  { id: "forret",    name: "Starters" },
+  { id: "mellemret", name: "Middle courses" },
+  { id: "hovedret",  name: "Main courses" },
+  { id: "dessert",   name: "Desserts & cheese" }
 ];
-const EVENT = { venue: "Restaurant Norrlyst", date: "Lørdag den 12. september", time: "17:00" };
+const EVENT = { venue: "Restaurant Norrlyst", date: "Saturday 12 September", time: "17:00", seats: 15 };
 </script>
 
 <style>
@@ -153,40 +153,40 @@ td.dish { font-weight: 600; }
 <div class="wrap">
 
   <p class="mono" id="stamp"></p>
-  <h1>Køkkenoversigt</h1>
-  <p class="sub">Alle svar samlet til én seddel, restauranten kan læse.</p>
+  <h1>Kitchen overview</h1>
+  <p class="sub">Every reply gathered into one sheet the restaurant can read.</p>
 
   <section class="intake no-print">
     <p>
-      Hent svarene fra Formspree — <strong>Export → JSON</strong> giver det pæneste
-      resultat, men CSV virker også — og sæt dem ind herunder. Alt bliver regnet
-      ud i browseren; intet sendes nogen steder hen.
+      Export the replies from Formspree — <strong>Export → JSON</strong> reads
+      cleanest, CSV also works — and paste them below. Everything is worked out
+      in this browser; nothing is uploaded anywhere.
     </p>
     <textarea id="paste" spellcheck="false"
       placeholder='[{"name":"Maja Jensen","attending":"yes","party":2,"guests":[…]}, …]'></textarea>
     <div class="bar">
-      <button type="button" id="run">Læs svarene</button>
-      <button type="button" class="ghost" id="demo">Vis et eksempel</button>
+      <button type="button" id="run">Read the replies</button>
+      <button type="button" class="ghost" id="demo">Show an example</button>
       <button type="button" class="ghost" id="print" hidden>Print</button>
-      <button type="button" class="ghost" id="copy" hidden>Kopiér som regneark</button>
+      <button type="button" class="ghost" id="copy" hidden>Copy as a spreadsheet</button>
       <span class="status" id="status"></span>
     </div>
   </section>
 
   <div id="out" hidden>
-    <h2>Optælling</h2>
+    <h2>The count</h2>
     <dl class="totals" id="totals"></dl>
 
-    <h2>Til køkkenet</h2>
+    <h2>For the kitchen</h2>
     <div id="tally"></div>
 
-    <h2>Bordet</h2>
+    <h2>The table</h2>
     <div class="scroll" id="table"></div>
 
-    <h2>Allergier og hensyn</h2>
+    <h2>Allergies and dietary needs</h2>
     <div id="diets"></div>
 
-    <h2>Afbud</h2>
+    <h2>Regrets</h2>
     <div id="regrets"></div>
   </div>
 </div>
@@ -272,7 +272,7 @@ td.dish { font-weight: 600; }
 
   function read(text) {
     const trimmed = text.trim();
-    if (!trimmed) throw new Error("Der er ikke sat noget ind endnu.");
+    if (!trimmed) throw new Error("Nothing has been pasted in yet.");
 
     let list;
     if (trimmed[0] === "[" || trimmed[0] === "{") {
@@ -280,7 +280,7 @@ td.dish { font-weight: 600; }
       list = Array.isArray(parsed) ? parsed : (parsed.submissions || [parsed]);
     } else {
       const rows = parseCSV(trimmed);
-      if (rows.length < 2) throw new Error("Kunne ikke finde nogen rækker i det indsatte.");
+      if (rows.length < 2) throw new Error("Could not find any rows in what was pasted.");
       const head = rows[0].map(function (h) { return h.trim(); });
       list = rows.slice(1).map(function (r) {
         const o = {};
@@ -313,10 +313,10 @@ td.dish { font-weight: 600; }
     const seats = coming.reduce(function (a, s) { return a.concat(s.guests); }, []);
 
     $("#totals").innerHTML = [
-      ["Kuverter", heads],
-      ["Selskaber", coming.length],
-      ["Afbud", regrets.length],
-      ["Retter valgt", seats.reduce(function (n, g) { return n + Object.keys(g.order || {}).length; }, 0)]
+      ["Covers", heads],
+      ["Parties", coming.length],
+      ["Regrets", regrets.length],
+      ["Seats left", Math.max(0, (EVENT.seats || 0) - heads)]
     ].map(function (r) {
       return '<div><dt class="mono">' + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
     }).join("");
@@ -326,7 +326,7 @@ td.dish { font-weight: 600; }
       const counts = new Map();
       seats.forEach(function (g) {
         const dish = (g.order || {})[c.id];
-        if (!dish || /^(ingen tak|none)$/i.test(dish)) return;
+        if (!dish || /^(ingen tak|none(,? thanks)?)$/i.test(dish)) return;
         counts.set(dish, (counts.get(dish) || 0) + 1);
       });
       const sorted = Array.from(counts.entries()).sort(function (a, b) { return b[1] - a[1]; });
@@ -334,12 +334,12 @@ td.dish { font-weight: 600; }
         ? sorted.map(function (e) {
             return "<tr><td class=\"dish\">" + esc(e[0]) + '</td><td class="n">' + e[1] + "</td></tr>";
           }).join("")
-        : '<tr class="zero"><td>Ingen valgt endnu</td><td class="n">0</td></tr>';
+        : '<tr class="zero"><td>None ticked yet</td><td class="n">0</td></tr>';
       return "<table><caption>" + esc(c.name) + "</caption><tbody>" + body + "</tbody></table>";
     }).join("");
 
     /* Per-person table */
-    const header = "<tr><th>Gæst</th><th>Selskab</th>" +
+    const header = "<tr><th>Guest</th><th>Party of</th>" +
       COURSES.map(function (c) { return "<th>" + esc(c.name) + "</th>"; }).join("") + "</tr>";
     const body = coming.length
       ? coming.map(function (s) {
@@ -351,7 +351,7 @@ td.dish { font-weight: 600; }
               }).join("") + "</tr>";
           }).join("");
         }).join("")
-      : '<tr><td colspan="6" class="empty">Ingen svar endnu.</td></tr>';
+      : '<tr><td colspan="6" class="empty">No replies yet.</td></tr>';
     $("#table").innerHTML = "<table><thead>" + header + "</thead><tbody>" + body + "</tbody></table>";
 
     /* Allergies */
@@ -360,7 +360,7 @@ td.dish { font-weight: 600; }
       ? "<table><tbody>" + diets.map(function (s) {
           return "<tr><td class=\"dish\">" + esc(s.name) + "</td><td>" + esc(s.diet) + "</td></tr>";
         }).join("") + "</tbody></table>"
-      : '<p class="empty">Ingen har meldt noget ind.</p>';
+      : '<p class="empty">Nobody has flagged anything.</p>';
 
     /* Regrets */
     $("#regrets").innerHTML = regrets.length
@@ -368,10 +368,10 @@ td.dish { font-weight: 600; }
           return "<tr><td class=\"dish\">" + esc(s.name) + "</td><td class=\"note\">" +
                  esc(s.note || "") + "</td></tr>";
         }).join("") + "</tbody></table>"
-      : '<p class="empty">Ingen afbud.</p>';
+      : '<p class="empty">No regrets.</p>';
 
     /* Tab-separated, for pasting straight into a sheet */
-    lastTSV = ["Gæst\tSelskab\t" + COURSES.map(function (c) { return c.name; }).join("\t")]
+    lastTSV = ["Guest\tParty of\t" + COURSES.map(function (c) { return c.name; }).join("\t")]
       .concat(coming.reduce(function (acc, s) {
         const gs = s.guests.length ? s.guests : [{ name: s.name, order: {} }];
         return acc.concat(gs.map(function (g) {
@@ -396,10 +396,10 @@ td.dish { font-weight: 600; }
     try {
       const subs = read($("#paste").value);
       render(subs);
-      say(subs.length + (subs.length === 1 ? " svar læst." : " svar læst."), false);
+      say(subs.length + (subs.length === 1 ? " reply read." : " replies read."), false);
     } catch (e) {
       $("#out").hidden = true;
-      say(e.message || "Kunne ikke læse det indsatte.", true);
+      say(e.message || "Could not read what was pasted.", true);
     }
   });
 
@@ -413,7 +413,7 @@ td.dish { font-weight: 600; }
           { name: "Anders Holm", order: { forret: "Hummersalat", mellemret: "Ingen tak",
                                           hovedret: "Striploin af krondyr", dessert: "3 / 5 oste" } }
         ] },
-      { name: "Tim", attending: "no", note: "Er i Port Moresby den uge.",
+      { name: "Tim", attending: "no", note: "In Port Moresby that week.",
         submittedAt: "2026-09-01T09:12:00Z", guests: [] },
       { name: "Frank", attending: "yes", party: 1, submittedAt: "2026-09-03T07:40:00Z",
         rows: "Frank | Norrlyst signatur tatar | Aromatisk bisque af strandkrabber | Dagens tilgang af fisk | Verdens bedste vaniljeis" }
@@ -425,8 +425,8 @@ td.dish { font-weight: 600; }
 
   $("#copy").addEventListener("click", function () {
     navigator.clipboard.writeText(lastTSV).then(
-      function () { say("Kopieret — sæt det ind i et regneark.", false); },
-      function () { say("Kunne ikke kopiere. Markér tabellen og kopiér manuelt.", true); }
+      function () { say("Copied — paste it into a spreadsheet.", false); },
+      function () { say("Could not copy. Select the table and copy it by hand.", true); }
     );
   });
 })();

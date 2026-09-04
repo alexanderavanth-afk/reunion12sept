@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="da">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Planning Life on a Coin Toss</title>
-<meta name="description" content="Genforeningsmiddag på Restaurant Norrlyst, lørdag den 12. september. Seks lande, ét bord.">
+<meta name="description" content="Reunion dinner at Restaurant Norrlyst, Saturday 12 September. Six countries, one table, fifteen seats.">
 <meta name="theme-color" content="#EDE9DD">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,164 +27,149 @@ const CONFIG = {
   hostName:  "Alexander",
 
   /* The evening. */
-  date:     { da: "Lørdag den 12. september", en: "Saturday 12 September" },
-  time:     { da: "17:00 – sent", en: "17:00 – late" },
+  date:     "Saturday 12 September",
+  time:     "17:00 – late",
+  venue:    "Restaurant Norrlyst",
+  venueUrl: "https://norrlyst.dk/restaurantnorrlyst/aften/",
+  city:     "Copenhagen",
+  deadline: "9 September",
+  seats:    15,
+  maxGuests: 6,
 
   /* How the evening runs. `aside` prints in the accent — the line that
      isn't really part of the schedule. */
   agenda: [
-    { time: "17 – 18", label: { da: "Ankomst, drinks og snacks",
-                                en: "Arrival, drinks and snacks" } },
-    { time: "18 – 22", label: { da: "Middag og drinks",
-                                en: "Dinner and drinks" } },
-    { time: "22 – ?",  label: { da: "Flere drinks?", en: "More drinks?" },
-      aside:           { da: "Hvor er Tim og Frank?", en: "Where are Tim and Frank?" } }
+    { time: "17 – 18", label: "Arrival, drinks and snacks" },
+    { time: "18 – 22", label: "Dinner and drinks" },
+    { time: "22 – ?",  label: "More drinks?", aside: "Where are Tim and Frank?" }
   ],
-  venue:    "Restaurant Norrlyst",
-  venueUrl: "https://norrlyst.dk/restaurantnorrlyst/aften/",
-  city:     { da: "København", en: "Copenhagen" },
-  deadline: { da: "9. september", en: "9 September" },
-  maxGuests: 8,
 
   /* The resting state of the hero coin, before anything is tossed. */
   host: {
     palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
                rule: "#C9C2AE", rule2: "#B3AB94", stamp: "#8A3B1E", aura: "#D3C5A6" },
-    quote: { orig: { da: "Ét bord. Seks lande. Én aften.",
-                     en: "One table. Six countries. One evening." },
-             by: "12.09.2026" }
+    quote: { orig: "One table. Six countries. One evening.", by: "12.09.2026" }
   },
 
   /* The six countries at the table, as coins. `hole` and `ring` are real
      structural facts about each currency's coin, not decoration. `palette`
      washes the whole page when that coin lands; `quote` is its line on life. */
   countries: [
-    { code: "JO", name: { da: "Jordan",          en: "Jordan" },
+    { code: "JO", name: "Jordan",
       unit: "DINAR", denom: "١٠", script: "ar", metal: "brass", ring: null,
-      fact: { da: "Én dinar deler sig i ti dirham, hundrede qirsh, tusind fils.",
-              en: "One dinar divides into ten dirham, a hundred qirsh, a thousand fils." },
+      fact: "One dinar divides into ten dirham, a hundred qirsh, a thousand fils.",
       palette: { ground: "#F0E6D4", bone2: "#E7DAC3", card: "#F9F2E4",
                  rule: "#D3C3A4", rule2: "#BFAC89", stamp: "#8E3B24", aura: "#DBB582" },
       quote: { orig: "خير الناس أنفعهم للناس", dir: "rtl", by: "Muhammad",
-               da: "De bedste mennesker er dem, der er til mest gavn for andre.",
                en: "The best of people are those of most use to others." } },
 
-    { code: "PH", name: { da: "Filippinerne",    en: "Philippines" },
+    { code: "PH", name: "Philippines",
       unit: "PISO", denom: "1", script: "lat", metal: "nickel", ring: null,
-      fact: { da: "Piso — arvet fra den spanske peso, stavet om til tagalog.",
-              en: "Piso — inherited from the Spanish peso, respelled into Tagalog." },
+      fact: "Piso — inherited from the Spanish peso, respelled into Tagalog.",
       palette: { ground: "#EFEBD8", bone2: "#E5E0C8", card: "#F8F5E5",
                  rule: "#CFC7A4", rule2: "#B8AF88", stamp: "#1D4E89", aura: "#E7CE83" },
       quote: { orig: "Ang hindi lumingon sa pinanggalingan ay hindi makararating sa paroroonan.",
-               by: { da: "Tagalsk ordsprog", en: "Tagalog proverb" },
-               da: "Den, der ikke ser tilbage på hvor han kom fra, når aldrig frem.",
+               by: "Tagalog proverb",
                en: "Whoever won't look back at where they came from will never arrive." } },
 
-    { code: "PG", name: { da: "Papua Ny Guinea", en: "Papua New Guinea" },
+    { code: "PG", name: "Papua New Guinea",
       unit: "KINA", denom: "", script: "lat", metal: "aged", ring: null, hole: true,
-      fact: { da: "Én-kina-mønten er slået med hul tværs igennem midten.",
-              en: "The one-kina coin is struck with a hole straight through the middle." },
+      fact: "The one-kina coin is struck with a hole straight through the middle.",
       palette: { ground: "#EEE4D2", bone2: "#E3D7C1", card: "#F7F0E1",
                  rule: "#D0BEA0", rule2: "#B7A484", stamp: "#93351F", aura: "#C68C52" },
-      quote: { orig: "Wanpela diwai i no inap kamapim bikbus.",
-               by: { da: "Tok pisin-ordsprog", en: "Tok Pisin saying" },
-               da: "Ét træ bliver aldrig til en skov.",
+      quote: { orig: "Wanpela diwai i no inap kamapim bikbus.", by: "Tok Pisin saying",
                en: "One tree never makes a forest." } },
 
-    { code: "TH", name: { da: "Thailand",        en: "Thailand" },
+    { code: "TH", name: "Thailand",
       unit: "BAHT", denom: "๑๐", script: "th", metal: "brass", ring: "nickel",
-      fact: { da: "Ti baht: et messinghjerte i en hvid ring.",
-              en: "Ten baht: a brass heart inside a white ring." },
+      fact: "Ten baht: a brass heart inside a white ring.",
       palette: { ground: "#F0EBD6", bone2: "#E6E0C6", card: "#F9F5E4",
                  rule: "#D1C7A2", rule2: "#BAAF86", stamp: "#6E2F3E", aura: "#DFC06D" },
       quote: { orig: "Manopubbaṅgamā dhammā, manoseṭṭhā manomayā.",
                by: "Buddha · Dhammapada 1",
-               da: "Alt hvad vi er, udspringer af det vi tænker.",
                en: "All that we are arises with our thoughts." } },
 
-    { code: "DE", name: { da: "Tyskland",        en: "Germany" },
+    { code: "DE", name: "Germany",
       unit: "EURO", denom: "2", script: "lat", metal: "nickel", ring: "brass",
-      fact: { da: "Samme mønt i tyve lande — og en anden bagside i hvert.",
-              en: "The same coin in twenty countries — and a different back in each." },
+      fact: "The same coin in twenty countries — and a different back in each.",
       palette: { ground: "#E9E7DE", bone2: "#DFDCD1", card: "#F4F2EB",
                  rule: "#C6C2B2", rule2: "#ADA895", stamp: "#8A1C1C", aura: "#C9B67F" },
       quote: { orig: "Es ist nicht genug zu wissen, man muss auch anwenden.",
                by: "Johann Wolfgang von Goethe",
-               da: "Det er ikke nok at vide — man må også bruge det.",
                en: "Knowing is not enough; we must apply." } },
 
-    { code: "DK", name: { da: "Danmark",         en: "Denmark" },
+    { code: "DK", name: "Denmark",
       unit: "KRONE", denom: "", script: "lat", metal: "nickel", ring: null, hole: true,
-      fact: { da: "Hul i midten, og monarkens kronede monogram rundt om det.",
-              en: "A hole through the middle, and the monarch's crowned monogram around it." },
+      fact: "A hole through the middle, and the monarch's crowned monogram around it.",
       palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
                  rule: "#C9C2AE", rule2: "#B3AB94", stamp: "#A32B2B", aura: "#D9B2AC" },
-      quote: { orig: "At rejse er at leve.", by: "H.C. Andersen",
-               da: "At rejse er at leve.", en: "To travel is to live." } }
+      quote: { orig: "At rejse er at leve.", by: "Hans Christian Andersen",
+               en: "To travel is to live." } }
   ],
 
-  /* The menu, à la carte. Each guest picks one dish per course — or skips
-     the course. `supp` is the supplement printed on the card; `price` is the
-     à la carte price; `label` overrides it where it isn't a single number. */
+  /* The menu, à la carte. Each guest ticks one dish per course — or skips it.
+     `name` is the dish as Norrlyst writes it, and it is what gets sent to the
+     kitchen; `en` and `desc` are what guests read. No prices: the hosts are
+     paying, and a price list only makes people order politely. */
   courses: [
     {
       id: "forret",
-      name: { da: "Forretter", en: "Starters" },
+      name: "Starters",
       dishes: [
         { id: "tatar", name: "Norrlyst signatur tatar",
-          desc: "Af okse, fløde-kefir, peberrod, aromatiske urter og røgede mandler",
-          price: 110 },
+          en: "Norrlyst signature tartare",
+          desc: "Beef, cream kefir, horseradish, aromatic herbs and smoked almonds" },
         { id: "hummer", name: "Hummersalat",
-          desc: "Sprød brioche og bitre urter",
-          price: 185, supp: 75 },
+          en: "Lobster salad",
+          desc: "Crisp brioche and bitter herbs" },
         { id: "logtaerte", name: "Løgtærte",
-          desc: "Syltede grøntsager og skummende sauce på lagret ost",
-          price: 110 }
+          en: "Onion tart",
+          desc: "Pickled vegetables and a foaming sauce of aged cheese" }
       ]
     },
     {
       id: "mellemret",
-      name: { da: "Mellemretter", en: "Middle courses" },
+      name: "Middle courses",
       dishes: [
         { id: "bisque", name: "Aromatisk bisque af strandkrabber",
-          desc: "Syltet knoldselleri og syrlige æbler",
-          price: 135 },
+          en: "Aromatic shore crab bisque",
+          desc: "Pickled celeriac and tart apples" },
         { id: "asparges", name: "Stegte hvide asparges",
-          desc: "Blomkålscreme, sprøde løg og aromatisk sauce med citron og timian",
-          price: 135 },
+          en: "Pan-fried white asparagus",
+          desc: "Cauliflower cream, crisp onions and an aromatic sauce of lemon and thyme" },
         { id: "havtaske", name: "Stegt havtaskekæbe",
-          desc: "Karamelliseret løgpuré og grønne jordbær anno 2025",
-          price: 185, supp: 50 }
+          en: "Pan-fried monkfish cheek",
+          desc: "Caramelised onion purée and green strawberries, vintage 2025" }
       ]
     },
     {
       id: "hovedret",
-      name: { da: "Hovedretter", en: "Main courses" },
+      name: "Main courses",
       dishes: [
         { id: "fisk", name: "Dagens tilgang af fisk",
-          desc: "Smørpocheret, grillede forårsløg og sauce på blåmuslinger og ørredrogn",
-          price: 185 },
+          en: "The day's catch",
+          desc: "Butter-poached, with grilled spring onions and a sauce of blue mussels and trout roe" },
         { id: "kaal", name: "Stegt kål",
-          desc: "Grillet løg og intens sauce på hengemte grøntsager",
-          price: 185 },
+          en: "Roasted cabbage",
+          desc: "Grilled onion and an intense sauce of long-kept vegetables" },
         { id: "krondyr", name: "Striploin af krondyr",
-          desc: "Creme på kartoffel og ramsløg, fermenteret løg og sauce på røget marv",
-          price: 310, supp: 125 }
+          en: "Red deer striploin",
+          desc: "Potato and wild garlic cream, fermented onion and a sauce of smoked marrow" }
       ]
     },
     {
       id: "dessert",
-      name: { da: "Desserter & ost", en: "Desserts & cheese" },
+      name: "Desserts & cheese",
       dishes: [
         { id: "ost", name: "3 / 5 oste",
-          desc: "Dansk honning og malt-knækbrød",
-          price: 110, label: "110 / 150" },
+          en: "Three or five cheeses",
+          desc: "Danish honey and malt crispbread" },
         { id: "rabarber", name: "Rabarber “Baked Alaska”",
-          desc: "Mørk chokolade, saltet karamel og sprød crumble",
-          price: 115 },
+          en: "Rhubarb baked Alaska",
+          desc: "Dark chocolate, salted caramel and a crisp crumble" },
         { id: "vanilje", name: "Verdens bedste vaniljeis",
-          desc: "Kaviar, koldpresset mandelolie og ristede græskarkerner",
-          price: 190, supp: 75 }
+          en: "The world's best vanilla ice cream",
+          desc: "Caviar, cold-pressed almond oil and toasted pumpkin seeds" }
       ]
     }
   ]
@@ -299,13 +284,7 @@ a:hover { color: var(--stamp); }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 0 22px 110px; }
 @media (min-width: 1080px) { .wrap { padding-inline: 72px; } }
 
-.topbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 18px 0 0;
-}
+.topbar { padding: 20px 0 0; }
 .kicker {
   margin: 0;
   font-size: 12px;
@@ -313,28 +292,8 @@ a:hover { color: var(--stamp); }
   letter-spacing: .01em;
   text-transform: uppercase;
   line-height: 1.25;
-  max-width: 30ch;
+  max-width: 34ch;
 }
-.lang {
-  display: inline-flex;
-  border: 1.5px solid var(--ink);
-  border-radius: 999px;
-  overflow: hidden;
-  flex: 0 0 auto;
-}
-.lang button {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  font-family: "Archivo", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-.lang button[aria-pressed="true"] { background: var(--ink); color: var(--bone); }
 
 /* ── Hero ──────────────────────────────────────────────────────────── */
 .hero {
@@ -369,6 +328,29 @@ a:hover { color: var(--stamp); }
   font-weight: 300;
   font-size: clamp(17px, 2.2vw, 21px);
   line-height: 1.45;
+}
+
+/* The one thing everyone must read */
+.notice {
+  margin: 0;
+  max-width: 52ch;
+  border-top: 1.5px solid var(--stamp);
+  border-bottom: 1.5px solid var(--stamp);
+  padding: 14px 0 15px;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.notice b { font-weight: 700; }
+.notice .lead {
+  display: block;
+  color: var(--stamp);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 7px;
 }
 
 /* Coin toss */
@@ -554,57 +536,40 @@ section { padding-top: 84px; }
   color: var(--stamp);
 }
 .course > .rule { border: 0; border-top: 1px solid var(--rule-2); margin: 0; }
-.dish {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 4px 22px;
-  padding: 15px 0;
-  border-bottom: 1px solid var(--rule);
-  align-items: baseline;
-}
+.dish { padding: 15px 0; border-bottom: 1px solid var(--rule); }
 .dish:last-child { border-bottom: 0; }
 .dish h4 {
-  margin: 0;
+  margin: 0 0 3px;
   font-size: var(--step-2);
   font-weight: 600;
   letter-spacing: -.012em;
   line-height: 1.25;
 }
 .dish .desc {
-  grid-column: 1;
   margin: 0;
   font-family: "Newsreader", Georgia, serif;
   font-weight: 300;
   font-size: 15.5px;
   line-height: 1.4;
   color: var(--ink-2);
-  max-width: 58ch;
+  max-width: 62ch;
 }
-.dish .price {
-  grid-row: 1 / span 2;
-  grid-column: 2;
-  align-self: start;
-  margin: 0;
+.dish .da {
+  display: block;
+  margin-top: 5px;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 14px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  padding-top: 2px;
-}
-.supp {
-  display: inline-block;
-  margin-left: 8px;
-  border: 1px solid var(--rule-2);
-  border-radius: 999px;
-  padding: 1px 7px 0;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: .04em;
-  font-weight: 400;
-  color: var(--ink-2);
-  vertical-align: 2px;
+  color: var(--ink-3);
 }
-.menu-note { margin: 0; color: var(--ink-2); font-size: 14.5px; max-width: 62ch; line-height: 1.55; }
+.menu-foot {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 15px;
+  max-width: 62ch;
+  line-height: 1.55;
+}
+.menu-foot a { font-weight: 600; }
 
 /* ── Form ──────────────────────────────────────────────────────────── */
 form { display: grid; gap: 30px; max-width: 780px; }
@@ -618,7 +583,7 @@ form { display: grid; gap: 30px; max-width: 780px; }
   line-height: 1.4;
 }
 
-input[type="text"], textarea, select {
+input[type="text"], textarea {
   width: 100%;
   background: var(--card);
   border: 1.5px solid var(--rule-2);
@@ -630,18 +595,8 @@ input[type="text"], textarea, select {
   transition: border-color .15s ease;
 }
 input[type="text"]::placeholder, textarea::placeholder { color: var(--ink-3); }
-input[type="text"]:hover, textarea:hover, select:hover { border-color: var(--ink-2); }
+input[type="text"]:hover, textarea:hover { border-color: var(--ink-2); }
 textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
-
-select {
-  appearance: none;
-  padding-right: 38px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%234A443A' stroke-width='1.6'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 13px center;
-  cursor: pointer;
-  text-overflow: ellipsis;
-}
 
 /* Attendance */
 .choice { display: grid; gap: 10px; }
@@ -745,6 +700,7 @@ select {
 }
 .guest-head input[type="text"]:hover { border: 0; }
 .guest-body { padding: 4px 15px 14px; }
+
 /* Tick lists — one dish per course */
 .ticks {
   border: 0;
@@ -758,7 +714,7 @@ select {
 .ticks legend { padding: 0; margin-bottom: 5px; color: var(--ink-3); }
 .tick {
   display: grid;
-  grid-template-columns: 16px 1fr auto;
+  grid-template-columns: 16px 1fr;
   gap: 11px;
   align-items: baseline;
   padding: 7px 9px 7px 7px;
@@ -784,14 +740,6 @@ select {
 .tick:has(input:checked) { background: var(--bone-2); border-color: var(--rule-2); }
 .tick:has(input:checked) .tname { font-weight: 600; }
 .tname { font-size: 15px; line-height: 1.3; }
-.tick .supp { margin-left: 6px; }
-.tprice {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 12px;
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
 
 /* Confirm panel */
 .confirm { border: 1.5px solid var(--ink); background: var(--card); padding: 18px 18px 20px; }
@@ -917,18 +865,13 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 <div class="wrap">
 
   <div class="topbar">
-    <p class="kicker" id="kicker"></p>
-    <div class="lang" role="group" aria-label="Sprog / Language">
-      <button type="button" data-lang="da" aria-pressed="true">DA</button>
-      <button type="button" data-lang="en" aria-pressed="false">EN</button>
-    </div>
+    <p class="kicker">Reunion dinner · six countries, one table</p>
   </div>
 
   <header class="hero">
     <div class="toss">
       <div class="coin-stage">
-        <button type="button" class="coin-btn" id="coin"
-                aria-label="Slå plat eller krone / Toss the coin"></button>
+        <button type="button" class="coin-btn" id="coin" aria-label="Toss the coin"></button>
       </div>
       <p class="mono toss-caption" id="caption"></p>
       <figure class="quote" id="quote">
@@ -940,22 +883,23 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
     <h1>Planning life on a <span class="thin">coin toss</span></h1>
 
-    <p class="sub"
-       data-da="Seks lande har haft os på skift. Den 12. september lander vi det samme sted — på Norrlyst i København."
-       data-en="Six countries have had us in turn. On 12 September we land in the same place — Norrlyst in Copenhagen."></p>
+    <p class="sub">Six countries have had us in turn. On 12 September we land in
+      the same place — Norrlyst in Copenhagen.</p>
+
+    <p class="notice" id="notice"></p>
 
     <dl class="ledger">
-      <div><dt class="mono" data-da="Dato" data-en="Date"></dt><dd id="f-date"></dd></div>
-      <div><dt class="mono" data-da="Tid" data-en="Time"></dt><dd id="f-time"></dd></div>
-      <div><dt class="mono" data-da="Sted" data-en="Where"></dt>
+      <div><dt class="mono">Date</dt><dd id="f-date"></dd></div>
+      <div><dt class="mono">Time</dt><dd id="f-time"></dd></div>
+      <div><dt class="mono">Where</dt>
            <dd><a id="f-venue" href="#" target="_blank" rel="noopener noreferrer"></a></dd></div>
-      <div><dt class="mono" data-da="Svar inden" data-en="Reply by"></dt><dd id="f-deadline"></dd></div>
+      <div><dt class="mono">Reply by</dt><dd id="f-deadline"></dd></div>
     </dl>
   </header>
 
   <section id="agenda">
     <div class="sec-head">
-      <h2 data-da="Aftenens gang" data-en="How the evening runs"></h2>
+      <h2>How the evening runs</h2>
       <span class="mono num">I / IV</span>
     </div>
     <ol class="agenda" id="agenda-list"></ol>
@@ -963,128 +907,121 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   <section id="countries">
     <div class="sec-head">
-      <h2 data-da="Bordets valutaer" data-en="Currencies at the table"></h2>
+      <h2>Currencies at the table</h2>
       <span class="mono num">II / IV</span>
     </div>
-    <p class="lede"
-       data-da="Seks steder, vi har kaldt hjem på skift. Hver mønt er slået som den rigtige — hullet, ringen og skriften er ikke pynt."
-       data-en="Six places we've each called home in turn. Every coin is struck like the real one — the hole, the ring and the script aren't decoration."></p>
+    <p class="lede">Six places we've each called home in turn. Every coin is
+      struck like the real one — the hole, the ring and the script aren't
+      decoration. Tap the one above to toss it.</p>
     <div class="coins" id="coin-row"></div>
   </section>
 
   <section id="menu-section">
     <div class="sec-head">
-      <h2 data-da="Kortet" data-en="The card"></h2>
+      <h2>The card</h2>
       <span class="mono num">III / IV</span>
     </div>
-    <p class="lede"
-       data-da="Norrlyst serverer à la carte om aftenen. Vælg én ret pr. servering — eller spring en over."
-       data-en="Norrlyst serves à la carte in the evening. Pick one dish per course — or skip a course."></p>
+    <p class="lede">Norrlyst serves à la carte in the evening. Pick one dish per
+      course — or skip a course. Dinner is on us, so order what you actually
+      want to eat.</p>
     <div id="menu"></div>
-    <p class="menu-note" id="menu-note"></p>
+    <p class="menu-foot" id="menu-foot"></p>
   </section>
 
   <section id="rsvp-section">
     <div class="sec-head">
-      <h2 data-da="Tilmelding" data-en="RSVP"></h2>
+      <h2>RSVP</h2>
       <span class="mono num">IV / IV</span>
     </div>
 
     <form id="rsvp" novalidate>
       <div class="step">
         <span class="n">01</span>
-        <h3 data-da="Hvem kommer?" data-en="Who's coming?"></h3>
+        <h3>Who's coming?</h3>
       </div>
 
       <div class="field">
-        <span class="lbl" data-da="Kommer I?" data-en="Are you coming?"></span>
+        <span class="lbl">Are you coming?</span>
         <div class="choice">
           <label>
             <input type="radio" name="attending" value="yes" checked>
             <span class="dot"></span>
-            <span data-da="Ja, vi kommer" data-en="Yes, we'll be there"></span>
+            <span>Yes, we'll be there</span>
           </label>
           <label>
             <input type="radio" name="attending" value="no">
             <span class="dot"></span>
-            <span data-da="Kan desværre ikke" data-en="Sadly can't make it"></span>
+            <span>Sadly can't make it</span>
           </label>
         </div>
       </div>
 
       <div class="field">
-        <label class="lbl" for="name" data-da="Dit navn" data-en="Your name"></label>
+        <label class="lbl" for="name">Your name</label>
         <input type="text" id="name" name="name" autocomplete="name"
-               data-ph-da="Fornavn og efternavn" data-ph-en="First and last name">
+               placeholder="First and last name">
       </div>
 
       <div class="field" id="party-field">
-        <span class="lbl" data-da="Hvor mange kommer I?" data-en="How many of you?"></span>
-        <span class="hint" data-da="Dig selv talt med." data-en="Including yourself."></span>
+        <span class="lbl">How many of you?</span>
+        <span class="hint" id="party-hint"></span>
         <div class="stepper">
-          <button type="button" id="minus" aria-label="Én færre / One fewer">−</button>
+          <button type="button" id="minus" aria-label="One fewer">−</button>
           <output id="party" for="minus plus">1</output>
-          <button type="button" id="plus" aria-label="Én mere / One more">+</button>
+          <button type="button" id="plus" aria-label="One more">+</button>
         </div>
       </div>
 
       <div class="step" id="step-2">
         <span class="n">02</span>
-        <h3 data-da="Retterne" data-en="The dishes"></h3>
+        <h3>The dishes</h3>
       </div>
 
       <div class="field" id="guests-field">
-        <span class="lbl" data-da="Sæt kryds ved det I gerne vil have" data-en="Tick what you'd like"></span>
-        <span class="hint"
-              data-da="Én ret pr. servering, pr. person. Intet er bindende — køkkenet vil bare gerne vide det på forhånd."
-              data-en="One dish per course, per person. Nothing is binding — the kitchen just likes to know in advance."></span>
+        <span class="lbl">Tick what you'd like</span>
+        <span class="hint">One dish per course, per person. Nothing is binding —
+          the kitchen just likes to know in advance.</span>
         <div class="guests" id="guests"></div>
       </div>
 
       <div class="step">
         <span class="n">03</span>
-        <h3 data-da="Bekræft" data-en="Confirm"></h3>
+        <h3>Confirm</h3>
       </div>
 
       <div class="field">
-        <label class="lbl" for="diet"
-               data-da="Allergier og hensyn" data-en="Allergies and dietary needs"></label>
-        <span class="hint"
-              data-da="Køkkenet tilpasser gerne — skriv hvem det gælder."
-              data-en="The kitchen will adapt — say who it applies to."></span>
-        <textarea id="diet" name="diet"
-                  data-ph-da="F.eks. “Maja: nødder og skaldyr”"
-                  data-ph-en="e.g. “Maja: nuts and shellfish”"></textarea>
+        <label class="lbl" for="diet">Allergies and dietary needs</label>
+        <span class="hint">The kitchen will adapt — say who it applies to.</span>
+        <textarea id="diet" name="diet" placeholder="e.g. “Maja: nuts and shellfish”"></textarea>
       </div>
 
       <div class="field">
-        <label class="lbl" for="note" data-da="Hilsen til værterne" data-en="A note to the hosts"></label>
-        <textarea id="note" name="note" data-ph-da="Valgfrit" data-ph-en="Optional"></textarea>
+        <label class="lbl" for="note">A note to the hosts</label>
+        <textarea id="note" name="note" placeholder="Optional"></textarea>
       </div>
 
       <div class="field">
         <div class="confirm">
-          <h4 data-da="Sådan sender vi den" data-en="This is what we'll send"></h4>
+          <h4>This is what we'll send</h4>
           <dl class="receipt" id="preview"></dl>
         </div>
       </div>
 
       <div class="field">
-        <button type="submit" class="submit" id="send"></button>
+        <button type="submit" class="submit" id="send">Send RSVP</button>
         <p class="err" id="err" hidden></p>
       </div>
     </form>
 
     <div class="done" id="done" hidden>
       <div class="done-head">
-        <span class="mono" data-da="Modtaget" data-en="Received"></span>
+        <span class="mono">Received</span>
         <span class="mono" id="done-stamp"></span>
       </div>
       <div class="done-body">
         <p class="big" id="done-line"></p>
         <dl class="receipt" id="receipt"></dl>
-        <button type="button" class="again" id="again"
-                data-da="Ret min tilmelding" data-en="Change my answer"></button>
+        <button type="button" class="again" id="again">Change my answer</button>
       </div>
     </div>
   </section>
@@ -1104,13 +1041,10 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   const $  = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = (v) => String(v == null ? "" : v)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-  let lang = "da";
-  try { lang = localStorage.getItem("rsvp-lang") || "da"; } catch (e) {}
-  if (lang !== "en") lang = "da";
-
-  const t = (v) => (v && typeof v === "object" && !Array.isArray(v) ? v[lang] : v) || "";
-  const T = (da, en) => (lang === "da" ? da : en);
+  const NONE = "None, thanks";
 
   /* ═══ Coins ════════════════════════════════════════════════════════
      Drawn, not photographed: a struck disc, a reeded rim, a legend on an
@@ -1169,7 +1103,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     }
 
     return '' +
-    '<svg viewBox="-104 -104 208 208" role="img" aria-label="' + (spec.alt || "") + '">' +
+    '<svg viewBox="-104 -104 208 208" role="img" aria-label="' + esc(spec.alt || "") + '">' +
       '<defs>' +
         '<radialGradient id="' + id + 'f" cx="34%" cy="28%" r="82%">' +
           '<stop offset="0%" stop-color="' + M.hi + '"/>' +
@@ -1202,9 +1136,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       '<g font-family="Archivo, sans-serif" font-weight="700" letter-spacing="2.6" ' +
          'fill="' + legendInk + '" opacity=".92">' +
         '<text font-size="15"><textPath href="#' + id + 'at" startOffset="50%" text-anchor="middle">' +
-          spec.legendTop + '</textPath></text>' +
+          esc(spec.legendTop) + '</textPath></text>' +
         '<text font-size="12"><textPath href="#' + id + 'ab" startOffset="50%" text-anchor="middle">' +
-          spec.legendBottom + '</textPath></text>' +
+          esc(spec.legendBottom) + '</textPath></text>' +
       '</g>' +
 
       centre +
@@ -1220,9 +1154,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       crown: c.code === "DK",
       denom: c.denom,
       script: c.script,
-      legendTop: t(c.name).toUpperCase(),
+      legendTop: c.name.toUpperCase(),
       legendBottom: c.unit,
-      alt: t(c.name) + " — " + c.unit
+      alt: c.name + " — " + c.unit
     };
   }
 
@@ -1234,16 +1168,19 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       denom: "XII",
       script: "lat",
       legendTop: "NORRLYST",
-      legendBottom: "MMXXVI · " + T("KØBENHAVN", "COPENHAGEN"),
-      alt: T("Middagens mønt", "The dinner's own coin")
+      legendBottom: "MMXXVI · " + CONFIG.city.toUpperCase(),
+      alt: "The dinner's own coin"
     };
   }
 
   /* The toss: the coin rests visible, flips once on load, and lands on a
-     new country with every tap before cycling back to the dinner's coin. */
+     new country with every tap. */
   let turns = 0;
   let tossIndex = -1;
   let tossing = false;
+
+  const landed = () => (tossIndex < 0 ? CONFIG.host : CONFIG.countries[tossIndex]);
+  const currentSpec = () => (tossIndex < 0 ? hostSpec() : countrySpec(CONFIG.countries[tossIndex]));
 
   function paintCoin(spec) { $("#coin").innerHTML = coinSVG(spec); }
 
@@ -1261,10 +1198,10 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   function showQuote(q, animate) {
     const fig = $("#quote");
     const orig = $("#q-orig");
-    orig.textContent = t(q.orig);
+    orig.textContent = q.orig;
     if (q.dir === "rtl") { orig.setAttribute("dir", "rtl"); } else { orig.removeAttribute("dir"); }
-    $("#q-trans").textContent = q[lang] && q[lang] !== t(q.orig) ? q[lang] : "";
-    $("#q-by").textContent = t(q.by);
+    $("#q-trans").textContent = q.en || "";
+    $("#q-by").textContent = q.by;
     if (animate) {
       fig.classList.remove("struck");
       void fig.offsetWidth;
@@ -1272,19 +1209,11 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     }
   }
 
-  function landed() {
-    return tossIndex < 0 ? CONFIG.host : CONFIG.countries[tossIndex];
-  }
-
   function setCaption() {
     const where = tossIndex < 0
-      ? T("VÆRTSLAND", "HOST COUNTRY") + " · <b>" + T("DANMARK", "DENMARK") + "</b>"
-      : T("LANDEDE PÅ", "LANDED ON") + " · <b>" + t(CONFIG.countries[tossIndex].name).toUpperCase() + "</b>";
-    $("#caption").innerHTML = where + " · " + T("TRYK FOR AT SLÅ", "TAP TO TOSS");
-  }
-
-  function currentSpec() {
-    return tossIndex < 0 ? hostSpec() : countrySpec(CONFIG.countries[tossIndex]);
+      ? "HOST COUNTRY · <b>DENMARK</b>"
+      : "LANDED ON · <b>" + esc(CONFIG.countries[tossIndex].name.toUpperCase()) + "</b>";
+    $("#caption").innerHTML = where + " · TAP TO TOSS";
   }
 
   function land(animate) {
@@ -1317,74 +1246,103 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#coin-row").innerHTML = CONFIG.countries.map(function (c) {
       return '<article class="country">' +
                '<div class="disc">' + coinSVG(countrySpec(c)) + "</div>" +
-               "<h3>" + t(c.name) + "</h3>" +
-               "<p>" + t(c.fact) + "</p>" +
+               "<h3>" + esc(c.name) + "</h3>" +
+               "<p>" + esc(c.fact) + "</p>" +
              "</article>";
     }).join("");
   }
 
+  /* ═══ Static copy that reads from CONFIG ═══════════════════════════ */
+  function renderChrome() {
+    $("#rail-l").textContent = "Heads or tails · 12.09.2026";
+    $("#rail-r").textContent = (CONFIG.venue + " · " + CONFIG.city).toUpperCase();
+
+    $("#notice").innerHTML =
+      '<span class="lead">An intimate room</span>' +
+      "Norrlyst seats <b>" + CONFIG.seats + " of us and not one more</b>, so please only " +
+      "bring the people already confirmed. If someone else should be at the table, " +
+      "say so before you reply and we'll see what the room allows.";
+
+    $("#f-date").textContent = CONFIG.date;
+    $("#f-time").textContent = CONFIG.time;
+    $("#f-deadline").textContent = CONFIG.deadline;
+    const venue = $("#f-venue");
+    venue.textContent = CONFIG.venue;
+    venue.href = CONFIG.venueUrl;
+
+    $("#party-hint").textContent =
+      "Including yourself, and only those already confirmed — " + CONFIG.seats + " seats in all.";
+
+    $("#menu-foot").innerHTML =
+      "Dish names are Norrlyst's own; the kitchen cooks to the season, so the card can " +
+      "shift a little before the night. The full card and everything else about the " +
+      'evening: <a href="' + CONFIG.venueUrl + '" target="_blank" rel="noopener noreferrer">' +
+      "norrlyst.dk</a>.";
+
+    $("#foot-mark").textContent = "Reunion dinner · MMXXVI";
+    $("#foot-place").textContent = (CONFIG.venue + " · " + CONFIG.city).toUpperCase();
+    $("#foot-note").innerHTML =
+      "Please reply by <strong>" + CONFIG.deadline + "</strong> so we can give Norrlyst the " +
+      "final count and the kitchen a feel for the card. Questions? Write to " +
+      CONFIG.hostName + ' at <a href="mailto:' + CONFIG.hostEmail + '">' + CONFIG.hostEmail +
+      "</a>.";
+  }
+
   function renderAgenda() {
     $("#agenda-list").innerHTML = CONFIG.agenda.map(function (row) {
-      return "<li><span class=\"t\">" + row.time + "</span>" +
-             '<span class="l">' + t(row.label) +
-               (row.aside ? '<span class="a">' + t(row.aside) + "</span>" : "") +
+      return '<li><span class="t">' + esc(row.time) + "</span>" +
+             '<span class="l">' + esc(row.label) +
+               (row.aside ? '<span class="a">' + esc(row.aside) + "</span>" : "") +
              "</span></li>";
     }).join("");
   }
 
   /* ═══ Menu ═════════════════════════════════════════════════════════ */
-  const priceOf = (d) => d.label || String(d.price);
-
   function renderMenu() {
     $("#menu").innerHTML = CONFIG.courses.map(function (course) {
       const dishes = course.dishes.map(function (d) {
         return '<div class="dish">' +
-                 "<h4>" + d.name + (d.supp ? '<span class="supp">+' + d.supp + "</span>" : "") + "</h4>" +
-                 '<p class="price">' + priceOf(d) + "</p>" +
-                 '<p class="desc">' + d.desc + "</p>" +
+                 "<h4>" + esc(d.en) + "</h4>" +
+                 '<p class="desc">' + esc(d.desc) +
+                   '<span class="da">' + esc(d.name) + "</span></p>" +
                "</div>";
       }).join("");
-      return '<div class="course"><h3>' + t(course.name) + '</h3><hr class="rule">' + dishes + "</div>";
+      return '<div class="course"><h3>' + esc(course.name) + '</h3><hr class="rule">' +
+             dishes + "</div>";
     }).join("");
-
-    $("#menu-note").textContent = T(
-      "Priser i kroner, som de står på kortet. Tallet i ringen er tillægget, hvis retten tages som del af en menu. Det endelige format bekræftes med restauranten.",
-      "Prices in kroner, as printed on the card. The number in the ring is the supplement if the dish is taken as part of a menu. The final format is being confirmed with the restaurant."
-    );
   }
 
   /* ═══ Guests ═══════════════════════════════════════════════════════ */
   let party = 1;
 
-  function tick(i, course, value, label, price, supp) {
+  function tick(i, courseId, value, label) {
     return '<label class="tick">' +
-             '<input type="radio" name="g' + i + "-" + course + '" value="' + value +
-               '" data-guest="' + i + '" data-course="' + course + '">' +
+             '<input type="radio" name="g' + i + "-" + courseId + '" value="' + esc(value) +
+               '" data-guest="' + i + '" data-course="' + courseId + '">' +
              '<span class="box"></span>' +
-             '<span class="tname">' + label +
-               (supp ? '<span class="supp">+' + supp + "</span>" : "") + "</span>" +
-             '<span class="tprice">' + (price || "") + "</span>" +
+             '<span class="tname">' + esc(label) + "</span>" +
            "</label>";
   }
 
   function guestRow(i) {
     const picks = CONFIG.courses.map(function (course) {
       const rows = course.dishes.map(function (d) {
-        return tick(i, course.id, d.id, d.name, priceOf(d), d.supp);
-      }).join("") + tick(i, course.id, "skip", T("Ingen tak", "None, thanks"), "", 0);
+        return tick(i, course.id, d.id, d.en);
+      }).join("") + tick(i, course.id, "skip", NONE);
 
       return '<fieldset class="ticks">' +
-               '<legend class="mono">' + t(course.name) + "</legend>" +
+               '<legend class="mono">' + esc(course.name) + "</legend>" +
                rows +
              "</fieldset>";
     }).join("");
 
-    const ph = i === 0 ? T("Dit navn", "Your name") : T("Gæst " + (i + 1), "Guest " + (i + 1));
+    const ph = i === 0 ? "Your name" : "Guest " + (i + 1);
 
     return '<div class="guest">' +
              '<div class="guest-head">' +
                '<span class="seat">' + String(i + 1).padStart(2, "0") + "</span>" +
-               '<input type="text" data-guest-name="' + i + '" autocomplete="off" placeholder="' + ph + '">' +
+               '<input type="text" data-guest-name="' + i + '" autocomplete="off" placeholder="' +
+                 ph + '">' +
              "</div>" +
              '<div class="guest-body">' + picks + "</div>" +
            "</div>";
@@ -1431,47 +1389,6 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#party").textContent = String(party);
   }
 
-  /* ═══ Language ═════════════════════════════════════════════════════ */
-  function applyLang() {
-    document.documentElement.lang = lang;
-    $$("[data-da]").forEach(function (el) { el.innerHTML = el.getAttribute("data-" + lang); });
-    $$("[data-ph-da]").forEach(function (el) { el.placeholder = el.getAttribute("data-ph-" + lang); });
-    $$(".lang button").forEach(function (b) {
-      b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
-    });
-
-    $("#kicker").textContent = T(
-      "Genforeningsmiddag · seks lande, ét bord",
-      "Reunion dinner · six countries, one table"
-    );
-    $("#rail-l").textContent = T("Plat eller krone · 12.09.2026", "Heads or tails · 12.09.2026");
-    $("#rail-r").textContent = (CONFIG.venue + " · " + t(CONFIG.city)).toUpperCase();
-
-    $("#f-date").textContent = t(CONFIG.date);
-    $("#f-time").textContent = t(CONFIG.time);
-    $("#f-deadline").textContent = t(CONFIG.deadline);
-    const venue = $("#f-venue");
-    venue.textContent = CONFIG.venue;
-    venue.href = CONFIG.venueUrl;
-
-    $("#foot-mark").textContent = T("Genforeningsmiddag", "Reunion dinner") + " · MMXXVI";
-    $("#foot-place").textContent = (CONFIG.venue + " · " + t(CONFIG.city)).toUpperCase();
-    $("#foot-note").innerHTML = T(
-      "Svar gerne inden <strong>" + t(CONFIG.deadline) +
-        "</strong>, så vi kan give Norrlyst det endelige antal og køkkenet en fornemmelse af kortet. Spørgsmål? Skriv til " +
-        CONFIG.hostName + " på ",
-      "Please reply by <strong>" + t(CONFIG.deadline) +
-        "</strong> so we can give Norrlyst the final count and the kitchen a feel for the card. Questions? Write to " +
-        CONFIG.hostName + " at "
-    ) + '<a href="mailto:' + CONFIG.hostEmail + '">' + CONFIG.hostEmail + "</a>.";
-
-    renderAgenda();
-    renderCountries();
-    renderMenu();
-    renderGuests();
-    land(false);
-  }
-
   /* ═══ Attendance ═══════════════════════════════════════════════════ */
   function attending() {
     const el = $('input[name="attending"]:checked');
@@ -1482,11 +1399,11 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#party-field").hidden = !yes;
     $("#guests-field").hidden = !yes;
     $("#step-2").hidden = !yes;
-    $("#send").textContent = yes ? T("Send tilmelding", "Send RSVP") : T("Send afbud", "Send regrets");
+    $("#send").textContent = yes ? "Send RSVP" : "Send regrets";
     renderPreview();
   }
 
-  /* ═══ Submit ═══════════════════════════════════════════════════════ */
+  /* ═══ Payload ══════════════════════════════════════════════════════ */
   function dishById(courseId, dishId) {
     const c = CONFIG.courses.find(function (x) { return x.id === courseId; });
     return c ? c.dishes.find(function (d) { return d.id === dishId; }) : null;
@@ -1502,8 +1419,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       CONFIG.courses.forEach(function (course) {
         const v = g.choices[course.id];
         if (!v) { order[course.id] = ""; return; }
-        if (v === "skip") { order[course.id] = T("Ingen tak", "None"); return; }
+        if (v === "skip") { order[course.id] = NONE; return; }
         const d = dishById(course.id, v);
+        /* The kitchen gets Norrlyst's own wording, not the English gloss. */
         order[course.id] = d ? d.name : v;
         if (d) kitchen[d.name] = (kitchen[d.name] || 0) + 1;
       });
@@ -1527,71 +1445,72 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       }).join("\n"),
       diet: $("#diet").value.trim(),
       note: $("#note").value.trim(),
-      event: CONFIG.venue + " — " + CONFIG.date.da,
+      event: CONFIG.venue + " — " + CONFIG.date,
       submittedAt: new Date().toISOString()
     };
   }
 
   function asText(d) {
     const lines = [
-      d.attending === "yes" ? "KOMMER / ATTENDING" : "AFBUD / CANNOT ATTEND",
-      "Navn / Name: " + d.name,
-      "Antal / Party: " + d.party,
+      d.attending === "yes" ? "ATTENDING" : "CANNOT ATTEND",
+      "Name: " + d.name,
+      "Party: " + d.party,
       ""
     ];
     d.guests.forEach(function (g) {
       lines.push(g.seat + ". " + (g.name || "—"));
       CONFIG.courses.forEach(function (c) {
-        lines.push("   " + c.name.da + ": " + (g.order[c.id] || "—"));
+        lines.push("   " + c.name + ": " + (g.order[c.id] || "—"));
       });
       lines.push("");
     });
     const keys = Object.keys(d.kitchen);
     if (keys.length) {
-      lines.push("TIL KØKKENET / KITCHEN TALLY");
+      lines.push("KITCHEN TALLY");
       keys.forEach(function (k) { lines.push("   " + k + " × " + d.kitchen[k]); });
       lines.push("");
     }
-    if (d.diet) lines.push("Allergier / Dietary: " + d.diet);
-    if (d.note) lines.push("Hilsen / Note: " + d.note);
+    if (d.diet) lines.push("Dietary: " + d.diet);
+    if (d.note) lines.push("Note: " + d.note);
     return lines.join("\n");
   }
 
-  /* Step 03 — a live reading of exactly what the send button will post. */
+  /* ═══ Step 03 — a live reading of what the button will post ════════ */
+  function orderLine(g) {
+    const order = CONFIG.courses
+      .map(function (c) { return g.order[c.id]; })
+      .filter(function (x) { return x && x !== NONE; });
+    return order.length ? order.join(" · ") : "Nothing ticked yet";
+  }
+
+  function rowsHTML(rows) {
+    return rows.map(function (r) {
+      return "<div><dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd></div>";
+    }).join("");
+  }
+
   function renderPreview() {
     const box = $("#preview");
     const d = payload();
-    const none = T("Ingen tak", "None");
-    const rows = [];
 
     if (!d.name) {
-      box.innerHTML = '<p class="empty">' +
-        T("Udfyld navnet ovenfor, så samler vi det hele her.",
-          "Fill in the name above and it all gathers here.") + "</p>";
+      box.innerHTML = '<p class="empty">Fill in the name above and it all gathers here.</p>';
       return;
     }
 
-    rows.push([T("Navn", "Name"), d.name]);
+    const rows = [["Name", d.name]];
     if (d.attending === "yes") {
-      rows.push([T("Antal", "Party"), String(d.party)]);
+      rows.push(["Party", String(d.party)]);
       d.guests.forEach(function (g) {
-        const order = CONFIG.courses
-          .map(function (c) { return g.order[c.id]; })
-          .filter(function (x) { return x && x !== none; });
-        rows.push([
-          g.name || T("Gæst ", "Guest ") + g.seat,
-          order.length ? order.join(" · ") : T("Intet valgt endnu", "Nothing ticked yet")
-        ]);
+        rows.push([g.name || "Guest " + g.seat, orderLine(g)]);
       });
-      if (d.diet) rows.push([T("Hensyn", "Needs"), d.diet]);
+      if (d.diet) rows.push(["Needs", d.diet]);
     } else {
-      rows.push([T("Svar", "Answer"), T("Afbud", "Regrets")]);
+      rows.push(["Answer", "Regrets"]);
     }
-    if (d.note) rows.push([T("Hilsen", "Note"), d.note]);
+    if (d.note) rows.push(["Note", d.note]);
 
-    box.innerHTML = rows.map(function (r) {
-      return "<div><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
-    }).join("");
+    box.innerHTML = rowsHTML(rows);
   }
 
   function showDone(d, viaEmail) {
@@ -1602,38 +1521,28 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
     const first = d.name.split(" ")[0] || "";
     $("#done-line").textContent = yes
-      ? T("Vi ses den 12.", "See you on the 12th.")
-      : T("Ærgerligt — vi savner dig den aften.", "A shame — you'll be missed that evening.");
+      ? "See you on the 12th."
+      : "A shame — you'll be missed that evening.";
     $("#done-stamp").textContent = (first || CONFIG.venue).toUpperCase();
 
-    const none = T("Ingen tak", "None");
-    const rows = [[T("Navn", "Name"), d.name]];
+    const rows = [["Name", d.name]];
     if (yes) {
-      rows.push([T("Antal", "Party"), String(d.party)]);
+      rows.push(["Party", String(d.party)]);
       d.guests.forEach(function (g) {
-        const order = CONFIG.courses
-          .map(function (c) { return g.order[c.id]; })
-          .filter(function (x) { return x && x !== none; });
-        rows.push([
-          g.name || T("Gæst ", "Guest ") + g.seat,
-          order.length ? order.join(" · ") : T("Ikke valgt endnu", "Not chosen yet")
-        ]);
+        rows.push([g.name || "Guest " + g.seat, orderLine(g)]);
       });
-      if (d.diet) rows.push([T("Hensyn", "Needs"), d.diet]);
+      if (d.diet) rows.push(["Needs", d.diet]);
     }
-    rows.push([T("Dato", "Date"), t(CONFIG.date)]);
-    if (viaEmail) rows.push([T("Status", "Status"), T("Sendt som e-mail", "Sent by email")]);
+    rows.push(["Date", CONFIG.date]);
+    if (viaEmail) rows.push(["Status", "Sent by email"]);
 
-    $("#receipt").innerHTML = rows.map(function (r) {
-      return "<div><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
-    }).join("");
-
+    $("#receipt").innerHTML = rowsHTML(rows);
     $("#done").scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   function mailFallback(d) {
     const subject = encodeURIComponent(
-      (d.attending === "yes" ? "RSVP: " : "Afbud: ") + d.name + " — " + CONFIG.venue
+      (d.attending === "yes" ? "RSVP: " : "Regrets: ") + d.name + " — " + CONFIG.venue
     );
     window.location.href = "mailto:" + CONFIG.hostEmail +
       "?subject=" + subject + "&body=" + encodeURIComponent(asText(d));
@@ -1647,8 +1556,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
     const nameEl = $("#name");
     if (!nameEl.value.trim()) {
-      err.textContent = T("Skriv lige dit navn, så vi ved hvem der kommer.",
-                          "Add your name so we know who's coming.");
+      err.textContent = "Add your name so we know who's coming.";
       err.hidden = false;
       nameEl.focus();
       return;
@@ -1659,7 +1567,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
     const btn = $("#send");
     btn.disabled = true;
-    btn.textContent = T("Sender…", "Sending…");
+    btn.textContent = "Sending…";
 
     fetch(CONFIG.endpoint, {
       method: "POST",
@@ -1673,9 +1581,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       .catch(function () {
         btn.disabled = false;
         syncAttending();
-        err.innerHTML = T("Tilmeldingen kunne ikke sendes. Prøv igen, eller ",
-                          "That didn't go through. Try again, or ") +
-          '<a href="#" id="mailnow">' + T("send den som e-mail", "send it by email") + "</a>.";
+        err.innerHTML = 'That didn\'t go through. Try again, or ' +
+          '<a href="#" id="mailnow">send it by email</a>.';
         err.hidden = false;
         const link = $("#mailnow");
         if (link) {
@@ -1709,16 +1616,13 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     syncAttending();
     $("#rsvp").scrollIntoView({ behavior: "smooth", block: "start" });
   });
-  $$(".lang button").forEach(function (b) {
-    b.addEventListener("click", function () {
-      lang = b.dataset.lang;
-      try { localStorage.setItem("rsvp-lang", lang); } catch (e) {}
-      applyLang();
-      syncAttending();
-    });
-  });
 
-  applyLang();
+  renderChrome();
+  renderAgenda();
+  renderCountries();
+  renderMenu();
+  renderGuests();
+  land(false);
   syncAttending();
   window.setTimeout(function () { toss(false); }, 420);
 })();
