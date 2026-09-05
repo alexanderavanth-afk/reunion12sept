@@ -144,8 +144,14 @@ array doesn't.
 
 ## The restaurant overview
 
-Open `overview.html`, export the replies from Formspree (**Export → JSON** reads
-cleanest, CSV also works), and paste them in. It produces:
+Open `overview.html` and paste the replies in — whichever form is to hand:
+
+- **the notification emails**, copied from `ATTENDING` down, several in a row;
+- **Export → JSON** from the Formspree dashboard;
+- **CSV**, which falls back to the flat `rows` field.
+
+Each submission is only ever its own party. The aggregating across everybody
+happens here, in the browser, on whatever you paste. It produces:
 
 - **Optælling** — covers, parties, regrets, dishes chosen.
 - **Til køkkenet** — every dish with a count, grouped by course. This is the
@@ -156,7 +162,8 @@ cleanest, CSV also works), and paste them in. It produces:
 Everything is computed in the browser; nothing is uploaded. **Print** gives a
 clean sheet to hand over, and **Kopiér som regneark** puts a tab-separated
 table on the clipboard for Excel or Sheets. Duplicate answers from the same
-name are collapsed, keeping the later one. "Vis et eksempel" loads sample data
+name are collapsed, keeping the later one — so someone who changes their mind
+is counted once. "Vis et eksempel" loads sample data
 if you want to see the shape before the real replies arrive.
 
 Its `COURSES` list must stay in step with `CONFIG.courses` in `index.html` —

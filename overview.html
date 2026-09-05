@@ -158,12 +158,15 @@ td.dish { font-weight: 600; }
 
   <section class="intake no-print">
     <p>
-      Export the replies from Formspree — <strong>Export → JSON</strong> reads
-      cleanest, CSV also works — and paste them below. Everything is worked out
-      in this browser; nothing is uploaded anywhere.
+      Paste the replies below — <strong>whichever is easiest</strong>. The
+      notification emails work: copy the block starting <em>ATTENDING</em> out
+      of each one, as many as you like, one after another. So does
+      <strong>Export → JSON</strong> or CSV from the Formspree dashboard.
+      Everything is worked out in this browser; nothing is uploaded anywhere.
+      Two replies from the same name count once — the later one wins.
     </p>
     <textarea id="paste" spellcheck="false"
-      placeholder='[{"name":"Maja Jensen","attending":"yes","party":2,"guests":[…]}, …]'></textarea>
+      placeholder="ATTENDING&#10;Name: Alex&#10;Party: 2&#10;&#10;1. Alex&#10;   Starters: Norrlyst signatur tatar&#10;   …&#10;&#10;— or the JSON / CSV export —"></textarea>
     <div class="bar">
       <button type="button" id="run">Read the replies</button>
       <button type="button" class="ghost" id="demo">Show an example</button>
@@ -247,6 +250,44 @@ td.dish { font-weight: 600; }
     }).filter(Boolean);
   }
 
+  function parseSummaries(text) {
+    /* The notification email's body, one or more of them, pasted together. */
+    const byName = {};
+    COURSES.forEach(function (c) { byName[c.name.toLowerCase()] = c.id; });
+
+    const blocks = text.split(/(?=^\s*(?:ATTENDING|CANNOT ATTEND)\s*$)/m)
+                       .filter(function (b) { return /^\s*(ATTENDING|CANNOT ATTEND)/m.test(b); });
+    if (!blocks.length) return null;
+
+    return blocks.map(function (b) {
+      const lines = b.split(/\r?\n/);
+      const sub = { attending: /CANNOT ATTEND/.test(b) ? "no" : "yes", guests: [] };
+      let guest = null;
+
+      lines.forEach(function (raw) {
+        const line = raw.trim();
+        let m;
+        if ((m = line.match(/^Name:\s*(.+)$/i)) && !sub.name) { sub.name = m[1].trim(); return; }
+        if ((m = line.match(/^Party:\s*(\d+)/i))) { sub.party = Number(m[1]); return; }
+        if ((m = line.match(/^Dietary:\s*(.+)$/i))) { sub.diet = m[1].trim(); return; }
+        if ((m = line.match(/^Note:\s*(.+)$/i))) { sub.note = m[1].trim(); return; }
+        if (/^KITCHEN TALLY/i.test(line)) { guest = null; return; }
+        if ((m = line.match(/^(\d+)\.\s+(.+)$/))) {
+          guest = { seat: Number(m[1]), name: m[2].trim(), order: {} };
+          sub.guests.push(guest);
+          return;
+        }
+        if (guest && (m = line.match(/^([^:]+):\s*(.+)$/))) {
+          const id = byName[m[1].trim().toLowerCase()];
+          if (id) guest.order[id] = m[2].trim();
+        }
+      });
+
+      if (!sub.party) sub.party = sub.guests.length;
+      return sub;
+    }).filter(function (sub) { return sub.name; });
+  }
+
   function normalise(sub) {
     const guestsRaw = maybeJSON(sub.guests);
     let guests = [];
@@ -274,7 +315,9 @@ td.dish { font-weight: 600; }
     const trimmed = text.trim();
     if (!trimmed) throw new Error("Nothing has been pasted in yet.");
 
-    let list;
+    let list = parseSummaries(trimmed);
+    if (list && list.length) return dedupe(list.map(normalise));
+
     if (trimmed[0] === "[" || trimmed[0] === "{") {
       const parsed = JSON.parse(trimmed);
       list = Array.isArray(parsed) ? parsed : (parsed.submissions || [parsed]);
@@ -289,16 +332,17 @@ td.dish { font-weight: 600; }
       });
     }
 
-    /* One person may answer twice — the later submission wins. */
-    const byName = new Map();
-    list.map(normalise)
-        .filter(function (s) { return s.name; })
-        .forEach(function (s) {
-          const key = s.name.trim().toLowerCase();
-          const prev = byName.get(key);
-          if (!prev || String(s.at) >= String(prev.at)) byName.set(key, s);
-        });
+    return dedupe(list.map(normalise));
+  }
 
+  /* One person may answer twice — the later submission wins. */
+  function dedupe(subs) {
+    const byName = new Map();
+    subs.filter(function (s) { return s.name; }).forEach(function (s) {
+      const key = s.name.trim().toLowerCase();
+      const prev = byName.get(key);
+      if (!prev || String(s.at) >= String(prev.at)) byName.set(key, s);
+    });
     return Array.from(byName.values());
   }
 
