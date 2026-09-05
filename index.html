@@ -53,13 +53,6 @@ const CONFIG = {
     //   caption: "The winter we learned to make proper coffee." },
   ],
 
-  /* The resting state of the hero coin, before anything is tossed. */
-  host: {
-    palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
-               rule: "#C9C2AE", rule2: "#B3AB94", stamp: "#8A3B1E", aura: "#D3C5A6" },
-    quote: { orig: "One table. Six countries. One evening.", by: "12.09.2026" }
-  },
-
   /* ── The six coins ──────────────────────────────────────────────────
      `image` is the full-size coin; the row of six loads a `-sm` variant
      beside it, since it never renders larger than 128px. Both are written by
@@ -1336,28 +1329,22 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     };
   }
 
-  function hostSpec() {
-    return {
-      image: null,
-      metal: "brass",
-      ring: null,
-      hole: false,
-      denom: "XII",
-      script: "lat",
-      legendTop: "NORRLYST",
-      legendBottom: "MMXXVI · " + CONFIG.city.toUpperCase(),
-      alt: "The dinner's own coin"
-    };
-  }
+  /* The coin is always one of the six. The page opens on a random one and
+     immediately throws it, so the mechanic shows itself without a tap. */
+  const pick = (not) => {
+    const n = CONFIG.countries.length;
+    if (n < 2) return 0;
+    let i = Math.floor(Math.random() * n);
+    while (i === not) i = Math.floor(Math.random() * n);
+    return i;
+  };
 
-  /* The toss: the coin rests visible, flips once on load, and lands on a
-     new country with every tap. */
   let turns = 0;
-  let tossIndex = -1;
+  let tossIndex = pick(-1);
   let tossing = false;
 
-  const landed = () => (tossIndex < 0 ? CONFIG.host : CONFIG.countries[tossIndex]);
-  const currentSpec = () => (tossIndex < 0 ? hostSpec() : countrySpec(CONFIG.countries[tossIndex]));
+  const landed = () => CONFIG.countries[tossIndex];
+  const currentSpec = () => countrySpec(landed());
 
   function applyPalette(pal) {
     const r = document.documentElement.style;
@@ -1385,10 +1372,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   }
 
   function setCaption() {
-    const where = tossIndex < 0
-      ? "HOST COUNTRY · <b>DENMARK</b>"
-      : "LANDED ON · <b>" + esc(CONFIG.countries[tossIndex].name.toUpperCase()) + "</b>";
-    $("#caption").innerHTML = where + " · TAP TO TOSS";
+    $("#caption").innerHTML = "LANDED ON · <b>" +
+      esc(landed().name.toUpperCase()) + "</b> · TAP TO TOSS";
   }
 
   function land(animate) {
@@ -1399,8 +1384,6 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     setCaption();
   }
 
-  /* The host coin is only the resting state. Every toss lands on one of the
-     six and the cycle carries on from wherever it landed. */
   function tossTo(index) {
     if (tossing) return;
     tossIndex = index;
@@ -1912,11 +1895,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   renderPicker("next");
   land(false);
 
-  /* The page opens on the dinner's own coin, then throws it — so the first
-     thing anyone sees is the mechanic, landing somewhere different each time. */
-  window.setTimeout(function () {
-    tossTo(Math.floor(Math.random() * CONFIG.countries.length));
-  }, 520);
+  /* Painted at rest first so the opening frame is a real coin, then thrown
+     to a different one — the mechanic, without anybody touching it. */
+  window.setTimeout(function () { tossTo(pick(tossIndex)); }, 420);
 })();
 </script>
 </body>

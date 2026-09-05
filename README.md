@@ -38,9 +38,10 @@ The metals are stylised; the holes, rings and scripts are not. The Arabic and
 Thai numerals load as `text=`-subsetted Noto faces (a few hundred bytes) with
 system fallbacks behind them.
 
-The page opens on the dinner's own coin, then throws it — landing on one of the
-six at random, so the first thing anyone sees is the mechanic working, and a
-reload gives a different country. Every tap after that walks the cycle on. Landing does three things at once: the coin is restruck, the whole page
+The coin is always one of the six. The page paints a random one at rest — so
+the opening frame is already a real coin — then throws it to a different one,
+which means the mechanic shows itself before anybody touches anything, and a
+reload lands somewhere else. Every tap after that walks the cycle on. Landing does three things at once: the coin is restruck, the whole page
 washes to that country's palette, and its line on life appears beneath —
 H.C. Andersen for Denmark, a Dhammapada verse for Thailand, a Tagalog proverb
 for the Philippines, a hadith in Arabic for Jordan, Goethe for Germany, and a
@@ -190,7 +191,6 @@ Everything editable lives in `CONFIG` at the top of `index.html`.
 | `date`, `time`, `venue`, `venueUrl`, `city` | The facts ledger under the headline |
 | `agenda[]` | The running order — time, label, and an optional `aside` printed in the accent |
 | `seats` | The size of the room: shown in the notice and the stepper hint, counted down in the overview |
-| `host` | The resting coin's palette and line, before anything is tossed |
 | `deadline` | The reply-by date |
 | `countries[]` | The six coins — name, unit, denomination, metal, `ring`, `hole`, the one-line fact, the `palette` and the `quote` |
 | `courses[]` | The menu: course groups, each with its dishes |
