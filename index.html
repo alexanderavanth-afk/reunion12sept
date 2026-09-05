@@ -335,7 +335,7 @@ a:hover { color: var(--stamp); }
 }
 .hero .sub {
   margin: 0;
-  max-width: 42ch;
+  max-width: 47ch;
   color: var(--ink-2);
   font-family: "Newsreader", Georgia, serif;
   font-weight: 300;
@@ -1041,8 +1041,10 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
     <h1>Planning life on a <span class="thin">coin toss</span></h1>
 
-    <p class="sub">Six countries have had us in turn. On 12 September we land in
-      the same place — Norrlyst in Copenhagen.</p>
+    <p class="sub">We have many homes, and on the 12th of September our home is
+      going to be with you all for an evening. Life is lived on a coin toss, and
+      we intend to make the most of where we land and who we are with. We hope
+      you will share this evening with us.</p>
 
     <a class="cta" href="#rsvp-section">
       <span class="cta-main">Reply, and choose your dishes</span>
@@ -1397,11 +1399,11 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     setCaption();
   }
 
-  function toss(advance) {
+  /* The host coin is only the resting state. Every toss lands on one of the
+     six and the cycle carries on from wherever it landed. */
+  function tossTo(index) {
     if (tossing) return;
-    /* The host coin is only the resting state — once tossed, the cycle
-       runs through the six countries and wraps. */
-    if (advance) tossIndex = (tossIndex + 1) % CONFIG.countries.length;
+    tossIndex = index;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       land(false);
@@ -1413,6 +1415,10 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#coin").style.transform = "rotateY(" + (turns * 360) + "deg) rotateX(12deg)";
     window.setTimeout(function () { land(true); }, 620);
     window.setTimeout(function () { tossing = false; }, 1400);
+  }
+
+  function toss() {
+    tossTo((tossIndex + 1) % CONFIG.countries.length);
   }
 
   function renderCountries() {
@@ -1829,7 +1835,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   });
 
   /* ═══ Wiring ═══════════════════════════════════════════════════════ */
-  $("#coin").addEventListener("click", function () { toss(true); });
+  $("#coin").addEventListener("click", toss);
 
   function setParty(n) {
     party = Math.min(CONFIG.maxGuests, Math.max(1, n));
@@ -1905,7 +1911,12 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   renderNames();
   renderPicker("next");
   land(false);
-  window.setTimeout(function () { toss(false); }, 420);
+
+  /* The page opens on the dinner's own coin, then throws it — so the first
+     thing anyone sees is the mechanic, landing somewhere different each time. */
+  window.setTimeout(function () {
+    tossTo(Math.floor(Math.random() * CONFIG.countries.length));
+  }, 520);
 })();
 </script>
 </body>

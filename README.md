@@ -38,8 +38,9 @@ The metals are stylised; the holes, rings and scripts are not. The Arabic and
 Thai numerals load as `text=`-subsetted Noto faces (a few hundred bytes) with
 system fallbacks behind them.
 
-The hero coin flips once on load and lands on a new country each time it's
-tapped. Landing does three things at once: the coin is restruck, the whole page
+The page opens on the dinner's own coin, then throws it — landing on one of the
+six at random, so the first thing anyone sees is the mechanic working, and a
+reload gives a different country. Every tap after that walks the cycle on. Landing does three things at once: the coin is restruck, the whole page
 washes to that country's palette, and its line on life appears beneath —
 H.C. Andersen for Denmark, a Dhammapada verse for Thailand, a Tagalog proverb
 for the Philippines, a hadith in Arabic for Jordan, Goethe for Germany, and a
