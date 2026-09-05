@@ -19,6 +19,14 @@
  * Setup is in SHEET-SETUP.md.
  */
 
+/* Anyone may POST a reply — the invitation page has to be able to, and the
+   worst a stranger can do is add a row you delete. Reading is different: the
+   replies carry names and allergies, so doGet answers only when it is handed
+   this key. It lives in the overview page's browser, never in the site — and
+   not in this repository either, which is why the line below is a placeholder:
+   put the real key in when you paste this into the script editor. */
+var READ_KEY = 'PUT-YOUR-KEY-HERE';
+
 var COURSES = [
   ['forret', 'Starters'],
   ['mellemret', 'Middle courses'],
@@ -66,7 +74,10 @@ function doPost(e) {
 
 /* ── Handing the replies back to the overview page ────────────────── */
 
-function doGet() {
+function doGet(e) {
+  var given = (e && e.parameter && e.parameter.key) || '';
+  if (given !== READ_KEY) return json({ ok: false, error: 'unauthorised' });
+
   var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Replies');
   if (!sh || sh.getLastRow() < 2) return json({ replies: [] });
 

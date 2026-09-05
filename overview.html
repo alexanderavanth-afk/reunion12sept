@@ -97,6 +97,17 @@ textarea {
 }
 .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .live { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 26px; }
+#key {
+  flex: 1 1 220px;
+  max-width: 320px;
+  background: var(--bone);
+  border: 1.5px solid var(--rule-2);
+  color: var(--ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  padding: 11px 12px;
+  border-radius: 0;
+}
 button {
   appearance: none;
   border: 1.5px solid var(--ink);
@@ -165,7 +176,21 @@ td.dish { font-weight: 600; }
 
   <section class="live no-print" id="live" hidden>
     <button type="button" id="reload">Refresh</button>
+    <button type="button" class="ghost" id="forget" hidden>Forget key</button>
     <span class="status" id="livestatus"></span>
+  </section>
+
+  <section class="intake no-print" id="keybar" hidden>
+    <p>
+      This page is locked because the replies carry names and allergies. Enter
+      the key once and this browser will remember it.
+    </p>
+    <div class="bar">
+      <input type="password" id="key" autocomplete="off" spellcheck="false"
+             placeholder="Key">
+      <button type="button" id="unlock">Unlock</button>
+      <span class="status" id="keystatus"></span>
+    </div>
   </section>
 
   <section class="intake no-print" id="intake">
@@ -370,6 +395,14 @@ td.dish { font-weight: 600; }
 
   const STORE = "reunion-replies-v1";
   const LIVE = typeof SHEET === "string" && SHEET.indexOf("http") === 0;
+  const KEYSTORE = "reunion-key-v1";
+
+  const readKey = () => {
+    try { return localStorage.getItem(KEYSTORE) || ""; } catch (e) { return ""; }
+  };
+  const writeKey = (k) => {
+    try { localStorage.setItem(KEYSTORE, k); } catch (e) {}
+  };
 
   function loadStore() {
     try { return JSON.parse(localStorage.getItem(STORE) || "[]"); }
@@ -540,13 +573,35 @@ td.dish { font-weight: 600; }
      With a sheet behind it the page just asks the sheet and stays current.
      Without one it falls back to the ledger you paste into.            */
 
+  function lock(message) {
+    $("#keybar").hidden = false;
+    $("#live").hidden = true;
+    $("#out").hidden = true;
+    const el = $("#keystatus");
+    el.textContent = message || "";
+    el.className = "status" + (message ? " bad" : "");
+    $("#key").focus();
+  }
+
   function fromSheet() {
+    const key = readKey();
+    if (!key) { lock(""); return Promise.resolve(); }
+
+    $("#keybar").hidden = true;
+    $("#live").hidden = false;
+    $("#forget").hidden = false;
     const el = $("#livestatus");
     el.textContent = "Reading the sheet…";
     el.className = "status";
-    return fetch(SHEET, { cache: "no-store" })
+
+    return fetch(SHEET + "?key=" + encodeURIComponent(key), { cache: "no-store" })
       .then(function (r) { return r.json(); })
       .then(function (data) {
+        if (data && data.ok === false) {
+          writeKey("");
+          lock("That key wasn't right. Try again.");
+          return;
+        }
         const subs = dedupe((data.replies || []).map(normalise));
         render(subs);
         $("#out").hidden = !subs.length;
@@ -569,9 +624,24 @@ td.dish { font-weight: 600; }
   if (LIVE) {
     $("#sub").textContent = "Read straight from the sheet, so it is current every "
       + "time you open it. Nothing to copy.";
-    $("#live").hidden = false;
     $("#intake").hidden = true;
     $("#reload").addEventListener("click", fromSheet);
+
+    $("#unlock").addEventListener("click", function () {
+      const k = $("#key").value.trim();
+      if (!k) return;
+      writeKey(k);
+      $("#key").value = "";
+      fromSheet();
+    });
+    $("#key").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); $("#unlock").click(); }
+    });
+    $("#forget").addEventListener("click", function () {
+      writeKey("");
+      lock("Key forgotten on this device.");
+    });
+
     fromSheet();
   } else {
     $("#sub").textContent = "Every reply gathered into one sheet the restaurant "

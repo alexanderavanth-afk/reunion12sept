@@ -23,7 +23,21 @@ Go to [sheets.new](https://sheets.new). Name it something like
 
 Select everything in that editor and delete it. Open
 [`tools/sheet-backend.gs`](tools/sheet-backend.gs) in this repository, copy the
-whole file, paste it in. Press the save icon.
+whole file, paste it in.
+
+**Then set your key.** Near the top is:
+
+```js
+var READ_KEY = 'PUT-YOUR-KEY-HERE';
+```
+
+Replace `PUT-YOUR-KEY-HERE` with a key of your own — any string, the longer the
+better. It is deliberately not stored in this repository, because the whole
+point of it is that only you have it. Press the save icon.
+
+Without the key the web app will accept replies but refuse to hand any back,
+so `/overview` will ask you for it the first time you open it and remember it
+in that browser afterwards.
 
 ## 4 · Deploy it
 
@@ -49,7 +63,9 @@ You get a **Web app URL** ending in `/exec`. Copy it. It looks like:
 https://script.google.com/macros/s/AKfycb…long…/exec
 ```
 
-**Treat it like a password.** Anyone with it can read the replies.
+The URL is safe to have in the site: it accepts replies from anyone — it has
+to, the invitation page uses it — but it will not hand any back without the key
+from step 3.
 
 ## 6 · Done — it's wired in
 
