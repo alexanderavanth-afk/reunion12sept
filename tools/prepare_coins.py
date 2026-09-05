@@ -9,16 +9,22 @@ two holed currencies, the centre hole punched through as well.
 
     python3 tools/prepare_coins.py raw/ --out coins/
 
-Files are matched to countries by name: any file whose name contains "jordan"
-becomes coins/jordan.png, and so on. Anything unmatched is reported and left
-alone. Use --map to place a file explicitly:
+Filenames do not matter. Every pair among the six coins differs by something
+measurable, so each image says which country it is: a hole through the middle
+means Papua New Guinea or Denmark (the darker one is PNG), two metals means
+Thailand or Germany (gold core is Thailand), and one metal with no hole means
+Jordan or Philippines (gold is Jordan). A batch settles its own pairs, so six
+files called "ChatGPT Image ….png" sort themselves out.
 
-    python3 tools/prepare_coins.py raw/ --map raw/image_04.png=denmark
+A country in the filename still wins if it is there, and --map beats both:
+
+    python3 tools/prepare_coins.py raw/ --map "raw/image 4.png=denmark"
+    python3 tools/prepare_coins.py raw/ --by-name    # ignore the images
 
 The background is found by flood-filling inward from the four corners, so it
-has to be flat — a gradient or a drop shadow will leave a halo. Papua New
-Guinea and Denmark also get a second fill from the centre, which is what opens
-their hole. Pass --no-hole NAME to turn that off for one coin.
+has to be flat — a gradient or a drop shadow will leave a halo. Raise --tol for
+a slightly uneven background. The hole is a second fill from the centre, and
+whether one opens is exactly what identifies a holed coin.
 """
 
 import argparse
@@ -65,7 +71,12 @@ def is_close(a, b, tol):
 
 
 def cut_background(im, tol, hole):
-    """Flood-fill the flat background away and return an alpha mask."""
+    """Flood-fill the flat background away.
+
+    Returns (mask, hole_area). `hole` may be None, meaning "punch the centre
+    if there is a centre to punch" — which is also how a holed coin gets
+    recognised in the first place.
+    """
     work = im.convert("RGB")
     w, h = work.size
     px = work.load()
@@ -80,11 +91,16 @@ def cut_background(im, tol, hole):
     if not filled:
         raise SystemExit("The corners are not a flat background — is this the right file?")
 
+    outer = sum(1 for y in range(h) for x in range(w) if px[x, y] == SENTINEL)
+
     # The hole is enclosed by the coin, so the corner fills never reach it.
-    if hole:
+    hole_area = 0
+    if hole is not False:
         cx, cy = w // 2, h // 2
         if px[cx, cy] != SENTINEL and is_close(px[cx, cy], bg, tol):
             ImageDraw.floodfill(work, (cx, cy), SENTINEL, thresh=tol)
+            hole_area = sum(1 for y in range(h) for x in range(w)
+                            if px[x, y] == SENTINEL) - outer
 
     mask = Image.new("L", (w, h), 255)
     mp = mask.load()
@@ -97,7 +113,67 @@ def cut_background(im, tol, hole):
     # carries the old background colour, then soften what is left.
     mask = mask.filter(ImageFilter.MinFilter(3))
     mask = mask.filter(ImageFilter.GaussianBlur(0.7))
-    return mask
+    return mask, hole_area
+
+
+# ── Reading the coin off the coin ────────────────────────────────────────
+# Every pair among these six differs by something measurable, so a file called
+# "ChatGPT Image Sep 5, 2026, 03_39_06 PM.png" can still identify itself:
+#
+#   a hole through the middle → Papua New Guinea or Denmark (darker = PNG)
+#   two metals                → Thailand or Germany (gold core = Thailand)
+#   one metal, no hole        → Jordan or Philippines (gold = Jordan)
+
+def ring_of(im, mask, r_lo, r_hi):
+    """Median colour of an annulus, so lettering doesn't skew it."""
+    box = mask.getbbox()
+    coin = im.convert("RGB").crop(box)
+    w, h = coin.size
+    cx, cy, rad = w / 2.0, h / 2.0, min(w, h) / 2.0
+    px = coin.load()
+    chans = ([], [], [])
+    for y in range(0, h, 2):
+        for x in range(0, w, 2):
+            d = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5 / rad
+            if r_lo <= d <= r_hi:
+                for i, v in enumerate(px[x, y]):
+                    chans[i].append(v)
+    if not chans[0]:
+        return (0, 0, 0)
+    return tuple(sorted(c)[len(c) // 2] for c in chans)
+
+
+def features(im, mask, hole_area):
+    core = ring_of(im, mask, 0.20, 0.40)
+    edge = ring_of(im, mask, 0.72, 0.84)
+    coin_area = sum(mask.histogram()[128:]) or 1
+    return {
+        "hole": hole_area > coin_area * 0.004,
+        "bimetal": sum(abs(a - b) for a, b in zip(core, edge)) > 46,
+        "core_warm": core[0] - core[2],
+        "edge_warm": edge[0] - edge[2],
+        "lum": sum(edge) / 3.0,
+    }
+
+
+def classify(seen):
+    """Assign countries across the whole batch, so pairs settle each other."""
+    out = {}
+    holed = sorted([f for f in seen if f["hole"]], key=lambda f: f["lum"])
+    if len(holed) >= 2:
+        out[holed[0]["path"]] = "papua-new-guinea"
+        out[holed[1]["path"]] = "denmark"
+    elif holed:
+        out[holed[0]["path"]] = "papua-new-guinea" if holed[0]["lum"] < 155 else "denmark"
+
+    for f in seen:
+        if f["path"] in out:
+            continue
+        if f["bimetal"]:
+            out[f["path"]] = "thailand" if f["core_warm"] > f["edge_warm"] else "germany"
+        else:
+            out[f["path"]] = "jordan" if f["core_warm"] > 18 else "philippines"
+    return out
 
 
 def square_up(im, mask):
@@ -135,6 +211,8 @@ def main():
                     help="place a file explicitly, as path=country")
     ap.add_argument("--no-hole", action="append", default=[],
                     help="skip the centre punch for this country")
+    ap.add_argument("--by-name", action="store_true",
+                    help="match on filenames only, instead of reading the coins")
     args = ap.parse_args()
 
     src = pathlib.Path(args.src)
@@ -155,25 +233,51 @@ def main():
     out_dir = pathlib.Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    done, skipped = [], []
+    # First pass: cut every file, letting each one show whether it is holed.
+    seen = []
     for path in files:
-        country = explicit.get(path.name) or match_country(path)
+        im = Image.open(path)
+        mask, hole_area = cut_background(im, args.tol, None)
+        f = features(im, mask, hole_area)
+        f.update(path=path, im=im, mask=mask)
+        seen.append(f)
+
+    read_names = {} if args.by_name else classify(seen)
+
+    done, skipped = [], []
+    for f in seen:
+        path = f["path"]
+        country = explicit.get(path.name) or match_country(path) or read_names.get(path)
         if not country:
             skipped.append(path.name)
             continue
 
-        hole = COUNTRIES[country] and country not in args.no_hole
-        im = Image.open(path)
-        mask = cut_background(im, args.tol, hole)
-        out = square_up(im, mask)
+        # Re-cut only if what the image suggested about the hole was wrong.
+        want_hole = COUNTRIES[country] and country not in args.no_hole
+        mask = f["mask"]
+        if want_hole != f["hole"]:
+            mask, _ = cut_background(f["im"], args.tol, want_hole)
 
         dest = out_dir / (country + ".png")
-        out.save(dest, "PNG", optimize=True)
-        done.append((country, dest, dest.stat().st_size // 1024, hole))
+        square_up(f["im"], mask).save(dest, "PNG", optimize=True)
+        by_name = bool(explicit.get(path.name) or match_country(path))
+        done.append((country, dest, dest.stat().st_size // 1024, want_hole,
+                     path.name, f, by_name))
 
-    for country, dest, kb, hole in done:
-        print("  {:<18} {}  ({} KB{})".format(
-            country, dest, kb, ", hole punched" if hole else ""))
+    for country, dest, kb, hole, src, f, by_name in done:
+        print("  {:<18} <- {}".format(country, src))
+        print("  {:<18}    {} · {} KB{} · {} · {}{} · {}".format(
+            "", dest, kb, ", hole punched" if hole else "",
+            "by filename" if by_name else "read off the coin",
+            "holed" if f["hole"] else "solid",
+            ", bimetal" if f["bimetal"] else "",
+            "warm metal" if f["core_warm"] > 18 else "cool metal"))
+
+    names = [d[0] for d in done]
+    clashes = sorted({c for c in names if names.count(c) > 1})
+    if clashes:
+        print("\nTwo files landed on the same country ({}) — one overwrote the "
+              "other. Pin them with --map.".format(", ".join(clashes)))
 
     if skipped:
         print("\nCouldn't tell which coin these are — rename them, or use --map:")

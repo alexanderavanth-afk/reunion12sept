@@ -14,9 +14,13 @@ the whole job on your side.
 Don't worry about file format, size, naming or transparency — I handle all of
 it. `tools/prepare_coins.py` cuts out the background, punches the holes in the
 Papua New Guinea and Denmark coins, squares each one up, centres it and writes
-`coins/<country>.png` at 1024 × 1024 with real alpha. Files are matched to
-countries by whatever is in the filename, so `image_04.png` just needs a word
-like "denmark" or "krone" in it — or you tell me which is which.
+`coins/<country>.png` at 1024 × 1024 with real alpha.
+
+**Filenames don't matter either.** Each image says which coin it is: a hole
+through the middle means Papua New Guinea or Denmark (the darker one is PNG),
+two metals means Thailand or Germany (gold core is Thailand), one metal and no
+hole means Jordan or Philippines (gold is Jordan). Six files called
+`ChatGPT Image Sep 5, 2026, 03_39_06 PM.png` sort themselves out.
 
 The one thing that does matter: **no drop shadow.** A shadow bleeds into the
 cutout and leaves a grey halo. The prompts say so three times; if one comes
