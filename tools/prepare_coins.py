@@ -54,8 +54,14 @@ ALIASES = {
 }
 
 SENTINEL = (255, 0, 255)   # a colour no coin will contain
-OUT_SIZE = 1024            # final square, px
 COIN_FILL = 0.92           # how much of the frame the coin spans
+
+# 800px covers the hero coin on a 3x phone. A generated coin is a photograph
+# of metal, so WebP holds it at a tenth of PNG's weight — and these are the
+# first thing the page loads.
+OUT_SIZE = 800
+SMALL_SIZE = 256   # the row of six, which never renders larger than 128px
+QUALITY = 86
 
 
 def match_country(path):
@@ -176,7 +182,7 @@ def classify(seen):
     return out
 
 
-def square_up(im, mask):
+def square_up(im, mask, out_size=OUT_SIZE):
     """Crop to the coin, centre it in a square, scale it to fill the frame."""
     box = mask.getbbox()
     if not box:
@@ -187,15 +193,15 @@ def square_up(im, mask):
     coin = im.crop(box)
 
     side = max(coin.size)
-    target = int(OUT_SIZE * COIN_FILL)
+    target = int(out_size * COIN_FILL)
     scale = target / side
     coin = coin.resize(
         (max(1, round(coin.width * scale)), max(1, round(coin.height * scale))),
         Image.LANCZOS,
     )
 
-    out = Image.new("RGBA", (OUT_SIZE, OUT_SIZE), (0, 0, 0, 0))
-    out.paste(coin, ((OUT_SIZE - coin.width) // 2, (OUT_SIZE - coin.height) // 2), coin)
+    out = Image.new("RGBA", (out_size, out_size), (0, 0, 0, 0))
+    out.paste(coin, ((out_size - coin.width) // 2, (out_size - coin.height) // 2), coin)
     return out
 
 
@@ -211,6 +217,9 @@ def main():
                     help="place a file explicitly, as path=country")
     ap.add_argument("--no-hole", action="append", default=[],
                     help="skip the centre punch for this country")
+    ap.add_argument("--size", type=int, default=OUT_SIZE, help="output square, px")
+    ap.add_argument("--format", choices=["webp", "png"], default="webp",
+                    help="webp is a tenth of the weight at the same quality")
     ap.add_argument("--by-name", action="store_true",
                     help="match on filenames only, instead of reading the coins")
     args = ap.parse_args()
@@ -258,11 +267,17 @@ def main():
         if want_hole != f["hole"]:
             mask, _ = cut_background(f["im"], args.tol, want_hole)
 
-        dest = out_dir / (country + ".png")
-        square_up(f["im"], mask).save(dest, "PNG", optimize=True)
+        dest = out_dir / (country + "." + args.format)
+        small = out_dir / (country + "-sm." + args.format)
+        for path_out, size in ((dest, args.size), (small, SMALL_SIZE)):
+            out = square_up(f["im"], mask, size)
+            if args.format == "webp":
+                out.save(path_out, "WEBP", quality=QUALITY, method=6)
+            else:
+                out.save(path_out, "PNG", optimize=True)
         by_name = bool(explicit.get(path.name) or match_country(path))
-        done.append((country, dest, dest.stat().st_size // 1024, want_hole,
-                     path.name, f, by_name))
+        done.append((country, dest, (dest.stat().st_size + small.stat().st_size) // 1024,
+                     want_hole, path.name, f, by_name))
 
     for country, dest, kb, hole, src, f, by_name in done:
         print("  {:<18} <- {}".format(country, src))

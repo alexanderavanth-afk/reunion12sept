@@ -61,13 +61,15 @@ const CONFIG = {
   },
 
   /* ── The six coins ──────────────────────────────────────────────────
-     `image` takes a PNG in /coins/ (transparent background, square). Leave
-     it null and the coin is drawn in SVG instead; a missing or broken file
-     also falls back to the drawing, so the page never shows a hole.
+     `image` is the full-size coin; the row of six loads a `-sm` variant
+     beside it, since it never renders larger than 128px. Both are written by
+     tools/prepare_coins.py. Set image to null and the coin is drawn in SVG
+     instead — and a missing or broken file falls back to the drawing too, so
+     the page never shows an empty box.
      `hole` and `ring` are real structural facts about each currency's coin.
      `palette` washes the page when that coin lands; `quote` is its line.  */
   countries: [
-    { code: "JO", name: "Jordan", image: "coins/jordan.png",
+    { code: "JO", name: "Jordan", image: "coins/jordan.webp",
       unit: "DINAR", denom: "١٠", script: "ar", metal: "brass", ring: null,
       fact: "One dinar divides into ten dirham, a hundred qirsh, a thousand fils.",
       palette: { ground: "#F0E6D4", bone2: "#E7DAC3", card: "#F9F2E4",
@@ -75,7 +77,7 @@ const CONFIG = {
       quote: { orig: "خير الناس أنفعهم للناس", dir: "rtl", by: "Muhammad",
                en: "The best of people are those of most use to others." } },
 
-    { code: "PH", name: "Philippines", image: "coins/philippines.png",
+    { code: "PH", name: "Philippines", image: "coins/philippines.webp",
       unit: "PISO", denom: "1", script: "lat", metal: "nickel", ring: null,
       fact: "Piso — inherited from the Spanish peso, respelled into Tagalog.",
       palette: { ground: "#EFEBD8", bone2: "#E5E0C8", card: "#F8F5E5",
@@ -84,7 +86,7 @@ const CONFIG = {
                by: "Tagalog proverb",
                en: "Whoever won't look back at where they came from will never arrive." } },
 
-    { code: "PG", name: "Papua New Guinea", image: "coins/papua-new-guinea.png",
+    { code: "PG", name: "Papua New Guinea", image: "coins/papua-new-guinea.webp",
       unit: "KINA", denom: "", script: "lat", metal: "aged", ring: null, hole: true,
       fact: "The one-kina coin is struck with a hole straight through the middle.",
       palette: { ground: "#EEE4D2", bone2: "#E3D7C1", card: "#F7F0E1",
@@ -92,7 +94,7 @@ const CONFIG = {
       quote: { orig: "Yumi olgeta wantok.", by: "Tok Pisin",
                en: "We are all wantok — one language, one people, each other's own." } },
 
-    { code: "TH", name: "Thailand", image: "coins/thailand.png",
+    { code: "TH", name: "Thailand", image: "coins/thailand.webp",
       unit: "BAHT", denom: "๑๐", script: "th", metal: "brass", ring: "nickel",
       fact: "Ten baht: a brass heart inside a white ring.",
       palette: { ground: "#F0EBD6", bone2: "#E6E0C6", card: "#F9F5E4",
@@ -101,7 +103,7 @@ const CONFIG = {
                by: "Buddha · Metta Sutta",
                en: "As a mother guards her only child with her life — so let your heart go out, without limit, to every living thing." } },
 
-    { code: "DE", name: "Germany", image: "coins/germany.png",
+    { code: "DE", name: "Germany", image: "coins/germany.webp",
       unit: "EURO", denom: "2", script: "lat", metal: "nickel", ring: "brass",
       fact: "The same coin in twenty countries — and a different back in each.",
       palette: { ground: "#E9E7DE", bone2: "#DFDCD1", card: "#F4F2EB",
@@ -110,7 +112,7 @@ const CONFIG = {
                by: "Goethe · Faust I",
                en: "Here I am human; here I am allowed to be." } },
 
-    { code: "DK", name: "Denmark", image: "coins/denmark.png",
+    { code: "DK", name: "Denmark", image: "coins/denmark.webp",
       unit: "KRONE", denom: "", script: "lat", metal: "nickel", ring: null, hole: true,
       fact: "A hole through the middle, and the monarch's crowned monogram around it.",
       palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
@@ -1305,10 +1307,11 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   /* Paint into a container: the photograph if there is one, the drawing
      otherwise — and the drawing again if the photograph fails to load. */
-  function paintDisc(el, spec) {
-    if (spec.image) {
-      el.innerHTML = '<img src="' + esc(spec.image) + '" alt="' + esc(spec.alt || "") +
-                     '" loading="lazy" decoding="async">';
+  function paintDisc(el, spec, small) {
+    const src = small && spec.image ? spec.image.replace(/(\.\w+)$/, "-sm$1") : spec.image;
+    if (src) {
+      el.innerHTML = '<img src="' + esc(src) + '" alt="' + esc(spec.alt || "") +
+                     '" loading="' + (small ? "lazy" : "eager") + '" decoding="async">';
       const img = $("img", el);
       img.addEventListener("error", function () { el.innerHTML = coinSVG(spec); }, { once: true });
     } else {
@@ -1422,7 +1425,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
              "</article>";
     }).join("");
     CONFIG.countries.forEach(function (c) {
-      paintDisc($('.disc[data-code="' + c.code + '"]', wrap), countrySpec(c));
+      paintDisc($('.disc[data-code="' + c.code + '"]', wrap), countrySpec(c), true);
     });
   }
 

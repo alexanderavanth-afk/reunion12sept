@@ -7,9 +7,14 @@ them up the moment they land.
 
 ## 1. The coins
 
-**Open [`COIN-PROMPTS.md`](COIN-PROMPTS.md), paste each of the six blocks into
-ChatGPT, and download what comes back.** Then send me the six images. That's
-the whole job on your side.
+**Done.** All six are in `coins/`, generated from
+[`COIN-PROMPTS.md`](COIN-PROMPTS.md) and processed by
+`tools/prepare_coins.py`. The originals are kept in `coins/originals/` (not
+deployed — see `.vercelignore`) in case any needs redoing.
+
+To replace one: generate it, drop it in a folder, and run
+
+    python3 tools/prepare_coins.py that-folder --out coins/
 
 Don't worry about file format, size, naming or transparency — I handle all of
 it. `tools/prepare_coins.py` cuts out the background, punches the holes in the
