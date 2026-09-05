@@ -107,6 +107,7 @@ button {
 button.ghost { background: transparent; color: var(--ink); }
 button:hover { background: var(--stamp); border-color: var(--stamp); color: var(--bone); }
 button:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
+button.danger { color: var(--stamp); border-color: var(--stamp); }
 .status { color: var(--ink-3); font-size: 13.5px; }
 .status.bad { color: var(--stamp); font-weight: 600; }
 
@@ -154,24 +155,29 @@ td.dish { font-weight: 600; }
 
   <p class="mono" id="stamp"></p>
   <h1>Kitchen overview</h1>
-  <p class="sub">Every reply gathered into one sheet the restaurant can read.</p>
+  <p class="sub">Every reply gathered into one sheet the restaurant can read.
+    Paste each one as it arrives — the page keeps them.</p>
 
   <section class="intake no-print">
     <p>
-      Paste the replies below — <strong>whichever is easiest</strong>. The
-      notification emails work: copy the block starting <em>ATTENDING</em> out
-      of each one, as many as you like, one after another. So does
-      <strong>Export → JSON</strong> or CSV from the Formspree dashboard.
-      Everything is worked out in this browser; nothing is uploaded anywhere.
-      Two replies from the same name count once — the later one wins.
+      When a reply lands in your inbox, copy the block starting
+      <em>ATTENDING</em> and paste it below. Press <strong>Add replies</strong>
+      and it joins everything already here — you never have to paste the same
+      one twice. The JSON or CSV export from Formspree works too, and so does
+      several emails pasted one after another.
+      <br><br>
+      Two replies from the same name count once, keeping the later one, so a
+      guest who changes their mind fixes themselves. Everything is stored in
+      this browser only; nothing is uploaded anywhere.
     </p>
     <textarea id="paste" spellcheck="false"
       placeholder="ATTENDING&#10;Name: Alex&#10;Party: 2&#10;&#10;1. Alex&#10;   Starters: Norrlyst signatur tatar&#10;   …&#10;&#10;— or the JSON / CSV export —"></textarea>
     <div class="bar">
-      <button type="button" id="run">Read the replies</button>
+      <button type="button" id="run">Add replies</button>
       <button type="button" class="ghost" id="demo">Show an example</button>
       <button type="button" class="ghost" id="print" hidden>Print</button>
       <button type="button" class="ghost" id="copy" hidden>Copy as a spreadsheet</button>
+      <button type="button" class="ghost danger" id="clear" hidden>Clear everything</button>
       <span class="status" id="status"></span>
     </div>
   </section>
@@ -348,6 +354,22 @@ td.dish { font-weight: 600; }
 
   /* ── Rendering ─────────────────────────────────────────────────── */
 
+  /* ── The store ─────────────────────────────────────────────────
+     The page is a ledger, not a form: what you paste is kept here, so
+     each reply is entered once and the totals are always current.   */
+
+  const STORE = "reunion-replies-v1";
+
+  function loadStore() {
+    try { return JSON.parse(localStorage.getItem(STORE) || "[]"); }
+    catch (e) { return []; }
+  }
+
+  function saveStore(list) {
+    try { localStorage.setItem(STORE, JSON.stringify(list)); return true; }
+    catch (e) { return false; }
+  }
+
   let lastTSV = "";
 
   function render(subs) {
@@ -436,18 +458,55 @@ td.dish { font-weight: 600; }
     el.className = "status" + (bad ? " bad" : "");
   }
 
+  function show(list) {
+    render(list);
+    $("#clear").hidden = !list.length;
+    $("#out").hidden = !list.length;
+    const heads = list.filter(function (s) { return s.attending; })
+                      .reduce(function (n, s) { return n + (s.party || s.guests.length); }, 0);
+    return list.length + (list.length === 1 ? " reply" : " replies") +
+           ", " + heads + (heads === 1 ? " cover" : " covers") + " so far.";
+  }
+
   $("#run").addEventListener("click", function () {
+    let fresh;
     try {
-      const subs = read($("#paste").value);
-      render(subs);
-      say(subs.length + (subs.length === 1 ? " reply read." : " replies read."), false);
+      fresh = read($("#paste").value);
     } catch (e) {
-      $("#out").hidden = true;
       say(e.message || "Could not read what was pasted.", true);
+      return;
     }
+
+    const before = loadStore();
+    const merged = dedupe(before.concat(fresh.map(function (sub) {
+      return Object.assign({}, sub, { at: sub.at || new Date().toISOString() });
+    })));
+    const added = merged.length - before.length;
+
+    if (!saveStore(merged)) {
+      say("Couldn't save to this browser — the totals below are right, but they "
+          + "won't survive a refresh.", true);
+      render(merged);
+      $("#out").hidden = false;
+      return;
+    }
+
+    $("#paste").value = "";
+    say(show(merged) + (added > 0
+      ? " (" + added + " new)"
+      : " — already had " + (fresh.length === 1 ? "that one" : "those")), false);
+  });
+
+  $("#clear").addEventListener("click", function () {
+    if (!window.confirm("Remove every reply stored in this browser? "
+                        + "The emails in your inbox are untouched.")) return;
+    try { localStorage.removeItem(STORE); } catch (e) {}
+    ["#out", "#clear", "#print", "#copy"].forEach(function (id) { $(id).hidden = true; });
+    say("Cleared. Paste replies to start again.", false);
   });
 
   $("#demo").addEventListener("click", function () {
+    say("Example loaded below — press Add replies to see what it does.", false);
     $("#paste").value = JSON.stringify([
       { name: "Maja Jensen", attending: "yes", party: 2, diet: "Anders: nødder",
         submittedAt: "2026-09-02T18:04:00Z",
@@ -462,10 +521,12 @@ td.dish { font-weight: 600; }
       { name: "Frank", attending: "yes", party: 1, submittedAt: "2026-09-03T07:40:00Z",
         rows: "Frank | Norrlyst signatur tatar | Aromatisk bisque af strandkrabber | Dagens tilgang af fisk | Verdens bedste vaniljeis" }
     ], null, 2);
-    $("#run").click();
   });
 
   $("#print").addEventListener("click", function () { window.print(); });
+
+  const existing = loadStore();
+  say(existing.length ? show(existing) : "Nothing stored yet. Paste a reply below.", false);
 
   $("#copy").addEventListener("click", function () {
     navigator.clipboard.writeText(lastTSV).then(

@@ -144,30 +144,38 @@ array doesn't.
 
 ## The restaurant overview
 
-Open `overview.html` and paste the replies in — whichever form is to hand:
+Live at **`<your-vercel-domain>/overview`** — the invitation's URL with
+`/overview` on the end. Nothing links to it, and it carries `noindex`, so only
+someone who knows the address finds it. Bookmark it.
 
-- **the notification emails**, copied from `ATTENDING` down, several in a row;
-- **Export → JSON** from the Formspree dashboard;
-- **CSV**, which falls back to the flat `rows` field.
+It is a **ledger, not a form**. When a reply lands in your inbox, copy the block
+starting `ATTENDING`, paste it in, press **Add replies** — and it joins
+everything already there. Each reply is entered once; you never re-paste. The
+JSON or CSV export from Formspree works the same way, as do several emails
+pasted one after another.
 
-Each submission is only ever its own party. The aggregating across everybody
-happens here, in the browser, on whatever you paste. It produces:
+Replies are held in that browser's `localStorage`, so the page you use is the
+page that remembers. Two replies from the same name count once, keeping the
+later one, so a guest who changes their mind corrects themselves. **Clear
+everything** wipes the store after a confirm — that's the reset, and it leaves
+your inbox and the Formspree dashboard untouched.
 
-- **Optælling** — covers, parties, regrets, dishes chosen.
-- **Til køkkenet** — every dish with a count, grouped by course. This is the
-  number the kitchen actually needs.
-- **Bordet** — one row per person with all four courses.
-- **Allergier** and **Afbud**.
+Each submission only ever describes its own party. The aggregating across
+everybody happens here, in the browser. It produces:
 
-Everything is computed in the browser; nothing is uploaded. **Print** gives a
-clean sheet to hand over, and **Kopiér som regneark** puts a tab-separated
-table on the clipboard for Excel or Sheets. Duplicate answers from the same
-name are collapsed, keeping the later one — so someone who changes their mind
-is counted once. "Vis et eksempel" loads sample data
-if you want to see the shape before the real replies arrive.
+- **The count** — covers, parties, regrets, and seats left of fifteen.
+- **For the kitchen** — every dish with a count, grouped by course, in
+  Norrlyst's own Danish. This is the number the restaurant needs.
+- **The table** — one row per person with all four courses.
+- **Allergies** and **Regrets**.
+
+**Print** gives a clean sheet to hand over; **Copy as a spreadsheet** puts a
+tab-separated table on the clipboard. "Show an example" fills the box with
+sample data if you want to see the shape before real replies arrive.
 
 Its `COURSES` list must stay in step with `CONFIG.courses` in `index.html` —
 that's the one place the two files have to agree.
+
 
 ## Editing the evening
 
