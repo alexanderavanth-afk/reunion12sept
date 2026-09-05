@@ -147,6 +147,23 @@ function rebuild(ss) {
   write(ss, 'Allergies', diets);
 }
 
+/* ── Wiping the test replies ──────────────────────────────────────────
+   Run this from the editor — pick clearAll in the function dropdown and
+   press Run. It empties Replies and rebuilds the two summary tabs, which
+   deleting rows by hand does not: those only rebuild when a reply lands.
+   No redeploy needed; running a function uses the saved code.           */
+
+function clearAll() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName('Replies');
+  if (sh && sh.getLastRow() > 1) {
+    sh.deleteRows(2, sh.getLastRow() - 1);
+  }
+  rebuild(ss);
+  SpreadsheetApp.getActiveSpreadsheet().toast('Replies cleared.', 'Reunion dinner', 5);
+}
+
+
 /* ── Small helpers ────────────────────────────────────────────────── */
 
 function tab(ss, name, header) {

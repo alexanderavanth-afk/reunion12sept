@@ -72,6 +72,20 @@ from step 3.
 The URL is in `CONFIG.sheet` in `index.html` and `SHEET` in `overview.html`.
 Send yourself one RSVP and watch it land in the sheet.
 
+## Clearing the test replies
+
+Formspree and the sheet are separate: emptying the Formspree dashboard clears
+your inbox archive, and nothing else. `/overview` reads the **sheet**.
+
+To wipe the sheet, open the Apps Script editor, pick **clearAll** in the
+function dropdown at the top, and press **Run**. It empties the Replies tab and
+rebuilds Kitchen and Allergies. No redeploy — running a function uses whatever
+is saved.
+
+Deleting the rows by hand works too, but leaves the Kitchen and Allergies tabs
+showing the old numbers until the next reply arrives, which is why `clearAll`
+exists.
+
 ## Turning it off afterwards
 
 When the dinner is over, shut it down in two places. Both take a minute.
