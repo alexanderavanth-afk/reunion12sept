@@ -49,11 +49,19 @@ animation and paints the result directly.
 Each country's `palette` (seven colours) and `quote` live beside it in
 `CONFIG.countries`, so both are edited in one place.
 
+## The page, in order
+
+The invitation is only sent to people who are already coming, so the page is
+built to be acted on, not read: coin, headline, **the button**, and then the
+form. Everything else — the running order, the coins, the photographs — sits
+below the form for whoever wants it. There is no "can't make it" option and no
+way to skip a course; both were decisions nobody needed to make.
+
 ## The RSVP flow
 
 Three numbered steps on one page — no wizard, nothing to lose on a refresh:
 
-1. **Who's coming?** — attending or not, your name, a party-size stepper, and
+1. **Who's coming?** — your name, a party-size stepper, and
    (as soon as the party is more than one) a name field per extra guest.
 2. **The dishes** — one box that asks one question at a time. Tap a dish and it
    advances to the next course; after the last course it moves to the next
@@ -64,6 +72,14 @@ Three numbered steps on one page — no wizard, nothing to lose on a refresh:
    clickable — they jump to that person's first unanswered course. At the end
    the box turns into a summary with a **Change** link on every line.
 3. **Confirm** — a live reading of exactly what the send button will post.
+
+## Phones
+
+Most people will open this on one, so it is checked rather than assumed: no
+horizontal overflow at 320, 360, 390 or 430 px, the call to action about 650 px
+down (one short scroll), the facts ledger two-up instead of four-down, the
+picker header wrapping rather than truncating, and every control at least 44 px
+tall. Inputs are 16 px so iOS doesn't zoom on focus.
 
 The vegetarian dish in each course carries a `VEG` mark, set by `veg: true` on
 the dish.
