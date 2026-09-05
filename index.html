@@ -18,18 +18,10 @@
 <script>
 const CONFIG = {
 
-  /* Where a reply goes. Both are optional and a reply is sent to whichever
-     is filled in.
-
-     `endpoint` — Formspree. This is what puts a reply in your inbox.
-     `sheet`    — the Google Apps Script web app from tools/sheet-backend.gs.
-                  This is the source of truth: it writes the reply into the
-                  sheet and keeps the Kitchen and Allergies tabs current, and
-                  it is what /overview reads. See SHEET-SETUP.md.
-
-     With neither set, the form falls back to a pre-filled email to hostEmail. */
+  /* Where a reply goes: Formspree, which emails it to you and keeps it in
+     its dashboard to export. Empty this and the form falls back to a
+     pre-filled email to hostEmail instead. */
   endpoint: "https://formspree.io/f/mljeljaa",
-  sheet: "https://script.google.com/macros/s/AKfycbxxfThG7AiNYNJkAnOR7vwqPtOBv-1H2fQX_3cc259td7G7K01CJjiLKPgo4Je0cJECqw/exec",
 
   hostEmail: "alexander.avanth@gmail.com",
   hostName:  "Alexander",
@@ -1744,34 +1736,19 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     }
 
     const d = payload();
-    if (!CONFIG.endpoint && !CONFIG.sheet) { mailFallback(d); return; }
+    if (!CONFIG.endpoint) { mailFallback(d); return; }
 
     const btn = $("#send");
     btn.disabled = true;
     btn.textContent = "Sending…";
 
-    const body = JSON.stringify(Object.assign({}, d, { summary: asText(d) }));
-    const posts = [];
-
-    if (CONFIG.endpoint) {
-      posts.push(fetch(CONFIG.endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: body
-      }));
-    }
-    if (CONFIG.sheet) {
-      /* No custom Content-Type: that keeps it a simple request, so the
-         browser skips the preflight Apps Script cannot answer. */
-      posts.push(fetch(CONFIG.sheet, { method: "POST", body: body }));
-    }
-
-    /* One of them landing is enough — the reply is recorded either way. */
-    Promise.allSettled(posts)
-      .then(function (results) {
-        if (!results.some(function (r) { return r.status === "fulfilled" && r.value.ok; })) {
-          throw new Error("both endpoints failed");
-        }
+    fetch(CONFIG.endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(Object.assign({}, d, { summary: asText(d) }))
+    })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
         showDone(d, false);
       })
       .catch(function () {

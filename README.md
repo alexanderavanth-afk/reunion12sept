@@ -108,15 +108,9 @@ and the section numbering closes up around it.
 
 ## Where the replies go
 
-A reply is posted to both of these, and either one landing is enough:
-
-- **Formspree** puts it in your inbox — the notification.
-- **The Google Sheet** ([SHEET-SETUP.md](SHEET-SETUP.md)) records it and keeps
-  its own Kitchen and Allergies tabs current — the source of truth, and what
-  `/overview` reads.
-
-Set `CONFIG.sheet` empty and it is Formspree only; set both empty and the form
-falls back to a pre-filled email to the host.
+Replies go to **Formspree**: it emails you each one and keeps them all in its
+dashboard, where **Export** gives you JSON or CSV. Empty `CONFIG.endpoint` and
+the form falls back to a pre-filled email to the host instead.
 
 ### Formspree
 
@@ -165,16 +159,10 @@ Live at **`<your-vercel-domain>/overview`** — the invitation's URL with
 `/overview` on the end. Nothing links to it and it carries `noindex`, so only
 someone who knows the address finds it. Bookmark it.
 
-**With a sheet behind it** (see [SHEET-SETUP.md](SHEET-SETUP.md)) it reads the
-replies itself every time it opens, and there is nothing to paste. Send the
-same link on Saturday and open it again on Tuesday and it says something
-different, because it is reading the sheet rather than a snapshot.
-
-**Without one** it falls back to a ledger you paste into: copy the block
-starting `ATTENDING` out of a notification email, press **Add replies**, and it
-joins what is already there, held in that browser's `localStorage`. The same
-fallback appears automatically if the sheet is ever unreachable, so the page is
-never a dead end.
+Copy the block starting `ATTENDING` out of a notification email, press **Add
+replies**, and it joins what is already there, held in that browser's
+`localStorage`. The JSON or CSV export from Formspree works the same way, as do
+several emails pasted one after another.
 
 Either way it produces:
 
