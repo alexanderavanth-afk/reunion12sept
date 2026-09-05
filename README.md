@@ -53,16 +53,37 @@ Each country's `palette` (seven colours) and `quote` live beside it in
 
 Three numbered steps on one page — no wizard, nothing to lose on a refresh:
 
-1. **Who's coming?** — attending or not, name, and a party-size stepper.
-2. **The dishes** — one tickable card per person, with each course as a short
-   list. One dish per course, plus "None, thanks" for anyone skipping it.
-3. **Confirm** — a live reading of exactly what the send button will post,
-   updating as the form is filled in.
+1. **Who's coming?** — attending or not, your name, a party-size stepper, and
+   (as soon as the party is more than one) a name field per extra guest.
+2. **The dishes** — one box that asks one question at a time. Tap a dish and it
+   advances to the next course; after the last course it moves to the next
+   person and starts again. A **Back** button, four pips for the courses, and a
+   `3 / 8` counter say where you are. When a plus-one exists, a tab strip names
+   each person with their progress (`02 1/4 Maja`) and the header reads
+   `MAJA · 2 OF 2`, so whose dinner you're choosing is never in doubt. Tabs are
+   clickable — they jump to that person's first unanswered course. At the end
+   the box turns into a summary with a **Change** link on every line.
+3. **Confirm** — a live reading of exactly what the send button will post.
+
+The vegetarian dish in each course carries a `VEG` mark, set by `veg: true` on
+the dish.
 
 The room seats fifteen, and the page says so twice: once under the headline
-where nobody can miss it, and again beside the party stepper where it actually
-bears on what someone is about to type. `CONFIG.seats` sets the number in both
-places, and the overview page counts down from it.
+where nobody can miss it, and again beside the party stepper where it bears on
+what someone is about to type. `CONFIG.seats` sets the number in both places,
+and the overview page counts down from it.
+
+## Coins and photographs
+
+Both are optional files the page picks up if they exist.
+
+**Coins** — a transparent square PNG per country in `coins/`, named in
+`CONFIG.countries[].image`. Without one, or if the file 404s, the coin falls
+back to the SVG drawing, so the page never shows an empty box.
+
+**Photographs** — JPGs in `photos/`, listed in `CONFIG.photos` with a `place`,
+`year` and `caption`. The whole section stays hidden while that array is empty,
+and the section numbering closes up around it.
 
 ## Where the replies go
 

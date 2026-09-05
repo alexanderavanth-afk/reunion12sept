@@ -44,6 +44,15 @@ const CONFIG = {
     { time: "22 – ?",  label: "More drinks?", aside: "Where are Tim and Frank?" }
   ],
 
+  /* ── Photographs ────────────────────────────────────────────────────
+     Drop the files in /photos/ and list them here. The section stays
+     hidden while this array is empty, so nothing breaks before they land.
+     Sizes: long edge 1600px, JPG, under ~400 KB each.                  */
+  photos: [
+    // { src: "photos/amman-2019.jpg", place: "Amman", year: "2019",
+    //   caption: "The winter we learned to make proper coffee." },
+  ],
+
   /* The resting state of the hero coin, before anything is tossed. */
   host: {
     palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
@@ -51,11 +60,14 @@ const CONFIG = {
     quote: { orig: "One table. Six countries. One evening.", by: "12.09.2026" }
   },
 
-  /* The six countries at the table, as coins. `hole` and `ring` are real
-     structural facts about each currency's coin, not decoration. `palette`
-     washes the whole page when that coin lands; `quote` is its line on life. */
+  /* ── The six coins ──────────────────────────────────────────────────
+     `image` takes a PNG in /coins/ (transparent background, square). Leave
+     it null and the coin is drawn in SVG instead; a missing or broken file
+     also falls back to the drawing, so the page never shows a hole.
+     `hole` and `ring` are real structural facts about each currency's coin.
+     `palette` washes the page when that coin lands; `quote` is its line.  */
   countries: [
-    { code: "JO", name: "Jordan",
+    { code: "JO", name: "Jordan", image: "coins/jordan.png",
       unit: "DINAR", denom: "١٠", script: "ar", metal: "brass", ring: null,
       fact: "One dinar divides into ten dirham, a hundred qirsh, a thousand fils.",
       palette: { ground: "#F0E6D4", bone2: "#E7DAC3", card: "#F9F2E4",
@@ -63,7 +75,7 @@ const CONFIG = {
       quote: { orig: "خير الناس أنفعهم للناس", dir: "rtl", by: "Muhammad",
                en: "The best of people are those of most use to others." } },
 
-    { code: "PH", name: "Philippines",
+    { code: "PH", name: "Philippines", image: "coins/philippines.png",
       unit: "PISO", denom: "1", script: "lat", metal: "nickel", ring: null,
       fact: "Piso — inherited from the Spanish peso, respelled into Tagalog.",
       palette: { ground: "#EFEBD8", bone2: "#E5E0C8", card: "#F8F5E5",
@@ -72,7 +84,7 @@ const CONFIG = {
                by: "Tagalog proverb",
                en: "Whoever won't look back at where they came from will never arrive." } },
 
-    { code: "PG", name: "Papua New Guinea",
+    { code: "PG", name: "Papua New Guinea", image: "coins/papua-new-guinea.png",
       unit: "KINA", denom: "", script: "lat", metal: "aged", ring: null, hole: true,
       fact: "The one-kina coin is struck with a hole straight through the middle.",
       palette: { ground: "#EEE4D2", bone2: "#E3D7C1", card: "#F7F0E1",
@@ -80,7 +92,7 @@ const CONFIG = {
       quote: { orig: "Wanpela diwai i no inap kamapim bikbus.", by: "Tok Pisin saying",
                en: "One tree never makes a forest." } },
 
-    { code: "TH", name: "Thailand",
+    { code: "TH", name: "Thailand", image: "coins/thailand.png",
       unit: "BAHT", denom: "๑๐", script: "th", metal: "brass", ring: "nickel",
       fact: "Ten baht: a brass heart inside a white ring.",
       palette: { ground: "#F0EBD6", bone2: "#E6E0C6", card: "#F9F5E4",
@@ -89,7 +101,7 @@ const CONFIG = {
                by: "Buddha · Dhammapada 1",
                en: "All that we are arises with our thoughts." } },
 
-    { code: "DE", name: "Germany",
+    { code: "DE", name: "Germany", image: "coins/germany.png",
       unit: "EURO", denom: "2", script: "lat", metal: "nickel", ring: "brass",
       fact: "The same coin in twenty countries — and a different back in each.",
       palette: { ground: "#E9E7DE", bone2: "#DFDCD1", card: "#F4F2EB",
@@ -98,7 +110,7 @@ const CONFIG = {
                by: "Johann Wolfgang von Goethe",
                en: "Knowing is not enough; we must apply." } },
 
-    { code: "DK", name: "Denmark",
+    { code: "DK", name: "Denmark", image: "coins/denmark.png",
       unit: "KRONE", denom: "", script: "lat", metal: "nickel", ring: null, hole: true,
       fact: "A hole through the middle, and the monarch's crowned monogram around it.",
       palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
@@ -107,10 +119,10 @@ const CONFIG = {
                en: "To travel is to live." } }
   ],
 
-  /* The menu, à la carte. Each guest ticks one dish per course — or skips it.
-     `name` is the dish as Norrlyst writes it, and it is what gets sent to the
-     kitchen; `en` and `desc` are what guests read. No prices: the hosts are
-     paying, and a price list only makes people order politely. */
+  /* ── The menu ───────────────────────────────────────────────────────
+     `name` is the dish as Norrlyst writes it, and it is what gets sent to
+     the kitchen; `en` and `desc` are what guests read. `veg: true` prints
+     the vegetarian mark. No prices — the hosts are paying.             */
   courses: [
     {
       id: "forret",
@@ -123,7 +135,7 @@ const CONFIG = {
           en: "Lobster salad",
           desc: "Crisp brioche and bitter herbs" },
         { id: "logtaerte", name: "Løgtærte",
-          en: "Onion tart",
+          en: "Onion tart", veg: true,
           desc: "Pickled vegetables and a foaming sauce of aged cheese" }
       ]
     },
@@ -135,7 +147,7 @@ const CONFIG = {
           en: "Aromatic shore crab bisque",
           desc: "Pickled celeriac and tart apples" },
         { id: "asparges", name: "Stegte hvide asparges",
-          en: "Pan-fried white asparagus",
+          en: "Pan-fried white asparagus", veg: true,
           desc: "Cauliflower cream, crisp onions and an aromatic sauce of lemon and thyme" },
         { id: "havtaske", name: "Stegt havtaskekæbe",
           en: "Pan-fried monkfish cheek",
@@ -150,7 +162,7 @@ const CONFIG = {
           en: "The day's catch",
           desc: "Butter-poached, with grilled spring onions and a sauce of blue mussels and trout roe" },
         { id: "kaal", name: "Stegt kål",
-          en: "Roasted cabbage",
+          en: "Roasted cabbage", veg: true,
           desc: "Grilled onion and an intense sauce of long-kept vegetables" },
         { id: "krondyr", name: "Striploin af krondyr",
           en: "Red deer striploin",
@@ -165,7 +177,7 @@ const CONFIG = {
           en: "Three or five cheeses",
           desc: "Danish honey and malt crispbread" },
         { id: "rabarber", name: "Rabarber “Baked Alaska”",
-          en: "Rhubarb baked Alaska",
+          en: "Rhubarb baked Alaska", veg: true,
           desc: "Dark chocolate, salted caramel and a crisp crumble" },
         { id: "vanilje", name: "Verdens bedste vaniljeis",
           en: "The world's best vanilla ice cream",
@@ -227,7 +239,6 @@ body::before {
   -webkit-mask-image: radial-gradient(88% 64% at 74% -10%, #000 0%, rgba(0,0,0,.5) 44%, transparent 74%);
   mask-image: radial-gradient(88% 64% at 74% -10%, #000 0%, rgba(0,0,0,.5) 44%, transparent 74%);
 }
-.wrap { position: relative; z-index: 1; }
 
 /* Paper grain, fixed over everything */
 body::after {
@@ -244,7 +255,7 @@ body::after {
 a { color: var(--ink); text-underline-offset: 3px; text-decoration-thickness: 1px; }
 a:hover { color: var(--stamp); }
 
-:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+:where(a, button, input, textarea, [tabindex]):focus-visible {
   outline: 2px solid var(--stamp);
   outline-offset: 3px;
 }
@@ -281,7 +292,7 @@ a:hover { color: var(--stamp); }
 @media (min-width: 1080px) { .rail { display: flex; } }
 
 /* ── Shell ─────────────────────────────────────────────────────────── */
-.wrap { max-width: 1180px; margin: 0 auto; padding: 0 22px 110px; }
+.wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 22px 110px; }
 @media (min-width: 1080px) { .wrap { padding-inline: 72px; } }
 
 .topbar { padding: 20px 0 0; }
@@ -369,7 +380,7 @@ a:hover { color: var(--stamp); }
   transition: transform 1.35s cubic-bezier(.16,.84,.28,1);
   filter: drop-shadow(0 22px 26px rgba(40,33,20,.3));
 }
-.coin-btn svg { width: 100%; height: 100%; display: block; }
+.coin-btn svg, .coin-btn img { width: 100%; height: 100%; display: block; object-fit: contain; }
 .toss-caption { color: var(--ink-3); text-align: center; margin: 0; }
 .toss-caption b { color: var(--ink); font-weight: 700; letter-spacing: .12em; }
 
@@ -454,13 +465,7 @@ a:hover { color: var(--stamp); }
   .ledger div:first-child { border-left: 0; padding-left: 0; }
 }
 .ledger dt { color: var(--ink-3); margin: 0 0 6px; }
-.ledger dd {
-  margin: 0;
-  font-size: var(--step-1);
-  font-weight: 600;
-  letter-spacing: -.005em;
-  line-height: 1.3;
-}
+.ledger dd { margin: 0; font-size: var(--step-1); font-weight: 600; letter-spacing: -.005em; line-height: 1.3; }
 
 /* ── Sections ──────────────────────────────────────────────────────── */
 section { padding-top: 84px; }
@@ -507,14 +512,8 @@ section { padding-top: 84px; }
   transition: transform .5s cubic-bezier(.16,.84,.28,1);
 }
 .country:hover .disc { transform: rotate(-8deg) scale(1.05); }
-.country .disc svg { width: 100%; height: 100%; display: block; }
-.country h3 {
-  margin: 0;
-  font-size: var(--step-1);
-  font-weight: 700;
-  letter-spacing: -.01em;
-  text-transform: uppercase;
-}
+.country .disc svg, .country .disc img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.country h3 { margin: 0; font-size: var(--step-1); font-weight: 700; letter-spacing: -.01em; text-transform: uppercase; }
 .country p {
   margin: 0;
   font-family: "Newsreader", Georgia, serif;
@@ -525,51 +524,36 @@ section { padding-top: 84px; }
   max-width: 25ch;
 }
 
-/* ── Menu ──────────────────────────────────────────────────────────── */
-.course { margin-bottom: 40px; }
-.course > h3 {
-  margin: 0 0 5px;
-  font-size: 12px;
+/* ── Photographs ───────────────────────────────────────────────────── */
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 26px 22px; }
+.shot { margin: 0; display: grid; gap: 10px; }
+.shot img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  background: var(--bone-2);
+  border: 1.5px solid var(--ink);
+}
+.shot figcaption { display: grid; gap: 3px; }
+.shot .where {
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: .16em;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  color: var(--stamp);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
 }
-.course > .rule { border: 0; border-top: 1px solid var(--rule-2); margin: 0; }
-.dish { padding: 15px 0; border-bottom: 1px solid var(--rule); }
-.dish:last-child { border-bottom: 0; }
-.dish h4 {
-  margin: 0 0 3px;
-  font-size: var(--step-2);
-  font-weight: 600;
-  letter-spacing: -.012em;
-  line-height: 1.25;
-}
-.dish .desc {
+.shot .where .yr { font-family: "IBM Plex Mono", monospace; font-weight: 500; color: var(--ink-3); }
+.shot .cap {
   margin: 0;
   font-family: "Newsreader", Georgia, serif;
   font-weight: 300;
   font-size: 15.5px;
   line-height: 1.4;
   color: var(--ink-2);
-  max-width: 62ch;
 }
-.dish .da {
-  display: block;
-  margin-top: 5px;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  letter-spacing: .04em;
-  color: var(--ink-3);
-}
-.menu-foot {
-  margin: 0;
-  color: var(--ink-2);
-  font-size: 15px;
-  max-width: 62ch;
-  line-height: 1.55;
-}
-.menu-foot a { font-weight: 600; }
 
 /* ── Form ──────────────────────────────────────────────────────────── */
 form { display: grid; gap: 30px; max-width: 780px; }
@@ -582,6 +566,7 @@ form { display: grid; gap: 30px; max-width: 780px; }
   font-weight: 300;
   line-height: 1.4;
 }
+.hint a { color: var(--stamp); font-family: "Archivo", sans-serif; font-weight: 600; font-size: 14px; }
 
 input[type="text"], textarea {
   width: 100%;
@@ -653,6 +638,11 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
   padding: 12px 0;
 }
 
+/* Companion names */
+.names { display: grid; gap: 8px; }
+.name-row { display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 10px; }
+.name-row .seat { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-3); }
+
 /* Numbered steps */
 .step {
   display: flex;
@@ -663,83 +653,199 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
   margin-bottom: 4px;
 }
 .step .n { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em; }
-.step h3 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -.02em;
-  text-transform: uppercase;
-}
+.step h3 { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -.02em; text-transform: uppercase; }
 
-/* Guest cards */
-.guests { display: grid; gap: 16px; }
-.guest { background: var(--card); border: 1.5px solid var(--ink); }
-.guest-head {
+/* ── The picker: one box, one question at a time ───────────────────── */
+.picker { border: 1.5px solid var(--ink); background: var(--card); overflow: hidden; }
+.picker-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 12px;
-  padding: 10px 15px;
-  border-bottom: 1.5px solid var(--ink);
-  background: var(--bone-2);
+  padding: 12px 16px;
+  background: var(--ink);
+  color: var(--bone);
 }
-.guest-head .seat {
+.picker-head .who { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.picker-head .course {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: .06em;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .72;
+}
+.picker-head .prog {
+  margin-left: auto;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: .1em;
+  font-variant-numeric: tabular-nums;
+  opacity: .72;
   flex: 0 0 auto;
 }
-.guest-head input[type="text"] {
+/* With a plus-one, whose dinner you are choosing has to be unmissable */
+.pk-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1.5px solid var(--ink);
+  background: var(--bone-2);
+  overflow-x: auto;
+}
+.pk-tab {
+  appearance: none;
   border: 0;
+  border-right: 1px solid var(--rule);
   background: transparent;
-  padding: 4px 0;
-  font-size: 15px;
-  font-weight: 600;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.guest-head input[type="text"]:hover { border: 0; }
-.guest-body { padding: 4px 15px 14px; }
-
-/* Tick lists — one dish per course */
-.ticks {
-  border: 0;
-  margin: 0;
-  padding: 13px 0 14px;
-  border-bottom: 1px solid var(--rule);
-  display: grid;
-  gap: 3px;
-}
-.ticks:last-child { border-bottom: 0; }
-.ticks legend { padding: 0; margin-bottom: 5px; color: var(--ink-3); }
-.tick {
-  display: grid;
-  grid-template-columns: 16px 1fr;
-  gap: 11px;
-  align-items: baseline;
-  padding: 7px 9px 7px 7px;
+  padding: 10px 15px 9px;
   cursor: pointer;
-  border: 1px solid transparent;
-  transition: background-color .12s ease;
-}
-.tick:hover { background: var(--bone-2); }
-.tick input { position: absolute; opacity: 0; pointer-events: none; }
-.tick .box {
-  width: 15px;
-  height: 15px;
-  border: 1.5px solid var(--rule-2);
+  font-family: "Archivo", sans-serif;
   display: grid;
-  place-items: center;
-  position: relative;
-  top: 2px;
+  gap: 2px;
+  justify-items: start;
+  flex: 0 0 auto;
+  color: var(--ink-3);
+  transition: background-color .15s ease, color .15s ease;
 }
-.tick .box::after { content: ""; width: 7px; height: 7px; background: transparent; }
-.tick input:checked ~ .box { border-color: var(--stamp); }
-.tick input:checked ~ .box::after { background: var(--stamp); }
-.tick input:focus-visible ~ .box { outline: 2px solid var(--stamp); outline-offset: 2px; }
-.tick:has(input:checked) { background: var(--bone-2); border-color: var(--rule-2); }
-.tick:has(input:checked) .tname { font-weight: 600; }
-.tname { font-size: 15px; line-height: 1.3; }
+.pk-tab:last-child { border-right: 0; }
+.pk-tab:hover { background: var(--card); color: var(--ink); }
+.pk-tab .seat {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.pk-tab .who2 { font-size: 14px; font-weight: 600; letter-spacing: -.01em; max-width: 18ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pk-tab.is-now { background: var(--card); color: var(--ink); box-shadow: inset 0 -3px 0 var(--stamp); }
+.pk-tab .tick2 { color: var(--stamp); }
+
+.picker-body { padding: 4px 0; }
+.picker-body.in-r { animation: slide-r .34s cubic-bezier(.16,.84,.28,1) both; }
+.picker-body.in-l { animation: slide-l .34s cubic-bezier(.16,.84,.28,1) both; }
+@keyframes slide-r { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+@keyframes slide-l { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: none; } }
+
+.opt {
+  appearance: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 22px;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  padding: 15px 16px;
+  cursor: pointer;
+  font-family: "Archivo", sans-serif;
+  color: var(--ink);
+  transition: background-color .13s ease, padding-left .13s ease;
+}
+.opt:hover { background: var(--bone-2); padding-left: 20px; }
+.opt:last-of-type { border-bottom: 0; }
+.opt .nm { display: block; font-size: 16.5px; font-weight: 600; letter-spacing: -.012em; line-height: 1.25; }
+.opt .ds {
+  display: block;
+  margin-top: 3px;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+.opt .da {
+  display: block;
+  margin-top: 5px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+}
+.opt .go { color: var(--rule-2); font-size: 17px; transition: color .13s ease, transform .13s ease; }
+.opt:hover .go { color: var(--stamp); transform: translateX(3px); }
+.opt.is-picked { background: var(--bone-2); }
+.opt.is-picked .go { color: var(--stamp); }
+.opt.skip { border-top: 1px solid var(--rule); }
+.opt.skip .nm { font-weight: 500; font-size: 14.5px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+
+.veg {
+  display: inline-block;
+  margin-left: 8px;
+  border: 1px solid var(--stamp);
+  color: var(--stamp);
+  border-radius: 999px;
+  padding: 1px 8px 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: .1em;
+  vertical-align: 2px;
+}
+
+.picker-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  border-top: 1.5px solid var(--ink);
+  background: var(--bone-2);
+}
+.picker-foot .back {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.picker-foot .back:disabled { color: var(--rule-2); cursor: not-allowed; }
+.pips { margin-left: auto; display: flex; gap: 5px; }
+.pips i { width: 7px; height: 7px; border: 1px solid var(--rule-2); border-radius: 50%; }
+.pips i.on { background: var(--stamp); border-color: var(--stamp); }
+.pips i.now { background: var(--ink); border-color: var(--ink); transform: scale(1.25); }
+
+/* Picker's finished state */
+.pk-done { padding: 20px 16px 6px; }
+.pk-done .line {
+  margin: 0 0 16px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+}
+.pk-guest { border-top: 1px solid var(--rule); padding: 12px 0; }
+.pk-guest:first-of-type { border-top: 0; }
+.pk-guest .gname { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.pk-line {
+  display: grid;
+  grid-template-columns: 118px 1fr auto;
+  gap: 12px;
+  align-items: baseline;
+  padding: 4px 0;
+  font-size: 14.5px;
+}
+.pk-line .c { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.pk-line .v { font-family: "Newsreader", Georgia, serif; font-weight: 300; font-size: 16px; }
+.pk-line .v.none { color: var(--ink-3); font-style: italic; }
+.pk-line .edit {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--stamp);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 /* Confirm panel */
 .confirm { border: 1.5px solid var(--ink); background: var(--card); padding: 18px 18px 20px; }
@@ -752,13 +858,7 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
   color: var(--stamp);
 }
 .confirm .receipt { border-top: 1px solid var(--rule); }
-.confirm .empty {
-  margin: 0;
-  font-family: "Newsreader", Georgia, serif;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--ink-3);
-}
+.confirm .empty { margin: 0; font-family: "Newsreader", Georgia, serif; font-weight: 300; font-style: italic; color: var(--ink-3); }
 
 /* Submit */
 .submit {
@@ -900,7 +1000,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   <section id="agenda">
     <div class="sec-head">
       <h2>How the evening runs</h2>
-      <span class="mono num">I / IV</span>
+      <span class="mono num" id="num-1"></span>
     </div>
     <ol class="agenda" id="agenda-list"></ol>
   </section>
@@ -908,7 +1008,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   <section id="countries">
     <div class="sec-head">
       <h2>Currencies at the table</h2>
-      <span class="mono num">II / IV</span>
+      <span class="mono num" id="num-2"></span>
     </div>
     <p class="lede">Six places we've each called home in turn. Every coin is
       struck like the real one — the hole, the ring and the script aren't
@@ -916,22 +1016,18 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     <div class="coins" id="coin-row"></div>
   </section>
 
-  <section id="menu-section">
+  <section id="photos-section" hidden>
     <div class="sec-head">
-      <h2>The card</h2>
-      <span class="mono num">III / IV</span>
+      <h2>Where we've been</h2>
+      <span class="mono num" id="num-3"></span>
     </div>
-    <p class="lede">Norrlyst serves à la carte in the evening. Pick one dish per
-      course — or skip a course. Dinner is on us, so order what you actually
-      want to eat.</p>
-    <div id="menu"></div>
-    <p class="menu-foot" id="menu-foot"></p>
+    <div class="gallery" id="gallery"></div>
   </section>
 
   <section id="rsvp-section">
     <div class="sec-head">
       <h2>RSVP</h2>
-      <span class="mono num">IV / IV</span>
+      <span class="mono num" id="num-4"></span>
     </div>
 
     <form id="rsvp" novalidate>
@@ -972,16 +1068,32 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         </div>
       </div>
 
+      <div class="field" id="names-field" hidden>
+        <span class="lbl">Who else is coming?</span>
+        <span class="hint">Names help us with the place cards.</span>
+        <div class="names" id="names"></div>
+      </div>
+
       <div class="step" id="step-2">
         <span class="n">02</span>
         <h3>The dishes</h3>
       </div>
 
-      <div class="field" id="guests-field">
-        <span class="lbl">Tick what you'd like</span>
-        <span class="hint">One dish per course, per person. Nothing is binding —
-          the kitchen just likes to know in advance.</span>
-        <div class="guests" id="guests"></div>
+      <div class="field" id="picker-field">
+        <span class="hint" id="menu-line"></span>
+        <div class="picker" id="picker">
+          <div class="picker-head">
+            <span class="who" id="pk-who"></span>
+            <span class="course" id="pk-course"></span>
+            <span class="prog" id="pk-prog"></span>
+          </div>
+          <div class="pk-tabs" id="pk-tabs" hidden></div>
+          <div class="picker-body" id="pk-body"></div>
+          <div class="picker-foot">
+            <button type="button" class="back" id="pk-back">← Back</button>
+            <div class="pips" id="pk-pips"></div>
+          </div>
+        </div>
       </div>
 
       <div class="step">
@@ -1044,12 +1156,14 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   const esc = (v) => String(v == null ? "" : v)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-  const NONE = "None, thanks";
+  const SKIP = "None, thanks";
+  const ROMAN = ["I", "II", "III", "IV"];
 
   /* ═══ Coins ════════════════════════════════════════════════════════
-     Drawn, not photographed: a struck disc, a reeded rim, a legend on an
-     arc, and either a hole or a denomination in the country's own script.
-     Rim ticks are generated rather than hand-authored path data.       */
+     A supplied PNG is used when there is one; otherwise the coin is drawn
+     — a struck disc, a reeded rim, a legend on an arc, and either a hole
+     or a denomination in the country's own script. A broken image falls
+     back to the drawing, so the page never shows an empty box.         */
 
   const METAL = {
     brass:  { hi: "#F2DCA8", mid: "#C29A54", lo: "#7E5F2A", edge: "#5B441E", text: "#463316" },
@@ -1146,8 +1260,22 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     '</svg>';
   }
 
+  /* Paint into a container: the photograph if there is one, the drawing
+     otherwise — and the drawing again if the photograph fails to load. */
+  function paintDisc(el, spec) {
+    if (spec.image) {
+      el.innerHTML = '<img src="' + esc(spec.image) + '" alt="' + esc(spec.alt || "") +
+                     '" loading="lazy" decoding="async">';
+      const img = $("img", el);
+      img.addEventListener("error", function () { el.innerHTML = coinSVG(spec); }, { once: true });
+    } else {
+      el.innerHTML = coinSVG(spec);
+    }
+  }
+
   function countrySpec(c) {
     return {
+      image: c.image || null,
       metal: c.metal,
       ring: c.ring,
       hole: !!c.hole,
@@ -1162,6 +1290,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   function hostSpec() {
     return {
+      image: null,
       metal: "brass",
       ring: null,
       hole: false,
@@ -1181,8 +1310,6 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   const landed = () => (tossIndex < 0 ? CONFIG.host : CONFIG.countries[tossIndex]);
   const currentSpec = () => (tossIndex < 0 ? hostSpec() : countrySpec(CONFIG.countries[tossIndex]));
-
-  function paintCoin(spec) { $("#coin").innerHTML = coinSVG(spec); }
 
   function applyPalette(pal) {
     const r = document.documentElement.style;
@@ -1218,7 +1345,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   function land(animate) {
     const it = landed();
-    paintCoin(currentSpec());
+    paintDisc($("#coin"), currentSpec());
     applyPalette(it.palette);
     showQuote(it.quote, animate);
     setCaption();
@@ -1243,16 +1370,38 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   }
 
   function renderCountries() {
-    $("#coin-row").innerHTML = CONFIG.countries.map(function (c) {
+    const wrap = $("#coin-row");
+    wrap.innerHTML = CONFIG.countries.map(function (c) {
       return '<article class="country">' +
-               '<div class="disc">' + coinSVG(countrySpec(c)) + "</div>" +
+               '<div class="disc" data-code="' + c.code + '"></div>' +
                "<h3>" + esc(c.name) + "</h3>" +
                "<p>" + esc(c.fact) + "</p>" +
              "</article>";
     }).join("");
+    CONFIG.countries.forEach(function (c) {
+      paintDisc($('.disc[data-code="' + c.code + '"]', wrap), countrySpec(c));
+    });
   }
 
-  /* ═══ Static copy that reads from CONFIG ═══════════════════════════ */
+  /* ═══ Photographs ══════════════════════════════════════════════════ */
+  function renderPhotos() {
+    const list = CONFIG.photos || [];
+    if (!list.length) return;
+    $("#photos-section").hidden = false;
+    $("#gallery").innerHTML = list.map(function (p) {
+      return '<figure class="shot">' +
+               '<img src="' + esc(p.src) + '" alt="' + esc(p.place || "") +
+                 '" loading="lazy" decoding="async">' +
+               "<figcaption>" +
+                 '<span class="where">' + esc(p.place || "") +
+                   '<span class="yr">' + esc(p.year || "") + "</span></span>" +
+                 (p.caption ? '<p class="cap">' + esc(p.caption) + "</p>" : "") +
+               "</figcaption>" +
+             "</figure>";
+    }).join("");
+  }
+
+  /* ═══ Static copy ══════════════════════════════════════════════════ */
   function renderChrome() {
     $("#rail-l").textContent = "Heads or tails · 12.09.2026";
     $("#rail-r").textContent = (CONFIG.venue + " · " + CONFIG.city).toUpperCase();
@@ -1273,11 +1422,18 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#party-hint").textContent =
       "Including yourself, and only those already confirmed — " + CONFIG.seats + " seats in all.";
 
-    $("#menu-foot").innerHTML =
-      "Dish names are Norrlyst's own; the kitchen cooks to the season, so the card can " +
-      "shift a little before the night. The full card and everything else about the " +
-      'evening: <a href="' + CONFIG.venueUrl + '" target="_blank" rel="noopener noreferrer">' +
-      "norrlyst.dk</a>.";
+    $("#menu-line").innerHTML =
+      '<a href="' + CONFIG.venueUrl + '" target="_blank" rel="noopener noreferrer">' +
+      "Click here for a full overview of the menu</a>, and please make your selection " +
+      "below along with your attendance so that we can send it to the restaurant ahead " +
+      "of time. The vegetarian dish in each course is marked <em class=\"veg\">VEG</em>.";
+
+    /* Sections are numbered in the order they actually appear. */
+    const shown = ["#num-1", "#num-2", "#num-3", "#num-4"]
+      .filter(function (id) { return id !== "#num-3" || (CONFIG.photos || []).length; });
+    shown.forEach(function (id, i) {
+      $(id).textContent = ROMAN[i] + " / " + ROMAN[shown.length - 1];
+    });
 
     $("#foot-mark").textContent = "Reunion dinner · MMXXVI";
     $("#foot-place").textContent = (CONFIG.venue + " · " + CONFIG.city).toUpperCase();
@@ -1297,96 +1453,174 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     }).join("");
   }
 
-  /* ═══ Menu ═════════════════════════════════════════════════════════ */
-  function renderMenu() {
-    $("#menu").innerHTML = CONFIG.courses.map(function (course) {
-      const dishes = course.dishes.map(function (d) {
-        return '<div class="dish">' +
-                 "<h4>" + esc(d.en) + "</h4>" +
-                 '<p class="desc">' + esc(d.desc) +
-                   '<span class="da">' + esc(d.name) + "</span></p>" +
+  /* ═══ Who's coming ═════════════════════════════════════════════════ */
+  let party = 1;
+  let names = [""];                 /* names[0] mirrors the "Your name" field */
+  let picks = [{}];                 /* picks[guest][courseId] = dishId | "skip" */
+
+  function guestName(i) {
+    const n = (names[i] || "").trim();
+    if (n) return n;
+    return i === 0 ? ($("#name").value.trim() || "You") : "Guest " + (i + 1);
+  }
+
+  function fitState() {
+    while (names.length < party) names.push("");
+    while (picks.length < party) picks.push({});
+    names.length = party;
+    picks.length = party;
+  }
+
+  function renderNames() {
+    const field = $("#names-field");
+    field.hidden = party < 2;
+    if (party < 2) { $("#names").innerHTML = ""; return; }
+
+    $("#names").innerHTML = Array.from({ length: party - 1 }, function (_, k) {
+      const i = k + 1;
+      return '<div class="name-row">' +
+               '<span class="seat">' + String(i + 1).padStart(2, "0") + "</span>" +
+               '<input type="text" data-name="' + i + '" autocomplete="off" value="' +
+                 esc(names[i] || "") + '" placeholder="Guest ' + (i + 1) + '">' +
+             "</div>";
+    }).join("");
+  }
+
+  /* ═══ The picker ═══════════════════════════════════════════════════
+     One box that walks every guest through every course, one question at
+     a time. `cursor` indexes a flat list of {guest, course} steps.      */
+  let cursor = 0;
+
+  const stepsList = () => {
+    const out = [];
+    for (let g = 0; g < party; g++) {
+      CONFIG.courses.forEach(function (c, ci) { out.push({ g: g, ci: ci }); });
+    }
+    return out;
+  };
+
+  function firstUnanswered() {
+    const steps = stepsList();
+    for (let i = 0; i < steps.length; i++) {
+      const s = steps[i];
+      if (!picks[s.g] || !picks[s.g][CONFIG.courses[s.ci].id]) return i;
+    }
+    return steps.length;
+  }
+
+  function optionHTML(d, picked) {
+    return '<button type="button" class="opt' + (picked ? " is-picked" : "") +
+             '" data-dish="' + esc(d.id) + '">' +
+             "<span>" +
+               '<span class="nm">' + esc(d.en) +
+                 (d.veg ? '<em class="veg">VEG</em>' : "") + "</span>" +
+               '<span class="ds">' + esc(d.desc) + "</span>" +
+               '<span class="da">' + esc(d.name) + "</span>" +
+             "</span>" +
+             '<span class="go" aria-hidden="true">→</span>' +
+           "</button>";
+  }
+
+  function doneHTML() {
+    const guests = Array.from({ length: party }, function (_, g) {
+      const lines = CONFIG.courses.map(function (c, ci) {
+        const v = picks[g][c.id];
+        const d = v && v !== "skip" ? dishById(c.id, v) : null;
+        const label = d ? d.en : (v === "skip" ? SKIP : "Not chosen");
+        return '<div class="pk-line">' +
+                 '<span class="c">' + esc(c.name) + "</span>" +
+                 '<span class="v' + (d ? "" : " none") + '">' + esc(label) + "</span>" +
+                 '<button type="button" class="edit" data-jump="' + (g * CONFIG.courses.length + ci) +
+                   '">Change</button>' +
                "</div>";
       }).join("");
-      return '<div class="course"><h3>' + esc(course.name) + '</h3><hr class="rule">' +
-             dishes + "</div>";
+      return '<div class="pk-guest"><div class="gname">' + esc(guestName(g)) + "</div>" +
+             lines + "</div>";
+    }).join("");
+
+    return '<div class="pk-done"><p class="line">That\'s everyone.</p>' + guests + "</div>";
+  }
+
+  function paintBody(html, dir) {
+    const b = $("#pk-body");
+    b.innerHTML = html;
+    b.classList.remove("in-l", "in-r");
+    void b.offsetWidth;
+    b.classList.add(dir === "back" ? "in-l" : "in-r");
+  }
+
+  function answeredCount(g) {
+    return CONFIG.courses.filter(function (c) { return !!picks[g][c.id]; }).length;
+  }
+
+  function renderTabs(activeGuest) {
+    const tabs = $("#pk-tabs");
+    if (party < 2) { tabs.hidden = true; tabs.innerHTML = ""; return; }
+    tabs.hidden = false;
+    tabs.innerHTML = Array.from({ length: party }, function (_, g) {
+      const done = answeredCount(g);
+      const all = CONFIG.courses.length;
+      return '<button type="button" class="pk-tab' + (g === activeGuest ? " is-now" : "") +
+               '" data-guest-tab="' + g + '">' +
+               '<span class="seat">' + String(g + 1).padStart(2, "0") +
+                 (done === all ? '<span class="tick2">✓</span>' : "<span>" + done + "/" + all + "</span>") +
+               "</span>" +
+               '<span class="who2">' + esc(guestName(g)) + "</span>" +
+             "</button>";
     }).join("");
   }
 
-  /* ═══ Guests ═══════════════════════════════════════════════════════ */
-  let party = 1;
+  function renderPicker(dir) {
+    const steps = stepsList();
+    const head = $(".picker-head");
+    const foot = $(".picker-foot");
 
-  function tick(i, courseId, value, label) {
-    return '<label class="tick">' +
-             '<input type="radio" name="g' + i + "-" + courseId + '" value="' + esc(value) +
-               '" data-guest="' + i + '" data-course="' + courseId + '">' +
-             '<span class="box"></span>' +
-             '<span class="tname">' + esc(label) + "</span>" +
-           "</label>";
-  }
+    if (cursor >= steps.length) {
+      $("#pk-who").textContent = "All chosen";
+      $("#pk-course").textContent = "";
+      $("#pk-prog").textContent = steps.length + " / " + steps.length;
+      head.hidden = false;
+      foot.hidden = true;
+      renderTabs(-1);
+      paintBody(doneHTML(), dir);
+      renderPreview();
+      return;
+    }
 
-  function guestRow(i) {
-    const picks = CONFIG.courses.map(function (course) {
-      const rows = course.dishes.map(function (d) {
-        return tick(i, course.id, d.id, d.en);
-      }).join("") + tick(i, course.id, "skip", NONE);
+    const s = steps[cursor];
+    const course = CONFIG.courses[s.ci];
+    const chosen = picks[s.g][course.id];
 
-      return '<fieldset class="ticks">' +
-               '<legend class="mono">' + esc(course.name) + "</legend>" +
-               rows +
-             "</fieldset>";
+    $("#pk-who").textContent = party > 1
+      ? guestName(s.g) + " · " + (s.g + 1) + " of " + party
+      : guestName(s.g);
+    $("#pk-course").textContent = course.name;
+    renderTabs(s.g);
+    $("#pk-prog").textContent = (cursor + 1) + " / " + steps.length;
+    head.hidden = false;
+    foot.hidden = false;
+
+    paintBody(
+      course.dishes.map(function (d) { return optionHTML(d, chosen === d.id); }).join("") +
+      '<button type="button" class="opt skip' + (chosen === "skip" ? " is-picked" : "") +
+        '" data-dish="skip">' +
+        '<span><span class="nm">Skip this course</span></span>' +
+        '<span class="go" aria-hidden="true">→</span></button>',
+      dir
+    );
+
+    $("#pk-back").disabled = cursor === 0;
+    $("#pk-pips").innerHTML = CONFIG.courses.map(function (c, i) {
+      const answered = !!picks[s.g][c.id];
+      return '<i class="' + (i === s.ci ? "now" : answered ? "on" : "") + '"></i>';
     }).join("");
-
-    const ph = i === 0 ? "Your name" : "Guest " + (i + 1);
-
-    return '<div class="guest">' +
-             '<div class="guest-head">' +
-               '<span class="seat">' + String(i + 1).padStart(2, "0") + "</span>" +
-               '<input type="text" data-guest-name="' + i + '" autocomplete="off" placeholder="' +
-                 ph + '">' +
-             "</div>" +
-             '<div class="guest-body">' + picks + "</div>" +
-           "</div>";
-  }
-
-  function readGuests() {
-    return $$(".guest", $("#guests")).map(function (row, i) {
-      const choices = {};
-      $$('input[type="radio"]:checked', row).forEach(function (r) {
-        choices[r.dataset.course] = r.value;
-      });
-      const nameEl = $('[data-guest-name="' + i + '"]', row);
-      return {
-        name: nameEl ? nameEl.value : "",
-        touched: !!(nameEl && nameEl.dataset.touched),
-        choices: choices
-      };
-    });
-  }
-
-  function renderGuests() {
-    const wrap = $("#guests");
-    const keep = readGuests();
-    wrap.innerHTML = Array.from({ length: party }, function (_, i) { return guestRow(i); }).join("");
-
-    keep.slice(0, party).forEach(function (g, i) {
-      const nameEl = $('[data-guest-name="' + i + '"]', wrap);
-      if (nameEl && g.name) {
-        nameEl.value = g.name;
-        if (g.touched) nameEl.dataset.touched = "1";
-      }
-      Object.keys(g.choices).forEach(function (courseId) {
-        const r = $('input[name="g' + i + "-" + courseId + '"][value="' + g.choices[courseId] + '"]', wrap);
-        if (r) r.checked = true;
-      });
-    });
-
-    const first = $('[data-guest-name="0"]', wrap);
-    if (first && !first.dataset.touched) first.value = $("#name").value.trim();
 
     renderPreview();
-    $("#minus").disabled = party <= 1;
-    $("#plus").disabled = party >= CONFIG.maxGuests;
-    $("#party").textContent = String(party);
+  }
+
+  function advance() {
+    cursor += 1;
+    renderPicker("next");
   }
 
   /* ═══ Attendance ═══════════════════════════════════════════════════ */
@@ -1397,7 +1631,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   function syncAttending() {
     const yes = attending();
     $("#party-field").hidden = !yes;
-    $("#guests-field").hidden = !yes;
+    $("#names-field").hidden = !yes || party < 2;
+    $("#picker-field").hidden = !yes;
     $("#step-2").hidden = !yes;
     $("#send").textContent = yes ? "Send RSVP" : "Send regrets";
     renderPreview();
@@ -1411,26 +1646,21 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   function payload() {
     const yes = attending();
-    const raw = yes ? readGuests() : [];
     const kitchen = {};
 
-    const guests = raw.map(function (g, i) {
+    const guests = yes ? Array.from({ length: party }, function (_, g) {
       const order = {};
       CONFIG.courses.forEach(function (course) {
-        const v = g.choices[course.id];
+        const v = picks[g][course.id];
         if (!v) { order[course.id] = ""; return; }
-        if (v === "skip") { order[course.id] = NONE; return; }
+        if (v === "skip") { order[course.id] = SKIP; return; }
         const d = dishById(course.id, v);
         /* The kitchen gets Norrlyst's own wording, not the English gloss. */
         order[course.id] = d ? d.name : v;
         if (d) kitchen[d.name] = (kitchen[d.name] || 0) + 1;
       });
-      return {
-        seat: i + 1,
-        name: g.name.trim() || (i === 0 ? $("#name").value.trim() : ""),
-        order: order
-      };
-    });
+      return { seat: g + 1, name: guestName(g), order: order };
+    }) : [];
 
     return {
       attending: yes ? "yes" : "no",
@@ -1479,8 +1709,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   function orderLine(g) {
     const order = CONFIG.courses
       .map(function (c) { return g.order[c.id]; })
-      .filter(function (x) { return x && x !== NONE; });
-    return order.length ? order.join(" · ") : "Nothing ticked yet";
+      .filter(function (x) { return x && x !== SKIP; });
+    return order.length ? order.join(" · ") : "Nothing chosen yet";
   }
 
   function rowsHTML(rows) {
@@ -1489,53 +1719,42 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     }).join("");
   }
 
-  function renderPreview() {
-    const box = $("#preview");
-    const d = payload();
-
-    if (!d.name) {
-      box.innerHTML = '<p class="empty">Fill in the name above and it all gathers here.</p>';
-      return;
-    }
-
+  function summaryRows(d) {
     const rows = [["Name", d.name]];
     if (d.attending === "yes") {
       rows.push(["Party", String(d.party)]);
-      d.guests.forEach(function (g) {
-        rows.push([g.name || "Guest " + g.seat, orderLine(g)]);
-      });
+      d.guests.forEach(function (g) { rows.push([g.name || "Guest " + g.seat, orderLine(g)]); });
       if (d.diet) rows.push(["Needs", d.diet]);
     } else {
       rows.push(["Answer", "Regrets"]);
     }
     if (d.note) rows.push(["Note", d.note]);
+    return rows;
+  }
 
-    box.innerHTML = rowsHTML(rows);
+  function renderPreview() {
+    const box = $("#preview");
+    const d = payload();
+    if (!d.name) {
+      box.innerHTML = '<p class="empty">Fill in the name above and it all gathers here.</p>';
+      return;
+    }
+    box.innerHTML = rowsHTML(summaryRows(d));
   }
 
   function showDone(d, viaEmail) {
-    const yes = d.attending === "yes";
     $("#rsvp").hidden = true;
-    $("#menu-section").hidden = true;
     $("#done").hidden = false;
 
     const first = d.name.split(" ")[0] || "";
-    $("#done-line").textContent = yes
+    $("#done-line").textContent = d.attending === "yes"
       ? "See you on the 12th."
       : "A shame — you'll be missed that evening.";
     $("#done-stamp").textContent = (first || CONFIG.venue).toUpperCase();
 
-    const rows = [["Name", d.name]];
-    if (yes) {
-      rows.push(["Party", String(d.party)]);
-      d.guests.forEach(function (g) {
-        rows.push([g.name || "Guest " + g.seat, orderLine(g)]);
-      });
-      if (d.diet) rows.push(["Needs", d.diet]);
-    }
+    const rows = summaryRows(d);
     rows.push(["Date", CONFIG.date]);
     if (viaEmail) rows.push(["Status", "Sent by email"]);
-
     $("#receipt").innerHTML = rowsHTML(rows);
     $("#done").scrollIntoView({ behavior: "smooth", block: "center" });
   }
@@ -1581,7 +1800,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       .catch(function () {
         btn.disabled = false;
         syncAttending();
-        err.innerHTML = 'That didn\'t go through. Try again, or ' +
+        err.innerHTML = "That didn't go through. Try again, or " +
           '<a href="#" id="mailnow">send it by email</a>.';
         err.hidden = false;
         const link = $("#mailnow");
@@ -1593,26 +1812,75 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   /* ═══ Wiring ═══════════════════════════════════════════════════════ */
   $("#coin").addEventListener("click", function () { toss(true); });
-  $("#minus").addEventListener("click", function () { if (party > 1) { party -= 1; renderGuests(); } });
-  $("#plus").addEventListener("click", function () {
-    if (party < CONFIG.maxGuests) { party += 1; renderGuests(); }
-  });
+
+  function setParty(n) {
+    party = Math.min(CONFIG.maxGuests, Math.max(1, n));
+    fitState();
+    $("#party").textContent = String(party);
+    $("#minus").disabled = party <= 1;
+    $("#plus").disabled = party >= CONFIG.maxGuests;
+    renderNames();
+    syncAttending();
+    cursor = Math.min(cursor, stepsList().length);
+    if (cursor >= stepsList().length) cursor = firstUnanswered();
+    renderPicker("next");
+  }
+
+  $("#minus").addEventListener("click", function () { setParty(party - 1); });
+  $("#plus").addEventListener("click", function () { setParty(party + 1); });
+
   $$('input[name="attending"]').forEach(function (r) {
     r.addEventListener("change", syncAttending);
   });
+
   $("#name").addEventListener("input", function () {
-    const first = $('[data-guest-name="0"]');
-    if (first && !first.dataset.touched) first.value = this.value.trim();
+    names[0] = this.value;
+    renderPicker("next");
   });
-  document.addEventListener("input", function (e) {
-    if (e.target.matches("[data-guest-name]")) e.target.dataset.touched = "1";
-    if (e.target.closest("#rsvp")) renderPreview();
+
+  $("#names").addEventListener("input", function (e) {
+    if (!e.target.matches("[data-name]")) return;
+    names[Number(e.target.dataset.name)] = e.target.value;
+    renderPreview();
   });
-  $("#rsvp").addEventListener("change", renderPreview);
+
+  $("#diet").addEventListener("input", renderPreview);
+  $("#note").addEventListener("input", renderPreview);
+
+  $("#pk-body").addEventListener("click", function (e) {
+    const opt = e.target.closest(".opt");
+    if (opt) {
+      const steps = stepsList();
+      const s = steps[cursor];
+      if (!s) return;
+      picks[s.g][CONFIG.courses[s.ci].id] = opt.dataset.dish;
+      advance();
+      return;
+    }
+    const jump = e.target.closest("[data-jump]");
+    if (jump) {
+      cursor = Number(jump.dataset.jump);
+      renderPicker("back");
+      $("#picker").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
+
+  $("#pk-tabs").addEventListener("click", function (e) {
+    const tab = e.target.closest("[data-guest-tab]");
+    if (!tab) return;
+    const g = Number(tab.dataset.guestTab);
+    const ci = CONFIG.courses.findIndex(function (c) { return !picks[g][c.id]; });
+    cursor = g * CONFIG.courses.length + (ci < 0 ? 0 : ci);
+    renderPicker("next");
+  });
+
+  $("#pk-back").addEventListener("click", function () {
+    if (cursor > 0) { cursor -= 1; renderPicker("back"); }
+  });
+
   $("#again").addEventListener("click", function () {
     $("#done").hidden = true;
     $("#rsvp").hidden = false;
-    $("#menu-section").hidden = false;
     syncAttending();
     $("#rsvp").scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -1620,8 +1888,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   renderChrome();
   renderAgenda();
   renderCountries();
-  renderMenu();
-  renderGuests();
+  renderPhotos();
+  renderNames();
+  renderPicker("next");
   land(false);
   syncAttending();
   window.setTimeout(function () { toss(false); }, 420);
