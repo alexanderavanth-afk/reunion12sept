@@ -51,15 +51,28 @@ https://script.google.com/macros/s/AKfycb…long…/exec
 
 **Treat it like a password.** Anyone with it can read the replies.
 
-## 6 · Send it to me
+## 6 · Done — it's wired in
 
-Paste it in chat and I'll put it in both places it needs to go:
+The URL is in `CONFIG.sheet` in `index.html` and `SHEET` in `overview.html`.
+Send yourself one RSVP and watch it land in the sheet.
 
-- `CONFIG.sheet` in `index.html` — so replies write themselves in
-- `SHEET` in `overview.html` — so the overview reads them out
+## Turning it off afterwards
 
-Or do it yourself: both are single lines near the top of each file, each with a
-comment saying exactly this.
+When the dinner is over, shut it down in two places. Both take a minute.
+
+**1 · Kill the URL.** In the Apps Script editor: **Deploy → Manage
+deployments**, click the pencil, set **Version → New version** and **Who has
+access → Only myself**, then **Deploy**. The URL immediately stops answering
+anyone but you. (Archiving the deployment from the same screen does the same
+thing more permanently.)
+
+**2 · Withdraw the script's access to your account.** Go to
+[myaccount.google.com/permissions](https://myaccount.google.com/permissions),
+find the project in the list, and choose **Remove access**. This is what undoes
+the scary screen you clicked through.
+
+The sheet itself is untouched by either — it stays in your Drive with all the
+replies in it. Nothing is deleted.
 
 ---
 
