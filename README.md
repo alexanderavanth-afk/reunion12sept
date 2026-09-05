@@ -108,6 +108,18 @@ and the section numbering closes up around it.
 
 ## Where the replies go
 
+A reply is posted to both of these, and either one landing is enough:
+
+- **Formspree** puts it in your inbox — the notification.
+- **The Google Sheet** ([SHEET-SETUP.md](SHEET-SETUP.md)) records it and keeps
+  its own Kitchen and Allergies tabs current — the source of truth, and what
+  `/overview` reads.
+
+Set `CONFIG.sheet` empty and it is Formspree only; set both empty and the form
+falls back to a pre-filled email to the host.
+
+### Formspree
+
 Submissions `POST` as JSON to Formspree, set in the `CONFIG` block at the top of
 `index.html`:
 
@@ -150,23 +162,21 @@ array doesn't.
 ## The restaurant overview
 
 Live at **`<your-vercel-domain>/overview`** — the invitation's URL with
-`/overview` on the end. Nothing links to it, and it carries `noindex`, so only
+`/overview` on the end. Nothing links to it and it carries `noindex`, so only
 someone who knows the address finds it. Bookmark it.
 
-It is a **ledger, not a form**. When a reply lands in your inbox, copy the block
-starting `ATTENDING`, paste it in, press **Add replies** — and it joins
-everything already there. Each reply is entered once; you never re-paste. The
-JSON or CSV export from Formspree works the same way, as do several emails
-pasted one after another.
+**With a sheet behind it** (see [SHEET-SETUP.md](SHEET-SETUP.md)) it reads the
+replies itself every time it opens, and there is nothing to paste. Send the
+same link on Saturday and open it again on Tuesday and it says something
+different, because it is reading the sheet rather than a snapshot.
 
-Replies are held in that browser's `localStorage`, so the page you use is the
-page that remembers. Two replies from the same name count once, keeping the
-later one, so a guest who changes their mind corrects themselves. **Clear
-everything** wipes the store after a confirm — that's the reset, and it leaves
-your inbox and the Formspree dashboard untouched.
+**Without one** it falls back to a ledger you paste into: copy the block
+starting `ATTENDING` out of a notification email, press **Add replies**, and it
+joins what is already there, held in that browser's `localStorage`. The same
+fallback appears automatically if the sheet is ever unreachable, so the page is
+never a dead end.
 
-Each submission only ever describes its own party. The aggregating across
-everybody happens here, in the browser. It produces:
+Either way it produces:
 
 - **The count** — covers, parties, regrets, and seats left of fifteen.
 - **For the kitchen** — every dish with a count, grouped by course, in
@@ -175,8 +185,9 @@ everybody happens here, in the browser. It produces:
 - **Allergies** and **Regrets**.
 
 **Print** gives a clean sheet to hand over; **Copy as a spreadsheet** puts a
-tab-separated table on the clipboard. "Show an example" fills the box with
-sample data if you want to see the shape before real replies arrive.
+tab-separated table on the clipboard. Two replies from the same name count
+once, keeping the later one, so a guest who changes their mind corrects
+themselves.
 
 Its `COURSES` list must stay in step with `CONFIG.courses` in `index.html` —
 that's the one place the two files have to agree.

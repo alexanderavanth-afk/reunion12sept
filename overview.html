@@ -20,6 +20,11 @@ const COURSES = [
   { id: "dessert",   name: "Desserts & cheese" }
 ];
 const EVENT = { venue: "Restaurant Norrlyst", date: "Saturday 12 September", time: "17:00", seats: 15 };
+
+/* The Google Apps Script web app from tools/sheet-backend.gs — the same URL
+   as CONFIG.sheet in index.html. With this set the page loads the replies
+   itself and there is nothing to paste. See SHEET-SETUP.md. */
+const SHEET = "";
 </script>
 
 <style>
@@ -91,6 +96,7 @@ textarea {
   resize: vertical;
 }
 .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.live { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 26px; }
 button {
   appearance: none;
   border: 1.5px solid var(--ink);
@@ -155,10 +161,14 @@ td.dish { font-weight: 600; }
 
   <p class="mono" id="stamp"></p>
   <h1>Kitchen overview</h1>
-  <p class="sub">Every reply gathered into one sheet the restaurant can read.
-    Paste each one as it arrives — the page keeps them.</p>
+  <p class="sub" id="sub"></p>
 
-  <section class="intake no-print">
+  <section class="live no-print" id="live" hidden>
+    <button type="button" id="reload">Refresh</button>
+    <span class="status" id="livestatus"></span>
+  </section>
+
+  <section class="intake no-print" id="intake">
     <p>
       When a reply lands in your inbox, copy the block starting
       <em>ATTENDING</em> and paste it below. Press <strong>Add replies</strong>
@@ -359,6 +369,7 @@ td.dish { font-weight: 600; }
      each reply is entered once and the totals are always current.   */
 
   const STORE = "reunion-replies-v1";
+  const LIVE = typeof SHEET === "string" && SHEET.indexOf("http") === 0;
 
   function loadStore() {
     try { return JSON.parse(localStorage.getItem(STORE) || "[]"); }
@@ -525,8 +536,49 @@ td.dish { font-weight: 600; }
 
   $("#print").addEventListener("click", function () { window.print(); });
 
-  const existing = loadStore();
-  say(existing.length ? show(existing) : "Nothing stored yet. Paste a reply below.", false);
+  /* ── Live, or pasted ───────────────────────────────────────────────
+     With a sheet behind it the page just asks the sheet and stays current.
+     Without one it falls back to the ledger you paste into.            */
+
+  function fromSheet() {
+    const el = $("#livestatus");
+    el.textContent = "Reading the sheet…";
+    el.className = "status";
+    return fetch(SHEET, { cache: "no-store" })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        const subs = dedupe((data.replies || []).map(normalise));
+        render(subs);
+        $("#out").hidden = !subs.length;
+        $("#print").hidden = !subs.length;
+        $("#copy").hidden = !subs.length;
+        const heads = subs.reduce(function (n, s) { return n + (s.party || s.guests.length); }, 0);
+        el.textContent = subs.length
+          ? subs.length + (subs.length === 1 ? " reply" : " replies") + ", " + heads +
+            (heads === 1 ? " cover" : " covers") + " — as of " +
+            new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : "No replies yet.";
+      })
+      .catch(function () {
+        el.textContent = "Couldn't reach the sheet. Paste the replies below instead.";
+        el.className = "status bad";
+        $("#intake").hidden = false;
+      });
+  }
+
+  if (LIVE) {
+    $("#sub").textContent = "Read straight from the sheet, so it is current every "
+      + "time you open it. Nothing to copy.";
+    $("#live").hidden = false;
+    $("#intake").hidden = true;
+    $("#reload").addEventListener("click", fromSheet);
+    fromSheet();
+  } else {
+    $("#sub").textContent = "Every reply gathered into one sheet the restaurant "
+      + "can read. Paste each one as it arrives — the page keeps them.";
+    const existing = loadStore();
+    say(existing.length ? show(existing) : "Nothing stored yet. Paste a reply below.", false);
+  }
 
   $("#copy").addEventListener("click", function () {
     navigator.clipboard.writeText(lastTSV).then(

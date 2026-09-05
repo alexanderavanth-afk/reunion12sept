@@ -18,10 +18,18 @@
 <script>
 const CONFIG = {
 
-  /* Where RSVPs are sent. Formspree — replies arrive by email and collect
-     in the dashboard for CSV export. Empty falls back to a pre-filled
-     email to hostEmail. */
+  /* Where a reply goes. Both are optional and a reply is sent to whichever
+     is filled in.
+
+     `endpoint` — Formspree. This is what puts a reply in your inbox.
+     `sheet`    — the Google Apps Script web app from tools/sheet-backend.gs.
+                  This is the source of truth: it writes the reply into the
+                  sheet and keeps the Kitchen and Allergies tabs current, and
+                  it is what /overview reads. See SHEET-SETUP.md.
+
+     With neither set, the form falls back to a pre-filled email to hostEmail. */
   endpoint: "https://formspree.io/f/mljeljaa",
+  sheet: "",
 
   hostEmail: "alexander.avanth@gmail.com",
   hostName:  "Alexander",
@@ -72,7 +80,7 @@ const CONFIG = {
 
     { code: "PH", name: "Philippines", image: "coins/philippines.webp",
       unit: "PISO", denom: "1", script: "lat", metal: "nickel", ring: null,
-      fact: "Where Lisa and Alex met, and Alex's first move into Asia. Where Alex is now.",
+      fact: "Where Lisa and Alex met, Alex's first move into Asia, and where Alex is now. Seven thousand islands, and a hello — kumusta — borrowed from the Spanish cómo está.",
       palette: { ground: "#EFEBD8", bone2: "#E5E0C8", card: "#F8F5E5",
                  rule: "#CFC7A4", rule2: "#B8AF88", stamp: "#1D4E89", aura: "#E7CE83" },
       quote: { orig: "Ang hindi lumingon sa pinanggalingan ay hindi makararating sa paroroonan.",
@@ -81,7 +89,7 @@ const CONFIG = {
 
     { code: "PG", name: "Papua New Guinea", image: "coins/papua-new-guinea.webp",
       unit: "KINA", denom: "", script: "lat", metal: "aged", ring: null, hole: true,
-      fact: "Where Lisa grew up. The most mysterious part of our life, and the part we tell the most stories about.",
+      fact: "Where Lisa grew up. The most mysterious part of our life, and the part we tell the most stories about. More languages are spoken here than anywhere else on Earth — over eight hundred.",
       palette: { ground: "#EEE4D2", bone2: "#E3D7C1", card: "#F7F0E1",
                  rule: "#D0BEA0", rule2: "#B7A484", stamp: "#93351F", aura: "#C68C52" },
       quote: { orig: "Yumi olgeta wantok.", by: "Tok Pisin",
@@ -89,7 +97,7 @@ const CONFIG = {
 
     { code: "TH", name: "Thailand", image: "coins/thailand.webp",
       unit: "BAHT", denom: "๑๐", script: "th", metal: "brass", ring: "nickel",
-      fact: "Home in Asia. Everyone at this table has been, and laughed, and left with something.",
+      fact: "Home in Asia. Everyone at this table has been, and laughed, and left with something. Bangkok's full ceremonial name runs to 168 letters, the longest place name in the world.",
       palette: { ground: "#F0EBD6", bone2: "#E6E0C6", card: "#F9F5E4",
                  rule: "#D1C7A2", rule2: "#BAAF86", stamp: "#6E2F3E", aura: "#DFC06D" },
       quote: { orig: "Mātā yathā niyaṃ puttaṃ āyusā ekaputtam anurakkhe.",
@@ -98,7 +106,7 @@ const CONFIG = {
 
     { code: "DE", name: "Germany", image: "coins/germany.webp",
       unit: "EURO", denom: "2", script: "lat", metal: "nickel", ring: "brass",
-      fact: "The other half of Lisa's childhood, and where we still go to spend the summer.",
+      fact: "The other half of Lisa's childhood, and where we still go to spend the summer. The national bread register lists more than three thousand kinds.",
       palette: { ground: "#E9E7DE", bone2: "#DFDCD1", card: "#F4F2EB",
                  rule: "#C6C2B2", rule2: "#ADA895", stamp: "#8A1C1C", aura: "#C9B67F" },
       quote: { orig: "Hier bin ich Mensch, hier darf ich's sein!",
@@ -107,7 +115,7 @@ const CONFIG = {
 
     { code: "DK", name: "Denmark", image: "coins/denmark.webp",
       unit: "KRONE", denom: "", script: "lat", metal: "nickel", ring: null, hole: true,
-      fact: "Where we are now, and where so many of the people we love happen to live.",
+      fact: "Where we are now, and where so many of the people we love happen to live. Its flag is the oldest still flown by any country.",
       palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
                  rule: "#C9C2AE", rule2: "#B3AB94", stamp: "#A32B2B", aura: "#D9B2AC" },
       quote: { orig: "At rejse er at leve.", by: "Hans Christian Andersen",
@@ -487,20 +495,31 @@ section { padding-top: 84px; }
 /* ── Country coins ─────────────────────────────────────────────────── */
 .coins {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
-  gap: 32px 22px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px 40px;
 }
-.country { display: grid; gap: 12px; justify-items: center; text-align: center; align-content: start; }
+.country {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 18px;
+  align-items: start;
+}
 .country .disc {
-  width: 128px;
-  max-width: 100%;
+  width: 88px;
   aspect-ratio: 1;
   filter: drop-shadow(0 10px 12px rgba(40,33,20,.26));
   transition: transform .5s cubic-bezier(.16,.84,.28,1);
 }
 .country:hover .disc { transform: rotate(-8deg) scale(1.05); }
 .country .disc svg, .country .disc img { width: 100%; height: 100%; display: block; object-fit: contain; }
-.country h3 { margin: 0; font-size: var(--step-1); font-weight: 700; letter-spacing: -.01em; text-transform: uppercase; }
+.country .txt { display: grid; gap: 6px; }
+.country h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
 .country p {
   margin: 0;
   font-family: "Newsreader", Georgia, serif;
@@ -508,7 +527,6 @@ section { padding-top: 84px; }
   font-size: 14.5px;
   line-height: 1.45;
   color: var(--ink-2);
-  max-width: 30ch;
 }
 
 /* ── Photographs ───────────────────────────────────────────────────── */
@@ -959,8 +977,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   .agenda li { padding: 15px 0 16px; }
   .agenda .l { font-size: 19px; }
 
-  .coins { gap: 26px 16px; }
-  .country .disc { width: 108px; }
+  .coins { gap: 24px; }
+  .country { grid-template-columns: 68px 1fr; gap: 14px; }
+  .country .disc { width: 68px; }
 
   .receipt div { flex-wrap: wrap; row-gap: 2px; }
   .receipt dt { max-width: none; flex: 1 0 100%; }
@@ -1348,8 +1367,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     wrap.innerHTML = CONFIG.countries.map(function (c) {
       return '<article class="country">' +
                '<div class="disc" data-code="' + c.code + '"></div>' +
-               "<h3>" + esc(c.name) + "</h3>" +
-               "<p>" + esc(c.fact) + "</p>" +
+               '<div class="txt"><h3>' + esc(c.name) + "</h3>" +
+               "<p>" + esc(c.fact) + "</p></div>" +
              "</article>";
     }).join("");
     CONFIG.countries.forEach(function (c) {
@@ -1725,19 +1744,34 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     }
 
     const d = payload();
-    if (!CONFIG.endpoint) { mailFallback(d); return; }
+    if (!CONFIG.endpoint && !CONFIG.sheet) { mailFallback(d); return; }
 
     const btn = $("#send");
     btn.disabled = true;
     btn.textContent = "Sending…";
 
-    fetch(CONFIG.endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(Object.assign({}, d, { summary: asText(d) }))
-    })
-      .then(function (r) {
-        if (!r.ok) throw new Error("HTTP " + r.status);
+    const body = JSON.stringify(Object.assign({}, d, { summary: asText(d) }));
+    const posts = [];
+
+    if (CONFIG.endpoint) {
+      posts.push(fetch(CONFIG.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: body
+      }));
+    }
+    if (CONFIG.sheet) {
+      /* No custom Content-Type: that keeps it a simple request, so the
+         browser skips the preflight Apps Script cannot answer. */
+      posts.push(fetch(CONFIG.sheet, { method: "POST", body: body }));
+    }
+
+    /* One of them landing is enough — the reply is recorded either way. */
+    Promise.allSettled(posts)
+      .then(function (results) {
+        if (!results.some(function (r) { return r.status === "fulfilled" && r.value.ok; })) {
+          throw new Error("both endpoints failed");
+        }
         showDone(d, false);
       })
       .catch(function () {
