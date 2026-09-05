@@ -64,7 +64,7 @@ const CONFIG = {
   countries: [
     { code: "JO", name: "Jordan", image: "coins/jordan.webp",
       unit: "DINAR", denom: "١٠", script: "ar", metal: "brass", ring: null,
-      fact: "One dinar divides into ten dirham, a hundred qirsh, a thousand fils.",
+      fact: "Where Lisa lives now — keeping its nerve between conflicts on nearly every border. Its western shore is the lowest dry land on Earth.",
       palette: { ground: "#F0E6D4", bone2: "#E7DAC3", card: "#F9F2E4",
                  rule: "#D3C3A4", rule2: "#BFAC89", stamp: "#8E3B24", aura: "#DBB582" },
       quote: { orig: "خير الناس أنفعهم للناس", dir: "rtl", by: "Muhammad",
@@ -72,7 +72,7 @@ const CONFIG = {
 
     { code: "PH", name: "Philippines", image: "coins/philippines.webp",
       unit: "PISO", denom: "1", script: "lat", metal: "nickel", ring: null,
-      fact: "Piso — inherited from the Spanish peso, respelled into Tagalog.",
+      fact: "Where Lisa and Alex met, and Alex's first move into Asia. Where Alex is now.",
       palette: { ground: "#EFEBD8", bone2: "#E5E0C8", card: "#F8F5E5",
                  rule: "#CFC7A4", rule2: "#B8AF88", stamp: "#1D4E89", aura: "#E7CE83" },
       quote: { orig: "Ang hindi lumingon sa pinanggalingan ay hindi makararating sa paroroonan.",
@@ -81,7 +81,7 @@ const CONFIG = {
 
     { code: "PG", name: "Papua New Guinea", image: "coins/papua-new-guinea.webp",
       unit: "KINA", denom: "", script: "lat", metal: "aged", ring: null, hole: true,
-      fact: "The one-kina coin is struck with a hole straight through the middle.",
+      fact: "Where Lisa grew up. The most mysterious part of our life, and the part we tell the most stories about.",
       palette: { ground: "#EEE4D2", bone2: "#E3D7C1", card: "#F7F0E1",
                  rule: "#D0BEA0", rule2: "#B7A484", stamp: "#93351F", aura: "#C68C52" },
       quote: { orig: "Yumi olgeta wantok.", by: "Tok Pisin",
@@ -89,7 +89,7 @@ const CONFIG = {
 
     { code: "TH", name: "Thailand", image: "coins/thailand.webp",
       unit: "BAHT", denom: "๑๐", script: "th", metal: "brass", ring: "nickel",
-      fact: "Ten baht: a brass heart inside a white ring.",
+      fact: "Home in Asia. Everyone at this table has been, and laughed, and left with something.",
       palette: { ground: "#F0EBD6", bone2: "#E6E0C6", card: "#F9F5E4",
                  rule: "#D1C7A2", rule2: "#BAAF86", stamp: "#6E2F3E", aura: "#DFC06D" },
       quote: { orig: "Mātā yathā niyaṃ puttaṃ āyusā ekaputtam anurakkhe.",
@@ -98,7 +98,7 @@ const CONFIG = {
 
     { code: "DE", name: "Germany", image: "coins/germany.webp",
       unit: "EURO", denom: "2", script: "lat", metal: "nickel", ring: "brass",
-      fact: "The same coin in twenty countries — and a different back in each.",
+      fact: "The other half of Lisa's childhood, and where we still go to spend the summer.",
       palette: { ground: "#E9E7DE", bone2: "#DFDCD1", card: "#F4F2EB",
                  rule: "#C6C2B2", rule2: "#ADA895", stamp: "#8A1C1C", aura: "#C9B67F" },
       quote: { orig: "Hier bin ich Mensch, hier darf ich's sein!",
@@ -107,7 +107,7 @@ const CONFIG = {
 
     { code: "DK", name: "Denmark", image: "coins/denmark.webp",
       unit: "KRONE", denom: "", script: "lat", metal: "nickel", ring: null, hole: true,
-      fact: "A hole through the middle, and the monarch's crowned monogram around it.",
+      fact: "Where we are now, and where so many of the people we love happen to live.",
       palette: { ground: "#EDE9DD", bone2: "#E4DFD0", card: "#F5F2E9",
                  rule: "#C9C2AE", rule2: "#B3AB94", stamp: "#A32B2B", aura: "#D9B2AC" },
       quote: { orig: "At rejse er at leve.", by: "Hans Christian Andersen",
@@ -290,22 +290,11 @@ a:hover { color: var(--stamp); }
 .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 22px 110px; }
 @media (min-width: 1080px) { .wrap { padding-inline: 72px; } }
 
-.topbar { padding: 20px 0 0; }
-.kicker {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .01em;
-  text-transform: uppercase;
-  line-height: 1.25;
-  max-width: 34ch;
-}
-
 /* ── Hero ──────────────────────────────────────────────────────────── */
 .hero {
   display: grid;
   gap: 26px;
-  padding: 26px 0 8px;
+  padding: 34px 0 8px;
   justify-items: center;
   text-align: center;
 }
@@ -318,6 +307,14 @@ a:hover { color: var(--stamp); }
   text-transform: uppercase;
   text-wrap: balance;
   max-width: 15ch;
+}
+.hero h1 .pre {
+  display: block;
+  font-size: .3em;
+  letter-spacing: .14em;
+  line-height: 1;
+  margin-bottom: .7em;
+  color: var(--stamp);
 }
 .hero h1 .thin {
   font-family: "Newsreader", Georgia, serif;
@@ -334,36 +331,6 @@ a:hover { color: var(--stamp); }
   font-weight: 300;
   font-size: clamp(17px, 2.2vw, 21px);
   line-height: 1.45;
-}
-
-/* Land, play with the coin, reply — the button carries the whole page */
-.cta {
-  display: grid;
-  gap: 4px;
-  justify-items: center;
-  text-align: center;
-  margin: 20px 0 4px;
-  padding: 18px 40px 20px;
-  background: var(--ink);
-  color: var(--bone);
-  border: 1.5px solid var(--ink);
-  text-decoration: none;
-  min-width: min(100%, 340px);
-  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
-}
-.cta:hover, .cta:focus-visible {
-  background: var(--stamp);
-  border-color: var(--stamp);
-  color: var(--bone);
-  transform: translateY(-2px);
-}
-.cta-main { font-size: 18px; font-weight: 700; letter-spacing: -.02em; }
-.cta-sub {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10.5px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  opacity: .72;
 }
 
 /* The seat limit, where it bears on what you're about to type */
@@ -397,6 +364,12 @@ a:hover { color: var(--stamp); }
 .coin-btn svg, .coin-btn img { width: 100%; height: 100%; display: block; object-fit: contain; }
 .toss-caption { color: var(--ink-3); text-align: center; margin: 0; }
 .toss-caption b { color: var(--ink); font-weight: 700; letter-spacing: .12em; }
+.toss-caption .tap {
+  color: var(--stamp);
+  margin-left: 10px;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
 
 /* ── Quote, struck on landing ───────────────────────────────────────── */
 .quote {
@@ -471,7 +444,7 @@ a:hover { color: var(--stamp); }
   display: grid;
   text-align: left;
 }
-@media (min-width: 720px) { .ledger { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 720px) { .ledger { grid-template-columns: repeat(3, 1fr); } }
 .ledger div { padding: 16px 0 17px; border-bottom: 1px solid var(--rule); }
 .ledger div:last-child { border-bottom: 0; }
 @media (min-width: 720px) {
@@ -514,8 +487,8 @@ section { padding-top: 84px; }
 /* ── Country coins ─────────────────────────────────────────────────── */
 .coins {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
-  gap: 30px 20px;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 32px 22px;
 }
 .country { display: grid; gap: 12px; justify-items: center; text-align: center; align-content: start; }
 .country .disc {
@@ -533,9 +506,9 @@ section { padding-top: 84px; }
   font-family: "Newsreader", Georgia, serif;
   font-weight: 300;
   font-size: 14.5px;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--ink-2);
-  max-width: 25ch;
+  max-width: 30ch;
 }
 
 /* ── Photographs ───────────────────────────────────────────────────── */
@@ -951,12 +924,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   .ledger { margin-top: 26px; grid-template-columns: 1fr 1fr; }
   .ledger div { padding: 13px 0 14px; }
-  .ledger div:nth-child(even) { border-left: 1px solid var(--rule); padding-left: 16px; }
-  .ledger div:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
-  .ledger div:nth-last-child(-n+2) { border-bottom: 0; }
+  .ledger div:nth-child(2) { border-left: 1px solid var(--rule); padding-left: 16px; }
+  .ledger div:last-child { grid-column: 1 / -1; border-bottom: 0; }
 
-  .cta { width: 100%; margin-top: 26px; padding: 17px 20px 19px; }
-  .cta-main { font-size: 17px; }
 
   section { padding-top: 62px; }
   .sec-head { margin-bottom: 22px; }
@@ -1015,10 +985,6 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
 <div class="wrap">
 
-  <div class="topbar">
-    <p class="kicker">Reunion dinner · six countries, one table</p>
-  </div>
-
   <header class="hero">
     <div class="toss">
       <div class="coin-stage">
@@ -1032,40 +998,25 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       </figure>
     </div>
 
-    <h1>Planning life on a <span class="thin">coin toss</span></h1>
+    <h1><span class="pre">Reunion dinner</span>Planning life on a
+      <span class="thin">coin toss</span></h1>
 
     <p class="sub">We have many homes, and on the 12th of September our home is
       going to be with you all for an evening. Life is lived on a coin toss, and
       we intend to make the most of where we land and who we are with. We hope
       you will share this evening with us.</p>
 
-    <a class="cta" href="#rsvp-section">
-      <span class="cta-main">Reply, and choose your dishes</span>
-      <span class="cta-sub" id="cta-sub"></span>
-    </a>
-
     <dl class="ledger">
       <div><dt class="mono">Date</dt><dd id="f-date"></dd></div>
       <div><dt class="mono">Time</dt><dd id="f-time"></dd></div>
       <div><dt class="mono">Where</dt>
            <dd><a id="f-venue" href="#" target="_blank" rel="noopener noreferrer"></a></dd></div>
-      <div><dt class="mono">Reply by</dt><dd id="f-deadline"></dd></div>
     </dl>
 
   </header>
 
   <section id="rsvp-section">
-    <div class="sec-head">
-      <h2>Reply</h2>
-      <span class="mono num">Two minutes</span>
-    </div>
-
     <form id="rsvp" novalidate>
-      <div class="step">
-        <span class="n">01</span>
-        <h3>Who's coming?</h3>
-      </div>
-
       <div class="field">
         <label class="lbl" for="name">Your name</label>
         <input type="text" id="name" name="name" autocomplete="name"
@@ -1083,17 +1034,12 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       </div>
 
       <div class="field" id="names-field" hidden>
-        <span class="lbl">Who else is coming?</span>
-        <span class="hint">Names help us with the place cards.</span>
+        <span class="lbl">And their names</span>
         <div class="names" id="names"></div>
       </div>
 
-      <div class="step" id="step-2">
-        <span class="n">02</span>
-        <h3>The dishes</h3>
-      </div>
-
       <div class="field" id="picker-field">
+        <span class="lbl">What everyone is eating</span>
         <span class="hint" id="menu-line"></span>
         <div class="picker" id="picker">
           <div class="picker-head">
@@ -1110,19 +1056,13 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         </div>
       </div>
 
-      <div class="step">
-        <span class="n">03</span>
-        <h3>Confirm</h3>
-      </div>
-
       <div class="field">
-        <label class="lbl" for="diet">Allergies and dietary needs</label>
-        <span class="hint">The kitchen will adapt — say who it applies to.</span>
+        <label class="lbl" for="diet">Allergies?</label>
         <textarea id="diet" name="diet" placeholder="e.g. “Maja: nuts and shellfish”"></textarea>
       </div>
 
       <div class="field">
-        <label class="lbl" for="note">A note to the hosts</label>
+        <label class="lbl" for="note">Anything else?</label>
         <textarea id="note" name="note" placeholder="Optional"></textarea>
       </div>
 
@@ -1165,9 +1105,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       <h2>Currencies at the table</h2>
       <span class="mono num" id="num-2"></span>
     </div>
-    <p class="lede">Six places we've each called home in turn. Every coin is
-      struck like the real one — the hole, the ring and the script aren't
-      decoration. Tap the one above to toss it.</p>
+    <p class="lede">Six places we've called home in turn. Tap the coin above to
+      throw it again.</p>
     <div class="coins" id="coin-row"></div>
   </section>
 
@@ -1372,8 +1311,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   }
 
   function setCaption() {
-    $("#caption").innerHTML = "LANDED ON · <b>" +
-      esc(landed().name.toUpperCase()) + "</b> · TAP TO TOSS";
+    $("#caption").innerHTML = "<b>" + esc(landed().name.toUpperCase()) +
+      '</b> <span class="tap">tap to toss</span>';
   }
 
   function land(animate) {
@@ -1449,22 +1388,19 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
     $("#f-date").textContent = CONFIG.date;
     $("#f-time").textContent = CONFIG.time;
-    $("#f-deadline").textContent = CONFIG.deadline;
     const venue = $("#f-venue");
     venue.textContent = CONFIG.venue;
     venue.href = CONFIG.venueUrl;
 
     $("#notice").innerHTML =
-      "Including yourself. The room seats <b>" + CONFIG.seats + " of us and not one more</b>, " +
-      "so please only bring the people already confirmed.";
-
-    $("#cta-sub").textContent = CONFIG.date + " · " + CONFIG.venue;
+      "Including yourself. The room seats <b>" + CONFIG.seats +
+      "</b> — please only bring who's already confirmed.";
 
     $("#menu-line").innerHTML =
+      'One dish per course, so we can send it to the restaurant ahead of time. ' +
+      '<em class="veg">VEG</em> marks the vegetarian option. ' +
       '<a href="' + CONFIG.venueUrl + '" target="_blank" rel="noopener noreferrer">' +
-      "Click here for a full overview of the menu</a>, and please make your selection " +
-      "below along with your attendance so that we can send it to the restaurant ahead " +
-      "of time. The vegetarian dish in each course is marked <em class=\"veg\">VEG</em>.";
+      "The full menu</a>.";
 
     /* The reading after the form is numbered; the form itself isn't. */
     const shown = ["#num-1", "#num-2", "#num-3"]

@@ -53,18 +53,21 @@ Each country's `palette` (seven colours) and `quote` live beside it in
 
 ## The page, in order
 
-The invitation is only sent to people who are already coming, so the page is
-built to be acted on, not read: coin, headline, **the button**, and then the
-form. Everything else — the running order, the coins, the photographs — sits
-below the form for whoever wants it. There is no "can't make it" option and no
-way to skip a course; both were decisions nobody needed to make.
+The invitation only goes to people who are already coming, so the page is built
+to be acted on, not read: the coin throws itself, the headline, the invitation
+in the hosts' own words, and then the form. Everything else — the running
+order, the coins, the photographs — sits below the form for whoever wants it.
+
+There is no "can't make it" option, no way to skip a course, and no step
+headings, section titles or call-to-action button above the form. Each was one
+more thing to read on the way to answering.
 
 ## The RSVP flow
 
 Three numbered steps on one page — no wizard, nothing to lose on a refresh:
 
-1. **Who's coming?** — your name, a party-size stepper, and
-   (as soon as the party is more than one) a name field per extra guest.
+1. **Who's coming?** — your name, a party-size stepper, and (as soon as the
+   party is more than one) a name field per extra guest.
 2. **The dishes** — one box that asks one question at a time. Tap a dish and it
    advances to the next course; after the last course it moves to the next
    person and starts again. A **Back** button, four pips for the courses, and a
