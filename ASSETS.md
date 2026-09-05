@@ -36,38 +36,24 @@ already on the page. They can arrive one at a time.
 
 ## 2. The photographs
 
-**JPGs in `photos/`**, named by place and year in lowercase with hyphens:
+**Upload them to [`photos/`](https://github.com/alexanderavanth-afk/reunion12sept/upload/main/photos)
+and tell me.** Straight off a phone is fine — `tools/prepare_photos.py` resizes
+each one to 1600px and saves it as WebP, which takes a set of eight from about
+thirty megabytes down to one or two.
+
+Name them `place-year.jpg` where you can — `amman-2019.jpg`,
+`port-moresby-2021.jpg` — and the place and year fill themselves in. Anything
+called `IMG_4471.jpg` still works; I just have to be told what it is.
+
+**Captions I can't guess.** One line each, and shorter is better — they read as
+marginalia beside the picture, not as an album. A fact, a date, a private joke.
+Send them as a list:
 
 ```
-photos/amman-2019.jpg
-photos/port-moresby-2021.jpg
-photos/bangkok-2023.jpg
+amman-2019      | The winter we learned to make proper coffee
+port-moresby    | Lisa's road to school, more or less
 ```
 
-### Format
-
-| | |
-| --- | --- |
-| File type | **JPG** (photos, not PNG — a tenth of the size at the same quality) |
-| Size | **1600 px on the long edge**, quality ~80 |
-| Weight | Under ~400 KB each |
-| Crop | Anything — they're displayed 4:3 and centre-cropped, so keep the subject away from the extreme edges |
-| How many | Six to nine sits best in the grid |
-
-Straight off a phone is fine; anything over ~1 MB I'll resize.
-
-### What to send with them
-
-For each photo, three lines:
-
-```
-photos/amman-2019.jpg | Amman | 2019 | The winter we learned to make proper coffee.
-```
-
-- **Place** — a city or a country, whatever reads better
-- **Year** — or a range, "2019–20"
-- **Caption** — one line. The shorter the better; these read as marginalia, not
-  as an album. Anything from a fact to a private joke.
-
-Send them as a list in chat and I'll wire them up, or paste them straight into
-`CONFIG.photos` in `index.html` — the shape is commented in there.
+Six to nine sits best in the grid. The section stays hidden until the first one
+lands, and the section numbering closes up around it, so there is no harm in
+taking your time.
