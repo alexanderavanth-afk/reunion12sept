@@ -375,10 +375,8 @@ a:hover { color: var(--stamp); }
 }
 .coin-btn svg, .coin-btn img { width: 100%; height: 100%; display: block; object-fit: contain; }
 .toss-caption { color: var(--ink-3); text-align: center; margin: 0; }
-.toss-caption b { color: var(--ink); font-weight: 700; letter-spacing: .12em; }
 .toss-caption .tap {
   color: var(--stamp);
-  margin-left: 10px;
   animation: pulse 2.4s ease-in-out infinite;
 }
 @keyframes pulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
@@ -1240,14 +1238,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         </div>
       </div>
 
-      <div class="field">
+      <div class="field" id="diet-field" hidden>
         <label class="lbl" for="diet">Allergies?</label>
         <textarea id="diet" name="diet" placeholder="e.g. “Maja: nuts and shellfish”"></textarea>
-      </div>
-
-      <div class="field">
-        <label class="lbl" for="note">Anything else?</label>
-        <textarea id="note" name="note" placeholder="Optional"></textarea>
       </div>
 
       <div class="field">
@@ -1487,8 +1480,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   }
 
   function setCaption() {
-    $("#caption").innerHTML = "<b>" + esc(landed().name.toUpperCase()) +
-      '</b> <span class="tap">tap to toss</span>';
+    $("#caption").innerHTML = '<span class="tap">tap to toss</span>';
   }
 
   /* Two layers, alternating: the incoming photograph fades up while the
@@ -1649,6 +1641,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#join-cue").hidden = joining !== null;
 
     $("#picker-field").hidden = joining !== "dinner";
+    /* Only worth asking of somebody who is eating. */
+    $("#diet-field").hidden = joining !== "dinner";
+    if (joining !== "dinner") $("#diet").value = "";
     $("#bar-field").hidden = joining !== "drinks";
     if (joining === "drinks") {
       $("#join-undo").textContent = many ? "Actually, we'd like dinner →"
@@ -1933,7 +1928,6 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         })).join(" | ");
       }).join("\n"),
       diet: $("#diet").value.trim(),
-      note: $("#note").value.trim(),
       event: CONFIG.venue + " — " + CONFIG.date,
       submittedAt: new Date().toISOString()
     };
@@ -1965,7 +1959,6 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       lines.push("");
     }
     if (d.diet) lines.push("Dietary: " + d.diet);
-    if (d.note) lines.push("Note: " + d.note);
     return lines.join("\n");
   }
 
@@ -1990,7 +1983,6 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       : String(d.party)]];
     d.guests.forEach(function (g) { rows.push([g.name || "Guest " + g.seat, orderLine(g)]); });
     if (d.diet) rows.push(["Needs", d.diet]);
-    if (d.note) rows.push(["Note", d.note]);
     return rows;
   }
 
@@ -2117,7 +2109,6 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   });
 
   $("#diet").addEventListener("input", renderPreview);
-  $("#note").addEventListener("input", renderPreview);
 
   $("#pk-body").addEventListener("click", function (e) {
     const opt = e.target.closest(".opt");
