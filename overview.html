@@ -282,6 +282,9 @@ td.dish { font-weight: 600; }
     return String(rowsText).split(/\n+/).map(function (line) {
       const parts = line.split("|").map(function (x) { return x.trim(); });
       if (!parts.length || !parts[0]) return null;
+      if (parts.length === 2 && /^drinks only$/i.test(parts[1])) {
+        return { name: parts[0], drinksOnly: true, order: {} };
+      }
       const order = {};
       COURSES.forEach(function (c, i) {
         const v = parts[i + 1];
@@ -318,6 +321,7 @@ td.dish { font-weight: 600; }
           sub.guests.push(guest);
           return;
         }
+        if (guest && /^Drinks only/i.test(line)) { guest.drinksOnly = true; return; }
         if (guest && (m = line.match(/^([^:]+):\s*(.+)$/))) {
           const id = byName[m[1].trim().toLowerCase()];
           if (id) guest.order[id] = m[2].trim();
@@ -335,7 +339,8 @@ td.dish { font-weight: 600; }
 
     if (Array.isArray(guestsRaw)) {
       guests = guestsRaw.map(function (g) {
-        return { name: g.name || "", order: maybeJSON(g.order) || {} };
+        return { name: g.name || "", drinksOnly: !!g.drinksOnly,
+                 order: maybeJSON(g.order) || {} };
       });
     } else if (sub.rows) {
       guests = guestsFromRows(sub.rows);
@@ -421,9 +426,13 @@ td.dish { font-weight: 600; }
     const regrets = subs.filter(function (s) { return !s.attending; });
     const heads = coming.reduce(function (n, s) { return n + (s.party || s.guests.length); }, 0);
     const seats = coming.reduce(function (a, s) { return a.concat(s.guests); }, []);
+    /* A drinks-only guest still takes a seat, but not a cover for the kitchen. */
+    const dry = seats.filter(function (g) { return g.drinksOnly; }).length;
 
     $("#totals").innerHTML = [
-      ["Covers", heads],
+      ["Heads", heads],
+      ["Eating", Math.max(0, heads - dry)],
+      ["Drinks only", dry],
       ["Parties", coming.length],
       ["Regrets", regrets.length],
       ["Seats left", Math.max(0, (EVENT.seats || 0) - heads)]
@@ -435,6 +444,7 @@ td.dish { font-weight: 600; }
     $("#tally").innerHTML = COURSES.map(function (c) {
       const counts = new Map();
       seats.forEach(function (g) {
+        if (g.drinksOnly) return;
         const dish = (g.order || {})[c.id];
         if (!dish || /^(ingen tak|none(,? thanks)?)$/i.test(dish)) return;
         counts.set(dish, (counts.get(dish) || 0) + 1);
@@ -455,10 +465,13 @@ td.dish { font-weight: 600; }
       ? coming.map(function (s) {
           const gs = s.guests.length ? s.guests : [{ name: s.name, order: {} }];
           return gs.map(function (g) {
+            const cells = g.drinksOnly
+              ? '<td colspan="' + COURSES.length + '" class="note">Drinks only</td>'
+              : COURSES.map(function (c) {
+                  return "<td>" + esc((g.order || {})[c.id] || "—") + "</td>";
+                }).join("");
             return "<tr><td>" + esc(g.name || "—") + "</td><td>" + esc(s.name) + "</td>" +
-              COURSES.map(function (c) {
-                return "<td>" + esc((g.order || {})[c.id] || "—") + "</td>";
-              }).join("") + "</tr>";
+              cells + "</tr>";
           }).join("");
         }).join("")
       : '<tr><td colspan="6" class="empty">No replies yet.</td></tr>';
@@ -486,7 +499,7 @@ td.dish { font-weight: 600; }
         const gs = s.guests.length ? s.guests : [{ name: s.name, order: {} }];
         return acc.concat(gs.map(function (g) {
           return [g.name || "", s.name].concat(COURSES.map(function (c) {
-            return (g.order || {})[c.id] || "";
+            return g.drinksOnly ? "drinks only" : ((g.order || {})[c.id] || "");
           })).join("\t");
         }));
       }, [])).join("\n");

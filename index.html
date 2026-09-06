@@ -681,6 +681,54 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
 .pk-tab .who2 { font-size: 14px; font-weight: 600; letter-spacing: -.01em; max-width: 18ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pk-tab.is-now { background: var(--card); color: var(--ink); box-shadow: inset 0 -3px 0 var(--stamp); }
 .pk-tab .tick2 { color: var(--stamp); }
+.pk-tab.is-dry .seat { color: var(--ink-3); }
+
+/* Not everybody eats. One switch per person, so half a couple can sit
+   down to dinner while the other half stays at the bar. */
+.pk-mode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bone-2);
+}
+.pk-mode .q {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.switch { display: flex; border: 1.5px solid var(--ink); background: var(--card); margin-left: auto; }
+.switch button {
+  appearance: none;
+  border: 0;
+  border-right: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink-2);
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+.switch button:last-child { border-right: 0; }
+.switch button:hover { background: var(--bone-2); }
+.switch button.on { background: var(--ink); color: var(--bone); }
+.pk-guest .dry {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--stamp);
+  margin-left: 8px;
+}
 
 .picker-body { padding: 4px 0; }
 .picker-body.in-r { animation: slide-r .34s cubic-bezier(.16,.84,.28,1) both; }
@@ -787,6 +835,21 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
 
 /* Picker's finished state */
 .pk-done { padding: 20px 16px 6px; }
+.pk-done .line .short { color: var(--stamp); font-weight: 600; }
+.pk-done .line .gap {
+  appearance: none;
+  border: 1.5px solid var(--stamp);
+  background: transparent;
+  color: var(--stamp);
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  padding: 5px 11px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+.pk-done .line .gap:hover { background: var(--stamp); color: var(--bone); }
 .pk-done .line {
   margin: 0 0 16px;
   font-size: 21px;
@@ -963,6 +1026,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   .opt .ds { font-size: 14.5px; }
 
   /* A comfortable thumb target on Back */
+  .pk-mode { padding: 10px 14px; }
+  .switch { margin-left: 0; flex: 1 0 100%; }
+  .switch button { flex: 1; padding: 9px 8px; }
   .picker-foot { padding: 8px 14px; }
   .picker-foot .back {
     min-height: 44px;
@@ -1073,6 +1139,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
             <span class="cue" id="pk-cue">Tap to confirm your dishes</span>
           </div>
           <div class="pk-tabs" id="pk-tabs" hidden></div>
+          <div class="pk-mode" id="pk-mode" hidden></div>
           <div class="picker-body" id="pk-body"></div>
           <div class="picker-foot">
             <button type="button" class="back" id="pk-back">← Back</button>
@@ -1443,6 +1510,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   let party = 1;
   let names = [""];                 /* names[0] mirrors the "Your name" field */
   let picks = [{}];                 /* picks[guest][courseId] = dishId | "skip" */
+  let dry = [false];                /* dry[guest] — here for the drinks, not the dinner */
 
   function guestName(i) {
     const n = (names[i] || "").trim();
@@ -1453,8 +1521,10 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   function fitState() {
     while (names.length < party) names.push("");
     while (picks.length < party) picks.push({});
+    while (dry.length < party) dry.push(false);
     names.length = party;
     picks.length = party;
+    dry.length = party;
   }
 
   function renderNames() {
@@ -1480,10 +1550,28 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   const stepsList = () => {
     const out = [];
     for (let g = 0; g < party; g++) {
+      if (dry[g]) continue;          /* drinks only — nothing to ask them */
       CONFIG.courses.forEach(function (c, ci) { out.push({ g: g, ci: ci }); });
     }
     return out;
   };
+
+  /* The list is no longer dense once somebody drops out of dinner, so a
+     jump has to be looked up rather than multiplied out. */
+  function stepIndex(g, ci) {
+    const steps = stepsList();
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i].g === g && steps[i].ci === ci) return i;
+    }
+    return -1;
+  }
+
+  function gapCount() {
+    const steps = stepsList();
+    return steps.filter(function (s) {
+      return !picks[s.g][CONFIG.courses[s.ci].id];
+    }).length;
+  }
 
   function firstUnanswered() {
     const steps = stepsList();
@@ -1492,6 +1580,35 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       if (!picks[s.g] || !picks[s.g][CONFIG.courses[s.ci].id]) return i;
     }
     return steps.length;
+  }
+
+  function modeHTML(g) {
+    return '<span class="q">' + esc(guestName(g)) + " is here for</span>" +
+           '<span class="switch">' +
+             '<button type="button" class="' + (dry[g] ? "" : "on") +
+               '" data-mode="eat" data-g="' + g + '">Dinner &amp; drinks</button>' +
+             '<button type="button" class="' + (dry[g] ? "on" : "") +
+               '" data-mode="dry" data-g="' + g + '">Drinks only</button>' +
+           "</span>";
+  }
+
+  /* Turning dinner off for somebody drops their courses out of the walk;
+     turning it back on puts them at the top of their own list again. */
+  function setMode(g, isDry) {
+    if (dry[g] === isDry) return;
+    dry[g] = isDry;
+    if (isDry) {
+      picks[g] = {};
+      const steps = stepsList();
+      let next = -1;
+      for (let i = 0; i < steps.length; i++) {
+        if (steps[i].g > g) { next = i; break; }
+      }
+      cursor = next >= 0 ? next : firstUnanswered();
+    } else {
+      cursor = Math.max(0, stepIndex(g, 0));
+    }
+    renderPicker("next");
   }
 
   function optionHTML(d, picked) {
@@ -1509,21 +1626,42 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   function doneHTML() {
     const guests = Array.from({ length: party }, function (_, g) {
+      if (dry[g]) {
+        return '<div class="pk-guest">' +
+                 '<div class="gname">' + esc(guestName(g)) +
+                   '<em class="dry">Drinks only</em></div>' +
+                 '<div class="pk-line">' +
+                   '<span class="c">Dinner</span>' +
+                   '<span class="v none">No dishes</span>' +
+                   '<button type="button" class="edit" data-eat="' + g + '">They\'re eating</button>' +
+                 "</div>" +
+               "</div>";
+      }
       const lines = CONFIG.courses.map(function (c, ci) {
         const d = picks[g][c.id] ? dishById(c.id, picks[g][c.id]) : null;
         const label = d ? d.en : "Not chosen";
         return '<div class="pk-line">' +
                  '<span class="c">' + esc(c.name) + "</span>" +
                  '<span class="v' + (d ? "" : " none") + '">' + esc(label) + "</span>" +
-                 '<button type="button" class="edit" data-jump="' + (g * CONFIG.courses.length + ci) +
-                   '">Change</button>' +
+                 '<button type="button" class="edit" data-jump-g="' + g +
+                   '" data-jump-c="' + ci + '">Change</button>' +
                "</div>";
       }).join("");
       return '<div class="pk-guest"><div class="gname">' + esc(guestName(g)) + "</div>" +
              lines + "</div>";
     }).join("");
 
-    return '<div class="pk-done"><p class="line">That\'s everyone.</p>' + guests + "</div>";
+    const eating = dry.slice(0, party).filter(function (x) { return !x; }).length;
+    const gaps = gapCount();
+    let line = "That's everyone.";
+    if (!eating) {
+      line = "Drinks it is — nothing for the kitchen.";
+    } else if (gaps) {
+      line = '<span class="short">' + gaps + (gaps === 1 ? " course" : " courses") +
+             ' still to choose.</span> <button type="button" class="gap" data-gap="1">' +
+             "Finish them →</button>";
+    }
+    return '<div class="pk-done"><p class="line">' + line + "</p>" + guests + "</div>";
   }
 
   function paintBody(html, dir) {
@@ -1545,10 +1683,13 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     tabs.innerHTML = Array.from({ length: party }, function (_, g) {
       const done = answeredCount(g);
       const all = CONFIG.courses.length;
+      const mark = dry[g] ? "<span>drinks</span>"
+                 : done === all ? '<span class="tick2">✓</span>'
+                 : "<span>" + done + "/" + all + "</span>";
       return '<button type="button" class="pk-tab' + (g === activeGuest ? " is-now" : "") +
+               (dry[g] ? " is-dry" : "") +
                '" data-guest-tab="' + g + '">' +
-               '<span class="seat">' + String(g + 1).padStart(2, "0") +
-                 (done === all ? '<span class="tick2">✓</span>' : "<span>" + done + "/" + all + "</span>") +
+               '<span class="seat">' + String(g + 1).padStart(2, "0") + mark +
                "</span>" +
                '<span class="who2">' + esc(guestName(g)) + "</span>" +
              "</button>";
@@ -1561,13 +1702,22 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     const foot = $(".picker-foot");
 
     if (cursor >= steps.length) {
-      $("#pk-who").textContent = "All chosen";
+      const anyEating = dry.slice(0, party).some(function (x) { return !x; });
+      const gaps = gapCount();
+      $("#pk-who").textContent = !anyEating ? "Drinks only"
+                              : gaps ? "Not quite done"
+                              : "All chosen";
       $("#pk-course").textContent = "";
-      $("#pk-prog").textContent = steps.length + " / " + steps.length;
+      $("#pk-prog").textContent = (steps.length - gaps) + " / " + steps.length;
       $("#pk-cue").hidden = true;
       head.hidden = false;
       foot.hidden = true;
       renderTabs(-1);
+      /* Party of one with nothing to choose: the switch is the only way
+         back to dinner, so it stays on screen. */
+      const solo = party === 1 && dry[0];
+      $("#pk-mode").hidden = !solo;
+      if (solo) $("#pk-mode").innerHTML = modeHTML(0);
       paintBody(doneHTML(), dir);
       renderPreview();
       return;
@@ -1582,6 +1732,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       : guestName(s.g);
     $("#pk-course").textContent = course.name;
     renderTabs(s.g);
+    $("#pk-mode").hidden = false;
+    $("#pk-mode").innerHTML = modeHTML(s.g);
     $("#pk-prog").textContent = (cursor + 1) + " / " + steps.length;
     $("#pk-cue").hidden = false;
     head.hidden = false;
@@ -1618,23 +1770,28 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     const guests = Array.from({ length: party }, function (_, g) {
       const order = {};
       CONFIG.courses.forEach(function (course) {
-        const v = picks[g][course.id];
+        const v = dry[g] ? null : picks[g][course.id];
         if (!v) { order[course.id] = ""; return; }
         const d = dishById(course.id, v);
         /* The kitchen gets Norrlyst's own wording, not the English gloss. */
         order[course.id] = d ? d.name : v;
         if (d) kitchen[d.name] = (kitchen[d.name] || 0) + 1;
       });
-      return { seat: g + 1, name: guestName(g), order: order };
+      return { seat: g + 1, name: guestName(g), drinksOnly: !!dry[g], order: order };
     });
+
+    const eating = guests.filter(function (g) { return !g.drinksOnly; }).length;
 
     return {
       attending: "yes",
       name: $("#name").value.trim(),
       party: party,
+      eating: eating,
+      drinksOnly: party - eating,
       guests: guests,
       kitchen: kitchen,
       rows: guests.map(function (g) {
+        if (g.drinksOnly) return (g.name || "?") + " | drinks only";
         return [g.name || "?"].concat(CONFIG.courses.map(function (c) {
           return g.order[c.id] || "-";
         })).join(" | ");
@@ -1650,14 +1807,19 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     const lines = [
       "ATTENDING",
       "Name: " + d.name,
-      "Party: " + d.party,
+      "Party: " + d.party +
+        (d.drinksOnly ? "  (" + d.eating + " eating, " + d.drinksOnly + " drinks only)" : ""),
       ""
     ];
     d.guests.forEach(function (g) {
       lines.push(g.seat + ". " + (g.name || "—"));
-      CONFIG.courses.forEach(function (c) {
-        lines.push("   " + c.name + ": " + (g.order[c.id] || "—"));
-      });
+      if (g.drinksOnly) {
+        lines.push("   Drinks only — no dishes");
+      } else {
+        CONFIG.courses.forEach(function (c) {
+          lines.push("   " + c.name + ": " + (g.order[c.id] || "—"));
+        });
+      }
       lines.push("");
     });
     const keys = Object.keys(d.kitchen);
@@ -1673,6 +1835,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   /* ═══ Step 03 — a live reading of what the button will post ════════ */
   function orderLine(g) {
+    if (g.drinksOnly) return "Drinks only";
     const order = CONFIG.courses
       .map(function (c) { return g.order[c.id]; })
       .filter(Boolean);
@@ -1686,7 +1849,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   }
 
   function summaryRows(d) {
-    const rows = [["Name", d.name], ["Party", String(d.party)]];
+    const rows = [["Name", d.name], ["Party", d.drinksOnly
+      ? d.party + " — " + d.eating + " eating, " + d.drinksOnly + " on drinks"
+      : String(d.party)]];
     d.guests.forEach(function (g) { rows.push([g.name || "Guest " + g.seat, orderLine(g)]); });
     if (d.diet) rows.push(["Needs", d.diet]);
     if (d.note) rows.push(["Note", d.note]);
@@ -1810,20 +1975,43 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       advance();
       return;
     }
-    const jump = e.target.closest("[data-jump]");
+    const jump = e.target.closest("[data-jump-g]");
     if (jump) {
-      cursor = Number(jump.dataset.jump);
+      const at = stepIndex(Number(jump.dataset.jumpG), Number(jump.dataset.jumpC));
+      if (at < 0) return;
+      cursor = at;
       renderPicker("back");
       $("#picker").scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
     }
+    const gap = e.target.closest("[data-gap]");
+    if (gap) {
+      cursor = firstUnanswered();
+      renderPicker("back");
+      $("#picker").scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    const eat = e.target.closest("[data-eat]");
+    if (eat) {
+      setMode(Number(eat.dataset.eat), false);
+      $("#picker").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
+
+  $("#pk-mode").addEventListener("click", function (e) {
+    const btn = e.target.closest("[data-mode]");
+    if (btn) setMode(Number(btn.dataset.g), btn.dataset.mode === "dry");
   });
 
   $("#pk-tabs").addEventListener("click", function (e) {
     const tab = e.target.closest("[data-guest-tab]");
     if (!tab) return;
     const g = Number(tab.dataset.guestTab);
+    if (dry[g]) { setMode(g, false); return; }
     const ci = CONFIG.courses.findIndex(function (c) { return !picks[g][c.id]; });
-    cursor = g * CONFIG.courses.length + (ci < 0 ? 0 : ci);
+    const at = stepIndex(g, ci < 0 ? 0 : ci);
+    if (at < 0) return;
+    cursor = at;
     renderPicker("next");
   });
 
@@ -1840,8 +2028,9 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   renderChrome();
   renderAgenda();
   renderCountries();
-  renderNames();
-  renderPicker("next");
+  /* Through setParty so the stepper's own buttons start out in the right
+     state — at one, there is no "one fewer" to offer. */
+  setParty(1);
   land(false);
 
   /* Painted at rest first so the opening frame is a real coin, then thrown
