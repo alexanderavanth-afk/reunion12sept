@@ -487,7 +487,9 @@ section { padding-top: 84px; }
 /* ── Country coins ─────────────────────────────────────────────────── */
 .coins {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* min() lets the track shrink below its ideal on a narrow phone instead
+     of forcing the page to scroll sideways. */
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 30px 40px;
 }
 .country {
@@ -627,9 +629,10 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
 .picker { border: 1.5px solid var(--ink); background: var(--card); overflow: hidden; }
 .picker-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 12px 16px 13px;
   background: var(--ink);
   color: var(--bone);
 }
@@ -640,6 +643,17 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
   letter-spacing: .1em;
   text-transform: uppercase;
   opacity: .72;
+}
+/* The one instruction anybody needs, where they are already looking */
+.picker-head .cue {
+  flex: 1 0 100%;
+  margin-top: 6px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #F0705A;
+  animation: pulse 1.7s ease-in-out infinite;
 }
 .picker-head .prog {
   margin-left: auto;
@@ -730,10 +744,23 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
   letter-spacing: .04em;
   color: var(--ink-3);
 }
-.opt .go { color: var(--rule-2); font-size: 17px; transition: color .13s ease, transform .13s ease; }
-.opt:hover .go { color: var(--stamp); transform: translateX(3px); }
+.opt .go {
+  color: var(--stamp);
+  font-size: 19px;
+  font-weight: 700;
+  transition: transform .13s ease;
+  animation: nudge 1.7s ease-in-out infinite;
+}
+.opt:hover .go, .opt:active .go { transform: translateX(4px); animation: none; }
+/* Phones have no hover, so pressing has to be the thing that answers back. */
+.opt:active { background: var(--bone-2); }
 .opt.is-picked { background: var(--bone-2); }
-.opt.is-picked .go { color: var(--stamp); }
+.opt.is-picked .go { animation: none; }
+
+@keyframes nudge {
+  0%, 82%, 100% { transform: none; }
+  91% { transform: translateX(4px); }
+}
 .opt.skip { border-top: 1px solid var(--rule); }
 .opt.skip .nm { font-weight: 500; font-size: 14.5px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
 
@@ -1057,6 +1084,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
             <span class="who" id="pk-who"></span>
             <span class="course" id="pk-course"></span>
             <span class="prog" id="pk-prog"></span>
+            <span class="cue" id="pk-cue">Tap to confirm your dishes</span>
           </div>
           <div class="pk-tabs" id="pk-tabs" hidden></div>
           <div class="picker-body" id="pk-body"></div>
@@ -1563,6 +1591,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       $("#pk-who").textContent = "All chosen";
       $("#pk-course").textContent = "";
       $("#pk-prog").textContent = steps.length + " / " + steps.length;
+      $("#pk-cue").hidden = true;
       head.hidden = false;
       foot.hidden = true;
       renderTabs(-1);
@@ -1581,6 +1610,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#pk-course").textContent = course.name;
     renderTabs(s.g);
     $("#pk-prog").textContent = (cursor + 1) + " / " + steps.length;
+    $("#pk-cue").hidden = false;
     head.hidden = false;
     foot.hidden = false;
 
