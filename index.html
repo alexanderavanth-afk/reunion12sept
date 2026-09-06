@@ -193,6 +193,13 @@ const CONFIG = {
   --stamp:  #8A3B1E;
   --aura:   #D3C5A6;
 
+  /* Struck brass, off the Jordanian dinar. Everything you can press wears
+     it, and it is the one colour the coin toss never repaints — an
+     affordance that changed with the country would stop being one. */
+  --gold:      #D8AE63;
+  --gold-lift: #EBCE93;
+  --gold-deep: #B98A38;
+
   --step-1: 15px;
   --step-2: 17px;
   --step-3: 21px;
@@ -563,28 +570,45 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
 
 
 /* Party stepper */
-.stepper { display: inline-flex; border: 1.5px solid var(--ink); background: var(--card); width: fit-content; }
+.stepper { display: inline-flex; align-items: stretch; gap: 10px; width: fit-content; }
 .stepper button {
   appearance: none;
-  border: 0;
-  background: transparent;
+  border: 1.5px solid var(--ink);
+  background: var(--gold);
   color: var(--ink);
   font-family: "Archivo", sans-serif;
-  width: 46px;
-  font-size: 21px;
+  font-weight: 700;
+  /* 52px clears the 44px minimum a thumb needs, with room to spare. */
+  width: 56px;
+  height: 56px;
+  font-size: 28px;
   line-height: 1;
   cursor: pointer;
+  box-shadow: 3px 3px 0 var(--gold-deep);
+  transition: background-color .12s ease, box-shadow .12s ease, transform .12s ease;
 }
-.stepper button:disabled { color: var(--ink-3); cursor: not-allowed; }
+.stepper button:hover { background: var(--gold-lift); }
+/* Pressing it moves it onto its own shadow, which is what a key does. */
+.stepper button:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--gold-deep); }
+.stepper button:disabled {
+  background: transparent;
+  border-color: var(--rule-2);
+  color: var(--rule-2);
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
 .stepper output {
-  min-width: 58px;
+  min-width: 68px;
   display: grid;
   place-items: center;
-  border-inline: 1.5px solid var(--ink);
+  border: 1.5px solid var(--ink);
+  background: var(--card);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 17px;
+  font-size: 21px;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
-  padding: 12px 0;
+  padding: 0 6px;
 }
 
 /* Companion names */
@@ -911,14 +935,17 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
   padding: 16px 32px;
   cursor: pointer;
   justify-self: start;
-  transition: background .15s ease, border-color .15s ease;
+  box-shadow: 5px 5px 0 var(--gold);
+  transition: background .15s ease, border-color .15s ease,
+              box-shadow .14s ease, transform .14s ease;
 }
-.submit:hover { background: var(--stamp); border-color: var(--stamp); }
+.submit:hover { background: var(--stamp); border-color: var(--stamp); box-shadow: 7px 7px 0 var(--gold); transform: translate(-1px, -1px); }
+.submit:active { box-shadow: 1px 1px 0 var(--gold-deep); transform: translate(4px, 4px); }
 .submit:disabled { opacity: .55; cursor: progress; }
 /* Waiting on a choice above rather than on the network — a different
    state, and it should not look like it is already working. */
-.submit.waiting { background: transparent; color: var(--ink-3); border-color: var(--rule-2); cursor: not-allowed; }
-.submit.waiting:hover { background: transparent; border-color: var(--rule-2); }
+.submit.waiting { background: transparent; color: var(--ink-3); border-color: var(--rule-2); box-shadow: none; cursor: not-allowed; }
+.submit.waiting:hover { background: transparent; border-color: var(--rule-2); box-shadow: none; transform: none; }
 
 /* ── Dinner, or only the drinks ─────────────────────────────────────
    The one thing a reply cannot leave blank, so it is asked plainly and
@@ -931,23 +958,51 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
   color: var(--ink);
   font-family: "Archivo", sans-serif;
   text-align: left;
-  padding: 17px 18px;
+  padding: 18px 18px 19px;
   cursor: pointer;
   display: grid;
-  gap: 4px;
-  transition: background-color .15s ease, color .15s ease, box-shadow .15s ease;
+  grid-template-columns: 1fr 22px;
+  align-items: center;
+  gap: 3px 14px;
+  box-shadow: 4px 4px 0 var(--gold);
+  transition: background-color .14s ease, color .14s ease,
+              box-shadow .14s ease, transform .14s ease;
 }
-.joining button:hover { background: var(--bone-2); }
-.joining button .t { font-size: 16px; font-weight: 700; letter-spacing: -.015em; }
+.joining button:hover { background: var(--bone-2); box-shadow: 6px 6px 0 var(--gold); transform: translate(-1px, -1px); }
+.joining button:active { box-shadow: 1px 1px 0 var(--gold-deep); transform: translate(3px, 3px); }
+.joining button .t { grid-column: 1; font-size: 17px; font-weight: 700; letter-spacing: -.018em; }
 .joining button .s {
+  grid-column: 1;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10.5px;
-  letter-spacing: .09em;
+  font-size: 11px;
+  letter-spacing: .085em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-2);
 }
-.joining button.on { background: var(--ink); color: var(--bone); box-shadow: inset 0 -4px 0 var(--stamp); }
-.joining button.on .s { color: var(--bone); opacity: .7; }
+/* A dot that fills, so the choice reads at a glance and not only by colour. */
+.joining button .dot {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--rule-2);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.stepper button:focus-visible,
+.joining button:focus-visible,
+.submit:focus-visible { outline: 3px solid var(--gold-deep); outline-offset: 3px; }
+.joining button .dot::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: transparent; }
+.joining button:hover .dot { border-color: var(--gold-deep); }
+.joining button.on {
+  background: var(--ink);
+  color: var(--bone);
+  box-shadow: 4px 4px 0 var(--gold-deep);
+}
+.joining button.on .s { color: var(--bone); opacity: .72; }
+.joining button.on .dot { border-color: var(--gold); }
+.joining button.on .dot::after { background: var(--gold); }
 .pick-me {
   font-family: "IBM Plex Mono", monospace;
   font-size: 11.5px;
@@ -1200,10 +1255,12 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
           <button type="button" id="join-food" data-join="dinner">
             <span class="t" id="join-food-t">I'm joining for dinner</span>
             <span class="s">Four courses, chosen below</span>
+            <span class="dot" aria-hidden="true"></span>
           </button>
           <button type="button" id="join-bar" data-join="drinks">
             <span class="t" id="join-bar-t">I'm joining for drinks, no food</span>
             <span class="s">Nothing for the kitchen</span>
+            <span class="dot" aria-hidden="true"></span>
           </button>
         </div>
         <span class="pick-me" id="join-cue">Pick one to carry on</span>
@@ -1243,7 +1300,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         <textarea id="diet" name="diet" placeholder="e.g. “Maja: nuts and shellfish”"></textarea>
       </div>
 
-      <div class="field">
+      <div class="field" id="confirm-field" hidden>
         <div class="confirm">
           <h4>This is what we'll send</h4>
           <dl class="receipt" id="preview"></dl>
@@ -1638,11 +1695,16 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
                                         : "I'm joining for drinks, no food";
     $("#join-food").classList.toggle("on", joining === "dinner");
     $("#join-bar").classList.toggle("on", joining === "drinks");
+    $("#join-food").setAttribute("aria-pressed", String(joining === "dinner"));
+    $("#join-bar").setAttribute("aria-pressed", String(joining === "drinks"));
     $("#join-cue").hidden = joining !== null;
 
     $("#picker-field").hidden = joining !== "dinner";
-    /* Only worth asking of somebody who is eating. */
+    /* Only worth asking — and only worth reading back — of somebody who
+       is eating. A drinks reply has a name and a number, and the note
+       above already says so in a sentence. */
     $("#diet-field").hidden = joining !== "dinner";
+    $("#confirm-field").hidden = joining !== "dinner";
     if (joining !== "dinner") $("#diet").value = "";
     $("#bar-field").hidden = joining !== "drinks";
     if (joining === "drinks") {
