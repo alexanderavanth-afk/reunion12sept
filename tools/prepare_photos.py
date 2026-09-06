@@ -27,6 +27,14 @@ import sys
 
 from PIL import Image, ImageOps
 
+# iPhones shoot HEIC by default and Pillow cannot read it unaided. This is
+# optional so the tool still runs without it — it just skips .heic files.
+try:
+    import pillow_heif
+    pillow_heif.register_heif_opener()
+except ImportError:
+    pass
+
 LONG_EDGE = 1600
 QUALITY = 82
 
