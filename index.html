@@ -917,6 +917,73 @@ textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
 }
 .submit:hover { background: var(--stamp); border-color: var(--stamp); }
 .submit:disabled { opacity: .55; cursor: progress; }
+/* Waiting on a choice above rather than on the network — a different
+   state, and it should not look like it is already working. */
+.submit.waiting { background: transparent; color: var(--ink-3); border-color: var(--rule-2); cursor: not-allowed; }
+.submit.waiting:hover { background: transparent; border-color: var(--rule-2); }
+
+/* ── Dinner, or only the drinks ─────────────────────────────────────
+   The one thing a reply cannot leave blank, so it is asked plainly and
+   answered in one tap before anything else opens up. */
+.joining { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 780px; }
+.joining button {
+  appearance: none;
+  border: 1.5px solid var(--ink);
+  background: var(--card);
+  color: var(--ink);
+  font-family: "Archivo", sans-serif;
+  text-align: left;
+  padding: 17px 18px;
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  transition: background-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.joining button:hover { background: var(--bone-2); }
+.joining button .t { font-size: 16px; font-weight: 700; letter-spacing: -.015em; }
+.joining button .s {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.joining button.on { background: var(--ink); color: var(--bone); box-shadow: inset 0 -4px 0 var(--stamp); }
+.joining button.on .s { color: var(--bone); opacity: .7; }
+.pick-me {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--stamp);
+  animation: pulse 1.7s ease-in-out infinite;
+}
+
+/* What a drinks-only reply gets instead of the menu. */
+.bar-note { border: 1.5px solid var(--ink); background: var(--card); padding: 20px 18px; max-width: 780px; }
+.bar-note h4 {
+  margin: 0 0 7px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+.bar-note p { margin: 0; font-family: "Newsreader", Georgia, serif; font-weight: 300; font-size: 16.5px; line-height: 1.5; color: var(--ink-2); }
+.bar-note .undo {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 10px 0 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.bar-note .undo:hover { color: var(--stamp); }
 .err { color: var(--stamp); font-size: 14.5px; font-weight: 600; margin: 0; }
 
 /* Confirmation */
@@ -1053,6 +1120,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   .done-head, .done-body { padding-inline: 16px; }
   .confirm { padding: 15px 15px 17px; }
+  .joining { grid-template-columns: 1fr; }
   .submit { width: 100%; text-align: center; }
 }
 
@@ -1128,7 +1196,31 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
         <div class="names" id="names"></div>
       </div>
 
-      <div class="field" id="picker-field">
+      <div class="field" id="joining-field">
+        <span class="lbl" id="joining-lbl">What are you joining for?</span>
+        <div class="joining">
+          <button type="button" id="join-food" data-join="dinner">
+            <span class="t" id="join-food-t">I'm joining for dinner</span>
+            <span class="s">Four courses, chosen below</span>
+          </button>
+          <button type="button" id="join-bar" data-join="drinks">
+            <span class="t" id="join-bar-t">I'm joining for drinks, no food</span>
+            <span class="s">Nothing for the kitchen</span>
+          </button>
+        </div>
+        <span class="pick-me" id="join-cue">Pick one to carry on</span>
+      </div>
+
+      <div class="field" id="bar-field" hidden>
+        <div class="bar-note">
+          <h4>Thank you — that's everything</h4>
+          <p>No dishes to choose. Send it over and you're done — we'll see
+            you at the bar.</p>
+          <button type="button" class="undo" id="join-undo">Actually, we'd like dinner →</button>
+        </div>
+      </div>
+
+      <div class="field" id="picker-field" hidden>
         <span class="lbl">What everyone is eating</span>
         <span class="hint" id="menu-line"></span>
         <div class="picker" id="picker">
@@ -1511,6 +1603,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   let names = [""];                 /* names[0] mirrors the "Your name" field */
   let picks = [{}];                 /* picks[guest][courseId] = dishId | "skip" */
   let dry = [false];                /* dry[guest] — here for the drinks, not the dinner */
+  let joining = null;               /* null until they say: "dinner" | "drinks" */
 
   function guestName(i) {
     const n = (names[i] || "").trim();
@@ -1540,6 +1633,43 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
                  esc(names[i] || "") + '" placeholder="Guest ' + (i + 1) + '">' +
              "</div>";
     }).join("");
+  }
+
+  /* ═══ Dinner, or only the drinks ═══════════════════════════════════
+     Asked once, at the top, before the menu is worth showing. Until it is
+     answered nothing else opens and the reply cannot be sent.          */
+  function renderJoining() {
+    const many = party > 1;
+    $("#join-food-t").textContent = many ? "We're joining for dinner"
+                                         : "I'm joining for dinner";
+    $("#join-bar-t").textContent = many ? "We're joining for drinks, no food"
+                                        : "I'm joining for drinks, no food";
+    $("#join-food").classList.toggle("on", joining === "dinner");
+    $("#join-bar").classList.toggle("on", joining === "drinks");
+    $("#join-cue").hidden = joining !== null;
+
+    $("#picker-field").hidden = joining !== "dinner";
+    $("#bar-field").hidden = joining !== "drinks";
+    if (joining === "drinks") {
+      $("#join-undo").textContent = many ? "Actually, we'd like dinner →"
+                                         : "Actually, I'd like dinner →";
+    }
+
+    const send = $("#send");
+    send.disabled = joining === null;
+    send.classList.toggle("waiting", joining === null);
+    send.textContent = joining === null ? "Choose one above" : "Send RSVP";
+  }
+
+  function setJoining(v) {
+    joining = v;
+    for (let g = 0; g < party; g++) dry[g] = (v === "drinks");
+    if (v === "dinner") {
+      cursor = firstUnanswered();
+      renderPicker("next");
+    }
+    renderJoining();
+    renderPreview();
   }
 
   /* ═══ The picker ═══════════════════════════════════════════════════
@@ -1597,6 +1727,14 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   function setMode(g, isDry) {
     if (dry[g] === isDry) return;
     dry[g] = isDry;
+    /* Marking the last eater as dry from inside the picker is the same
+       answer as the button at the top, so the top should agree. */
+    if (isDry && dry.slice(0, party).every(function (x) { return x; })) {
+      joining = "drinks";
+      renderJoining();
+      renderPreview();
+      return;
+    }
     if (isDry) {
       picks[g] = {};
       const steps = stepsList();
@@ -1715,9 +1853,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       renderTabs(-1);
       /* Party of one with nothing to choose: the switch is the only way
          back to dinner, so it stays on screen. */
-      const solo = party === 1 && dry[0];
-      $("#pk-mode").hidden = !solo;
-      if (solo) $("#pk-mode").innerHTML = modeHTML(0);
+      $("#pk-mode").hidden = true;
       paintBody(doneHTML(), dir);
       renderPreview();
       return;
@@ -1732,8 +1868,8 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       : guestName(s.g);
     $("#pk-course").textContent = course.name;
     renderTabs(s.g);
-    $("#pk-mode").hidden = false;
-    $("#pk-mode").innerHTML = modeHTML(s.g);
+    $("#pk-mode").hidden = party < 2;
+    if (party > 1) $("#pk-mode").innerHTML = modeHTML(s.g);
     $("#pk-prog").textContent = (cursor + 1) + " / " + steps.length;
     $("#pk-cue").hidden = false;
     head.hidden = false;
@@ -1903,6 +2039,13 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
       return;
     }
 
+    if (joining === null) {
+      err.textContent = "Say whether you're joining for dinner or just the drinks.";
+      err.hidden = false;
+      $("#joining-field").scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
     const d = payload();
     if (!CONFIG.endpoint) { mailFallback(d); return; }
 
@@ -1942,11 +2085,22 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#minus").disabled = party <= 1;
     $("#plus").disabled = party >= CONFIG.maxGuests;
     renderNames();
-    renderPreview();
+    for (let g = 0; g < party; g++) if (joining) dry[g] = (joining === "drinks");
     cursor = Math.min(cursor, stepsList().length);
     if (cursor >= stepsList().length) cursor = firstUnanswered();
     renderPicker("next");
+    renderJoining();
+    renderPreview();
   }
+
+  $(".joining").addEventListener("click", function (e) {
+    const btn = e.target.closest("[data-join]");
+    if (btn) setJoining(btn.dataset.join);
+  });
+  $("#join-undo").addEventListener("click", function () {
+    setJoining("dinner");
+    $("#picker").scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 
   $("#minus").addEventListener("click", function () { setParty(party - 1); });
   $("#plus").addEventListener("click", function () { setParty(party + 1); });
