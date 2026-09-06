@@ -67,6 +67,8 @@ def main():
     ap.add_argument("--out", default="photos", help="where the web-sized files go")
     ap.add_argument("--size", type=int, default=LONG_EDGE, help="long edge, px")
     ap.add_argument("--format", choices=["webp", "jpg"], default="webp")
+    ap.add_argument("--quality", type=int, default=QUALITY,
+                    help="lower it for images that sit behind something")
     args = ap.parse_args()
 
     src = pathlib.Path(args.src)
@@ -97,9 +99,9 @@ def main():
         dest = out_dir / (slug + "." + args.format)
 
         if args.format == "webp":
-            im.save(dest, "WEBP", quality=QUALITY, method=6)
+            im.save(dest, "WEBP", quality=args.quality, method=6)
         else:
-            im.save(dest, "JPEG", quality=QUALITY, optimize=True, progressive=True)
+            im.save(dest, "JPEG", quality=args.quality, optimize=True, progressive=True)
 
         kb = dest.stat().st_size // 1024
         total += kb
