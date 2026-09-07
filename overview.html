@@ -312,7 +312,7 @@ td.dish { font-weight: 600; }
         const line = raw.trim();
         let m;
         if ((m = line.match(/^Name:\s*(.+)$/i)) && !sub.name) { sub.name = m[1].trim(); return; }
-        if ((m = line.match(/^Party:\s*(\d+)/i))) { sub.party = Number(m[1]); return; }
+        if ((m = line.match(/^Party:\s*(\d+)/i)) && !sub.party) { sub.party = Number(m[1]); return; }
         if ((m = line.match(/^Dietary:\s*(.+)$/i))) { sub.diet = m[1].trim(); return; }
         if ((m = line.match(/^Note:\s*(.+)$/i))) { sub.note = m[1].trim(); return; }
         if (/^KITCHEN TALLY/i.test(line)) { guest = null; return; }
@@ -349,7 +349,7 @@ td.dish { font-weight: 600; }
     return {
       name: sub.name || "",
       attending: String(sub.attending || "yes").toLowerCase() !== "no",
-      party: Number(sub.party) || guests.length || 0,
+      party: Math.max(Number(sub.party) || 0, guests.length) || 0,
       guests: guests,
       diet: sub.diet || "",
       note: sub.note || "",
