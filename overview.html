@@ -14,13 +14,14 @@
 /* The courses, in the order the kitchen reads them. Keep this list in step
    with CONFIG.courses in index.html. */
 const COURSES = [
-  { id: "forret",    name: "Starters" },
-  { id: "mellemret", name: "Middle courses" },
-  { id: "hovedret",  name: "Main courses" },
-  { id: "dessert",   name: "Desserts & cheese" }
+  { id: "forret",    name: "Starters",          da: "FORRETTER" },
+  { id: "mellemret", name: "Middle courses",    da: "MELLEMRETTER" },
+  { id: "hovedret",  name: "Main courses",      da: "HOVEDRETTER" },
+  { id: "dessert",   name: "Desserts & cheese", da: "DESSERTER & OST" }
 ];
 const EVENT = { venue: "Restaurant Norrlyst", date: "Saturday 12 September", time: "17:00", seats: 15,
-                booking: "Alexander Avanth", host: "Alexander" };
+                booking: "Alexander Avanth", host: "Alexander",
+                daDate: "lørdag den 12. september", daTime: "17.00" };
 
 /* The dishes the invitation marks VEG. The kitchen is asked to confirm
    these, since the guests were told so on our word rather than theirs. */
@@ -246,7 +247,7 @@ td.dish { font-weight: 600; }
       form could not know — a guest taking only two courses, a change agreed on
       the phone — goes in the box first and lands in the message.</p>
     <textarea id="extra" spellcheck="false"
-      placeholder="One guest in the Wilson party would like only two courses, a starter and a main, both vegetarian."></textarea>
+      placeholder="Én gæst i Wilsons selskab ønsker kun to retter — en forret og en hovedret — begge vegetariske."></textarea>
     <div class="bar">
       <button type="button" id="note-copy">Copy the message</button>
       <span class="status" id="note-status"></span>
@@ -545,59 +546,71 @@ td.dish { font-weight: 600; }
     const eating = Math.max(0, heads - dryN);
 
     const L = [];
-    L.push("Subject: " + EVENT.date + " booking — our dish choices, and two questions");
+    L.push("Emne: Bordbestilling " + EVENT.daDate + " — vores retter og to spørgsmål");
     L.push("");
-    L.push("Hi,");
+    L.push("Hej,");
     L.push("");
-    L.push("This is the party booked under " + EVENT.booking + " for " + EVENT.date +
-           " at " + EVENT.time + " — " + heads + " of us in all. Here is what " +
-           "everyone has chosen, so you have it before the evening.");
+    L.push("Det er selskabet booket under " + EVENT.booking + " til " + EVENT.daDate +
+           " kl. " + EVENT.daTime + ". Vi er " + heads + " i alt. Her er, hvad alle " +
+           "har valgt, så I har det inden aftenen.");
     L.push("");
 
+    let short = 0;
     COURSES.forEach(function (c) {
       const counts = new Map();
       seats.forEach(function (g) {
         if (g.drinksOnly) return;
         const dish = (g.order || {})[c.id];
-        if (!dish || /^(ingen tak|none(,? thanks)?)$/i.test(dish)) return;
+        if (!dish || dish === "—" || /^(ingen tak|none(,? thanks)?)$/i.test(dish)) return;
         counts.set(dish, (counts.get(dish) || 0) + 1);
       });
       if (!counts.size) return;
-      L.push(c.name.toUpperCase());
+      let tot = 0;
+      counts.forEach(function (n) { tot += n; });
+      if (tot < eating) short += 1;
+      L.push(c.da + "  (" + tot + " kuverter)");
       Array.from(counts.entries())
-        .sort(function (a, b) { return b[1] - a[1] || a[0].localeCompare(b[0]); })
+        .sort(function (a, b) { return b[1] - a[1] || a[0].localeCompare(b[0], "da"); })
         .forEach(function (e) { L.push("  " + e[0] + " × " + e[1]); });
       L.push("");
     });
 
-    L.push(eating + " of us are eating." +
-           (dryN ? " " + dryN + " more are joining for drinks only and will not need food." : ""));
+    L.push(eating + " af os spiser med." +
+           (dryN ? " " + (dryN === 1 ? "Én kommer" : dryN + " kommer") +
+                   " kun til drinks og skal ikke have mad." : ""));
+    /* A course that comes up short is not an omission — somebody is taking
+       fewer than four — and the kitchen should be told so, not left to
+       wonder whether a choice went missing. */
+    if (short) {
+      L.push("Nogle retter tæller færre kuverter end " + eating +
+             ", fordi ikke alle spiser alle fire retter. Se punkt 2.");
+    }
     L.push("");
 
-    L.push("TWO THINGS TO CONFIRM");
+    L.push("TO TING, VI GERNE VIL HAVE BEKRÆFTET");
     L.push("");
-    L.push("1. We told our guests these are the vegetarian dishes. Could you " +
-           "confirm that is right, and say if any of them are made with fish " +
-           "sauce, meat stock, anchovy or gelatine?");
+    L.push("1. Vi har fortalt vores gæster, at disse retter er vegetariske. " +
+           "Kan I bekræfte, at det er rigtigt — og sige til, hvis nogen af dem " +
+           "indeholder fiskesauce, kødfond, ansjos eller husblas?");
     VEG.forEach(function (d) { L.push("   - " + d); });
     L.push("");
 
     const extra = $("#extra").value.trim();
     L.push("2. " + (extra ||
-      "[anything the form could not know — put it in the box above]"));
+      "[det, formularen ikke kan vide — skriv det i feltet ovenfor]"));
     L.push("");
 
     const diets = coming.filter(function (s) { return s.diet; });
-    L.push("ALLERGIES AND DIETARY NEEDS");
+    L.push("ALLERGIER OG HENSYN");
     if (diets.length) {
-      diets.forEach(function (s) { L.push("  " + s.diet + "   (" + s.name + "'s party)"); });
+      diets.forEach(function (s) { L.push("  " + s.diet + "   (" + s.name + "s selskab)"); });
     } else {
-      L.push("  None reported.");
+      L.push("  Ingen oplyst.");
     }
     L.push("");
-    L.push("Please tell us if any of this needs changing at your end.");
+    L.push("Sig endelig til, hvis noget af dette skal ændres fra jeres side.");
     L.push("");
-    L.push("Thank you very much,");
+    L.push("Mange tak,");
     L.push(EVENT.host);
 
     return L.join("\n");
