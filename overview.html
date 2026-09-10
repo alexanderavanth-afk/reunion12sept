@@ -19,7 +19,12 @@ const COURSES = [
   { id: "hovedret",  name: "Main courses" },
   { id: "dessert",   name: "Desserts & cheese" }
 ];
-const EVENT = { venue: "Restaurant Norrlyst", date: "Saturday 12 September", time: "17:00", seats: 15 };
+const EVENT = { venue: "Restaurant Norrlyst", date: "Saturday 12 September", time: "17:00", seats: 15,
+                booking: "Alexander Avanth", host: "Alexander" };
+
+/* The dishes the invitation marks VEG. The kitchen is asked to confirm
+   these, since the guests were told so on our word rather than theirs. */
+const VEG = ["Løgtærte", "Stegte hvide asparges", "Stegt kål", "Rabarber “Baked Alaska”"];
 
 /* Left over from a live-backend experiment that was more trouble than it was
    worth. Empty means the page works the way it does now: you paste the
@@ -212,6 +217,7 @@ td.dish { font-weight: 600; }
       <button type="button" class="ghost" id="demo">Show an example</button>
       <button type="button" class="ghost" id="print" hidden>Print</button>
       <button type="button" class="ghost" id="copy" hidden>Copy as a spreadsheet</button>
+      <button type="button" class="ghost" id="kitchen" hidden>Message for the kitchen</button>
       <button type="button" class="ghost danger" id="clear" hidden>Clear everything</button>
       <span class="status" id="status"></span>
     </div>
@@ -233,6 +239,20 @@ td.dish { font-weight: 600; }
     <h2>Regrets</h2>
     <div id="regrets"></div>
   </div>
+
+  <section id="note-out" hidden>
+    <h2>Message for the kitchen</h2>
+    <p class="lede">The counts below come from the replies above. Anything the
+      form could not know — a guest taking only two courses, a change agreed on
+      the phone — goes in the box first and lands in the message.</p>
+    <textarea id="extra" spellcheck="false"
+      placeholder="One guest in the Wilson party would like only two courses, a starter and a main, both vegetarian."></textarea>
+    <div class="bar">
+      <button type="button" id="note-copy">Copy the message</button>
+      <span class="status" id="note-status"></span>
+    </div>
+    <textarea id="note" spellcheck="false" readonly></textarea>
+  </section>
 </div>
 
 <script>
@@ -420,6 +440,7 @@ td.dish { font-weight: 600; }
   }
 
   let lastTSV = "";
+  let lastSubs = [];
 
   function render(subs) {
     const coming = subs.filter(function (s) { return s.attending; });
@@ -507,6 +528,79 @@ td.dish { font-weight: 600; }
     $("#out").hidden = false;
     $("#print").hidden = false;
     $("#copy").hidden = false;
+    $("#kitchen").hidden = false;
+
+    lastSubs = coming;
+    if (!$("#note-out").hidden) $("#note").value = kitchenNote(coming);
+  }
+
+  /* ── The note that actually goes to the restaurant ─────────────────
+     Everything the replies know, in the kitchen's own wording, plus the
+     two things they have to answer: are our vegetarian marks right, and
+     is the arrangement in the box below alright.                      */
+  function kitchenNote(coming) {
+    const seats = coming.reduce(function (a, s) { return a.concat(s.guests); }, []);
+    const heads = coming.reduce(function (n, s) { return n + (s.party || s.guests.length); }, 0);
+    const dryN = seats.filter(function (g) { return g.drinksOnly; }).length;
+    const eating = Math.max(0, heads - dryN);
+
+    const L = [];
+    L.push("Subject: " + EVENT.date + " booking — our dish choices, and two questions");
+    L.push("");
+    L.push("Hi,");
+    L.push("");
+    L.push("This is the party booked under " + EVENT.booking + " for " + EVENT.date +
+           " at " + EVENT.time + " — " + heads + " of us in all. Here is what " +
+           "everyone has chosen, so you have it before the evening.");
+    L.push("");
+
+    COURSES.forEach(function (c) {
+      const counts = new Map();
+      seats.forEach(function (g) {
+        if (g.drinksOnly) return;
+        const dish = (g.order || {})[c.id];
+        if (!dish || /^(ingen tak|none(,? thanks)?)$/i.test(dish)) return;
+        counts.set(dish, (counts.get(dish) || 0) + 1);
+      });
+      if (!counts.size) return;
+      L.push(c.name.toUpperCase());
+      Array.from(counts.entries())
+        .sort(function (a, b) { return b[1] - a[1] || a[0].localeCompare(b[0]); })
+        .forEach(function (e) { L.push("  " + e[0] + " × " + e[1]); });
+      L.push("");
+    });
+
+    L.push(eating + " of us are eating." +
+           (dryN ? " " + dryN + " more are joining for drinks only and will not need food." : ""));
+    L.push("");
+
+    L.push("TWO THINGS TO CONFIRM");
+    L.push("");
+    L.push("1. We told our guests these are the vegetarian dishes. Could you " +
+           "confirm that is right, and say if any of them are made with fish " +
+           "sauce, meat stock, anchovy or gelatine?");
+    VEG.forEach(function (d) { L.push("   - " + d); });
+    L.push("");
+
+    const extra = $("#extra").value.trim();
+    L.push("2. " + (extra ||
+      "[anything the form could not know — put it in the box above]"));
+    L.push("");
+
+    const diets = coming.filter(function (s) { return s.diet; });
+    L.push("ALLERGIES AND DIETARY NEEDS");
+    if (diets.length) {
+      diets.forEach(function (s) { L.push("  " + s.diet + "   (" + s.name + "'s party)"); });
+    } else {
+      L.push("  None reported.");
+    }
+    L.push("");
+    L.push("Please tell us if any of this needs changing at your end.");
+    L.push("");
+    L.push("Thank you very much,");
+    L.push(EVENT.host);
+
+    return L.join("\n");
   }
 
   function say(msg, bad) {
@@ -662,6 +756,24 @@ td.dish { font-weight: 600; }
     const existing = loadStore();
     say(existing.length ? show(existing) : "Nothing stored yet. Paste a reply below.", false);
   }
+
+  $("#kitchen").addEventListener("click", function () {
+    $("#note-out").hidden = false;
+    $("#note").value = kitchenNote(lastSubs);
+    $("#note-out").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  $("#extra").addEventListener("input", function () {
+    $("#note").value = kitchenNote(lastSubs);
+  });
+
+  $("#note-copy").addEventListener("click", function () {
+    const el = $("#note-status");
+    navigator.clipboard.writeText($("#note").value).then(
+      function () { el.textContent = "Copied — paste it into your email."; },
+      function () { el.textContent = "Could not copy. Select the text below and copy it by hand."; }
+    );
+  });
 
   $("#copy").addEventListener("click", function () {
     navigator.clipboard.writeText(lastTSV).then(
