@@ -23,6 +23,17 @@ const CONFIG = {
      pre-filled email to hostEmail instead. */
   endpoint: "https://formspree.io/f/mljeljaa",
 
+  /* The evening has happened. The form comes down, everything else stays
+     up — set this back to false and the RSVP returns exactly as it was. */
+  closed: true,
+  closedNote: {
+    head: "The table is cleared",
+    body: "Replies are closed. The evening was Saturday 12 September at " +
+          "Restaurant Norrlyst — fourteen of us, six countries, one table.\n\n" +
+          "Thank you for coming. The coin still tosses.",
+    stamp: "12.09.2026"
+  },
+
   hostEmail: "alexander.avanth@gmail.com",
   hostName:  "Alexander",
 
@@ -538,6 +549,40 @@ section { padding-top: 84px; }
   font-size: 14.5px;
   line-height: 1.45;
   color: var(--ink-2);
+}
+
+/* ── When the evening is over ───────────────────────────────────────
+   Where the form used to be. Same frame as the receipt it replaces, so
+   the page keeps its shape rather than collapsing around a gap. */
+.closed { border: 1.5px solid var(--ink); background: var(--card); max-width: 780px; }
+.closed-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 18px;
+  background: var(--ink);
+  color: var(--bone);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.closed-body { padding: 22px 20px 26px; }
+.closed-body h3 {
+  margin: 0 0 12px;
+  font-size: var(--step-3);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+}
+.closed-body p {
+  margin: 0;
+  max-width: 54ch;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-size: 17.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  white-space: pre-line;
 }
 
 /* ── Form ──────────────────────────────────────────────────────────── */
@@ -1227,6 +1272,17 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
   </header>
 
   <section id="rsvp-section">
+    <div class="closed" id="closed-note" hidden>
+      <div class="closed-head">
+        <span class="mono">Closed</span>
+        <span class="mono" id="closed-stamp"></span>
+      </div>
+      <div class="closed-body">
+        <h3 id="closed-head"></h3>
+        <p id="closed-body"></p>
+      </div>
+    </div>
+
     <form id="rsvp" novalidate>
       <div class="field">
         <label class="lbl" for="name">Your name</label>
@@ -2082,6 +2138,7 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
 
   $("#rsvp").addEventListener("submit", function (e) {
     e.preventDefault();
+    if (CONFIG.closed) return;
     const err = $("#err");
     err.hidden = true;
 
@@ -2231,6 +2288,17 @@ footer p { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 14.5px; l
     $("#rsvp").hidden = false;
     $("#rsvp").scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
+  /* Closing it is a matter of what the page shows, not of what has been
+     deleted — the form is still here, behind the flag. */
+  if (CONFIG.closed) {
+    $("#rsvp").hidden = true;
+    $("#done").hidden = true;
+    $("#closed-note").hidden = false;
+    $("#closed-head").textContent = CONFIG.closedNote.head;
+    $("#closed-body").textContent = CONFIG.closedNote.body;
+    $("#closed-stamp").textContent = CONFIG.closedNote.stamp;
+  }
 
   renderChrome();
   renderAgenda();
