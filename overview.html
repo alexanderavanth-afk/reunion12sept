@@ -13,19 +13,17 @@
 <script>
 /* The courses, in the order the kitchen reads them. Keep this list in step
    with CONFIG.courses in index.html. */
-const COURSES = [
-  { id: "forret",    name: "Starters",          da: "FORRETTER" },
-  { id: "mellemret", name: "Middle courses",    da: "MELLEMRETTER" },
-  { id: "hovedret",  name: "Main courses",      da: "HOVEDRETTER" },
-  { id: "dessert",   name: "Desserts & cheese", da: "DESSERTER & OST" }
-];
-const EVENT = { venue: "Restaurant Norrlyst", date: "Saturday 12 September", time: "17:00", seats: 15,
+/* Empty until the Bangkok place is booked and its menu is written into
+   CONFIG.courses in index.html. While it is empty this page is a headcount
+   and an allergy list, and the kitchen sections stay out of the way. */
+const COURSES = [];
+const EVENT = { venue: "Bangkok", date: "Friday 27 November", time: "18:00", seats: 0,
                 booking: "Alexander Avanth", host: "Alexander",
-                daDate: "lørdag den 12. september", daTime: "17.00" };
+                daDate: "", daTime: "" };
 
 /* The dishes the invitation marks VEG. The kitchen is asked to confirm
    these, since the guests were told so on our word rather than theirs. */
-const VEG = ["Løgtærte", "Stegte hvide asparges", "Stegt kål", "Rabarber “Baked Alaska”"];
+const VEG = [];
 
 /* Left over from a live-backend experiment that was more trouble than it was
    worth. Empty means the page works the way it does now: you paste the
@@ -228,7 +226,7 @@ td.dish { font-weight: 600; }
     <h2>The count</h2>
     <dl class="totals" id="totals"></dl>
 
-    <h2>For the kitchen</h2>
+    <h2 id="tally-head">For the kitchen</h2>
     <div id="tally"></div>
 
     <h2>The table</h2>
@@ -456,9 +454,8 @@ td.dish { font-weight: 600; }
       ["Eating", Math.max(0, heads - dry)],
       ["Drinks only", dry],
       ["Parties", coming.length],
-      ["Regrets", regrets.length],
-      ["Seats left", Math.max(0, (EVENT.seats || 0) - heads)]
-    ].map(function (r) {
+      ["Regrets", regrets.length]
+    ].concat(EVENT.seats ? [["Seats left", Math.max(0, EVENT.seats - heads)]] : []).map(function (r) {
       return '<div><dt class="mono">' + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
     }).join("");
 
@@ -529,7 +526,10 @@ td.dish { font-weight: 600; }
     $("#out").hidden = false;
     $("#print").hidden = false;
     $("#copy").hidden = false;
-    $("#kitchen").hidden = false;
+    /* Nothing to tell a kitchen until there is a kitchen and a menu. */
+    $("#kitchen").hidden = !COURSES.length;
+    $("#tally-head").hidden = !COURSES.length;
+    $("#tally").hidden = !COURSES.length;
 
     lastSubs = coming;
     if (!$("#note-out").hidden) $("#note").value = kitchenNote(coming);
