@@ -1,3 +1,9 @@
-# Generated originals are kept for provenance, not deployed.
-coins/originals
-photos/originals
+# Nothing below is uploaded to the deployment. The files stay in the
+# repository for the record; the address resolves to a blank page with
+# nothing behind it.
+#
+# To restore: delete these three lines, move index.html and overview.html
+# back out of archive/, and redeploy.
+archive
+tools
+README.md
